@@ -23,6 +23,14 @@ export const metadata: Metadata = {
     siteName: "PartyPadi",
     type: "website",
   },
+  icons: {
+    icon: [
+      { url: "/images/partypadi-icon.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/partypadi-icon.png", type: "image/png" },
+    ],
+  },
 };
 
 export const viewport = {

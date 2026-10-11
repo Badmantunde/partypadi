@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Compass } from "lucide-react";
 
 export default function NotFound() {
@@ -8,6 +9,17 @@ export default function NotFound() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#C5FF35]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-md w-full text-center space-y-6">
+        <div className="flex justify-center">
+          <Image
+            src="/images/partypadi-icon.png"
+            alt="PartyPadi"
+            width={80}
+            height={80}
+            className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-xl animate-float-slow"
+            priority
+          />
+        </div>
+
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-wider text-white/80">
           <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />
           <span>404 // ROUTE NOT FOUND</span>

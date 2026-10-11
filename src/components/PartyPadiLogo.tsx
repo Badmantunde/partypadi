@@ -1,61 +1,74 @@
 import React from "react";
+import Image from "next/image";
 
 interface PartyPadiLogoProps {
   className?: string;
   theme?: "light" | "dark";
   showTagline?: boolean;
   size?: "sm" | "md" | "lg";
+  iconOnly?: boolean;
 }
 
 export function PartyPadiLogo({
   className = "",
-  theme = "light",
+  theme = "dark",
   showTagline = false,
   size = "md",
+  iconOnly = false,
 }: PartyPadiLogoProps) {
   const isDark = theme === "dark";
-  const textColor = isDark ? "text-[#F5F5F0]" : "text-[#11120F]";
-  const subtextColor = isDark ? "text-[#8E8F89]" : "text-[#5C5E57]";
+  const logoSrc = isDark
+    ? "/images/partypadi-logo-dark.png"
+    : "/images/partypadi-logo-light.png";
 
-  const iconSizes = {
-    sm: "w-6 h-6",
-    md: "w-7 h-7",
-    lg: "w-9 h-9",
+  const sizeClasses = {
+    sm: "h-7 w-auto",
+    md: "h-8 sm:h-9 w-auto",
+    lg: "h-10 sm:h-11 w-auto",
   };
 
-  const textSizes = {
-    sm: "text-base tracking-tight",
-    md: "text-lg tracking-tight",
-    lg: "text-2xl tracking-tight",
+  const iconSizeClasses = {
+    sm: "h-7 w-7",
+    md: "h-9 w-9",
+    lg: "h-11 w-11",
   };
+
+  const subtextColor = isDark ? "text-neutral-400" : "text-neutral-500";
+
+  if (iconOnly) {
+    return (
+      <div className={`inline-flex items-center shrink-0 select-none ${className}`}>
+        <Image
+          src="/images/partypadi-icon.png"
+          alt="PartyPadi Icon"
+          width={120}
+          height={120}
+          className={`${iconSizeClasses[size]} object-contain`}
+          priority
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      {/* Swiss geometric monogram badge */}
-      <div
-        className={`${iconSizes[size]} relative flex items-center justify-center bg-[#11120F] border border-black/15 overflow-hidden shrink-0`}
-        aria-hidden="true"
-      >
-        <span className="font-mono text-[10px] font-black tracking-tighter text-white">
-          PP
+    <div className={`inline-flex flex-col select-none ${className}`}>
+      <div className="flex items-center">
+        <Image
+          src={logoSrc}
+          alt="PartyPadi"
+          width={400}
+          height={98}
+          className={`${sizeClasses[size]} object-contain`}
+          priority
+        />
+      </div>
+      {showTagline && (
+        <span
+          className={`text-[9px] font-mono tracking-widest uppercase mt-1 pl-1 ${subtextColor}`}
+        >
+          CAMPUS TICKETING // OOU
         </span>
-        {/* Signature electric neon lime dot indicator */}
-        <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#C5FF35] rounded-none" />
-      </div>
-
-      <div className="flex flex-col leading-none">
-        <div className={`font-display font-black uppercase ${textSizes[size]} ${textColor} flex items-center`}>
-          <span>PARTY</span>
-          <span className="ml-1 text-[#11120F] dark:text-white">PADI</span>
-          {/* Subtle neon lime editorial bullet */}
-          <span className="w-1.5 h-1.5 bg-[#C5FF35] ml-1 inline-block" />
-        </div>
-        {showTagline && (
-          <span className={`text-[9px] font-mono tracking-widest uppercase mt-0.5 ${subtextColor}`}>
-            CAMPUS TICKETING // OOU
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 }
