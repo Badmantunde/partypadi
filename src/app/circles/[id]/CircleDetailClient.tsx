@@ -460,7 +460,7 @@ export function CircleDetailClient() {
                           <button
                             type="button"
                             onClick={() => setTicketModalEvent(selectedOfficialEvent)}
-                            className="spicy-btn px-6 py-3 bg-[#C5FF35] text-[#0C0D0E] hover:bg-white rounded-full text-xs font-mono font-black tracking-wider uppercase transition-all shadow-lg flex items-center gap-2"
+                            className="spicy-btn w-full sm:w-auto px-6 py-3 bg-[#C5FF35] text-[#0C0D0E] hover:bg-white rounded-full text-xs font-mono font-black tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2"
                           >
                             <Ticket className="w-4 h-4" />
                             <span>Get My Ticket (Individual Checkout)</span>
@@ -468,7 +468,7 @@ export function CircleDetailClient() {
 
                           <Link
                             href={`/events/${selectedOfficialEvent.id}`}
-                            className="px-4 py-2.5 rounded-full border border-white/20 text-white hover:bg-white/5 text-xs font-mono transition-all flex items-center gap-1.5"
+                            className="w-full sm:w-auto text-center justify-center px-4 py-2.5 rounded-full border border-white/20 text-white hover:bg-white/5 text-xs font-mono transition-all flex items-center gap-1.5"
                           >
                             <span>Event Details</span>
                             <ExternalLink className="w-3.5 h-3.5" />

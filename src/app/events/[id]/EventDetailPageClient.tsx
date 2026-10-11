@@ -10,6 +10,7 @@ import { TicketModal } from "@/components/TicketModal";
 import { HostEventModal } from "@/components/HostEventModal";
 import { ToastProvider, useToast } from "@/components/Toast";
 import { useAuth } from "@/context/AuthContext";
+import { EventPhotoGallery } from "@/components/EventPhotoGallery";
 import {
   Calendar,
   MapPin,
@@ -20,6 +21,7 @@ import {
   Check,
   ArrowRight,
   ArrowLeft,
+  Camera,
 } from "lucide-react";
 
 interface EventDetailPageClientProps {
@@ -80,7 +82,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
 
         {/* Hero Banner Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-2xl bg-black">
+          <div className="relative min-h-[360px] sm:min-h-0 aspect-auto sm:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-2xl bg-black">
             <Image
               src={event.imageUrl}
               alt={event.title}
@@ -89,41 +91,48 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
               sizes="(max-width: 1200px) 100vw, 1200px"
               className="object-cover filter contrast-[1.05]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/30" />
 
             {/* Badges on Poster */}
-            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 bg-black/70 backdrop-blur-md text-white text-xs font-mono tracking-wider uppercase rounded-full border border-white/20">
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex flex-wrap items-center gap-2 pr-12">
+              <span className="px-3 py-1 bg-black/70 backdrop-blur-md text-white text-xs font-mono tracking-wider uppercase rounded-full border border-white/20 whitespace-nowrap">
                 {event.categoryLabel}
               </span>
               {event.statusBadge && (
-                <span className="px-3 py-1 bg-[#C5FF35] text-[#11120F] text-xs font-mono font-bold tracking-wider uppercase rounded-full shadow-md">
+                <span className="px-3 py-1 bg-[#C5FF35] text-[#11120F] text-xs font-mono font-bold tracking-wider uppercase rounded-full shadow-md whitespace-nowrap">
                   {event.statusBadge}
                 </span>
               )}
-              <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-white text-xs font-mono rounded-full border border-white/20 hidden sm:inline-block">
+              <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-white text-xs font-mono rounded-full border border-white/20 hidden sm:inline-block whitespace-nowrap">
                 {event.campus}
               </span>
+              <a
+                href="#gallery"
+                className="px-3 py-1 bg-white/20 hover:bg-white text-white hover:text-black backdrop-blur-md text-xs font-mono rounded-full border border-white/20 transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>Photo Drop</span>
+              </a>
             </div>
 
             {/* Share Button on Banner */}
             <button
               onClick={handleShare}
-              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2.5 bg-black/60 hover:bg-black/90 text-white rounded-full border border-white/20 backdrop-blur-md transition-all shadow-md hover:scale-105"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2.5 bg-black/60 hover:bg-black/90 text-white rounded-full border border-white/20 backdrop-blur-md transition-all shadow-md hover:scale-105 shrink-0"
               title="Share event link"
             >
               <Share2 className="w-4 h-4" />
             </button>
 
             {/* Bottom Title on Banner */}
-            <div className="absolute bottom-5 left-5 right-5 sm:bottom-8 sm:left-8 sm:right-8 text-white space-y-2">
-              <span className="text-[11px] font-mono tracking-widest text-[#C5FF35] uppercase block">
+            <div className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-8 sm:right-8 text-white space-y-2">
+              <span className="text-[10px] sm:text-[11px] font-mono tracking-widest text-[#C5FF35] uppercase block">
                 OFFICIAL CAMPUS EXPERIENCE // {event.campus}
               </span>
-              <h1 className="font-display font-medium text-3xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.04] text-white">
+              <h1 className="font-display font-medium text-2xl sm:text-4xl lg:text-6xl tracking-tight leading-[1.08] text-white">
                 {event.title}
               </h1>
-              <p className="text-sm sm:text-base text-neutral-300 max-w-2xl font-normal leading-relaxed">
+              <p className="text-xs sm:text-base text-neutral-300 max-w-2xl font-normal leading-relaxed line-clamp-2 sm:line-clamp-none">
                 {event.subtitle}
               </p>
             </div>
@@ -430,6 +439,15 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Event Photos & Picture Pickup Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <EventPhotoGallery
+            eventId={event.id}
+            eventTitle={event.title}
+            organizerName={event.organizer.name}
+          />
         </div>
 
         {/* Related Events Section */}

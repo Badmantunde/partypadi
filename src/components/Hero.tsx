@@ -200,7 +200,7 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
           </div>
 
           {/* Cards Arc Container */}
-          <div className="flex sm:flex-row flex-nowrap items-end justify-start sm:justify-center overflow-x-auto sm:overflow-visible pt-8 pb-8 sm:pt-6 sm:pb-2 px-6 sm:px-0 gap-4 sm:gap-0 scrollbar-none snap-x snap-mandatory">
+          <div className="flex sm:flex-row flex-nowrap items-end justify-start sm:justify-center overflow-x-auto sm:overflow-visible pt-12 pb-8 sm:pt-6 sm:pb-2 px-6 sm:px-0 gap-4 sm:gap-0 scrollbar-none snap-x snap-mandatory">
             {cards.map((card) => {
               const isCenter = card.isCenter;
 

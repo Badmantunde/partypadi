@@ -58,25 +58,25 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between h-16 sm:h-20 flex-nowrap gap-3">
             {/* Left: Star Mark & PartyPadi Wordmark */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3.5 shrink-0">
               <Link
                 href="/"
-                className="outline-none focus-visible:ring-1 focus-visible:ring-white flex items-center gap-2 group transition-transform hover:scale-[1.02]"
+                className="outline-none focus-visible:ring-1 focus-visible:ring-white flex items-center gap-2 group transition-transform hover:scale-[1.02] shrink-0"
               >
                 <PartyPadiLogo theme="dark" size="md" />
               </Link>
 
-              <div className="hidden lg:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono tracking-wider uppercase text-white/80">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] animate-pulse" />
-                <span>OOU · AGO-IWOYE</span>
+              <div className="hidden 2xl:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono tracking-wider uppercase text-white/80 whitespace-nowrap shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] animate-pulse shrink-0" />
+                <span className="whitespace-nowrap">OOU · AGO-IWOYE</span>
               </div>
             </div>
 
-            {/* Center: Floating Dark Capsule Navigation */}
+            {/* Center: Floating Dark Capsule Navigation (Visible on xl and above) */}
             <nav
-              className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner"
+              className="hidden xl:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner shrink-0"
               aria-label="Main Navigation"
             >
               {navLinks.map((link) => {
@@ -85,59 +85,56 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`relative px-3.5 py-1.5 text-xs font-mono rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+                    className={`relative px-3.5 py-1.5 text-xs font-mono rounded-full transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                       active
                         ? "bg-white/15 text-white font-bold border border-white/25 shadow-xs"
                         : "text-white/70 hover:text-white hover:bg-white/10"
                     }`}
                   >
                     {active && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] shadow-[0_0_8px_#C5FF35]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] shadow-[0_0_8px_#C5FF35] shrink-0" />
                     )}
-                    <span>{link.label}</span>
+                    <span className="whitespace-nowrap">{link.label}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Right: Action Buttons */}
-            <div className="hidden sm:flex items-center gap-2.5">
+            {/* Right: Action Buttons on Desktop (Visible on xl and above) */}
+            <div className="hidden xl:flex items-center gap-2.5 shrink-0">
               {/* Host an Event button */}
               <Link
                 href="/host"
-                className={`text-xs font-mono px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 ${
+                className={`text-xs font-mono px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                   checkIsActive("/host")
                     ? "bg-[#C5FF35] text-[#0C0D0E] font-bold shadow-[0_0_15px_rgba(197,255,53,0.3)]"
                     : "text-white/80 hover:text-white hover:bg-white/5"
                 }`}
               >
-                <span>Host an Event</span>
-                <span className="text-[9px] bg-white/10 text-white/80 px-1.5 py-0.5 rounded font-mono font-semibold">0% Fee</span>
+                <span className="whitespace-nowrap">Host an Event</span>
+                <span className="text-[9px] bg-white/10 text-white/80 px-1.5 py-0.5 rounded font-mono font-semibold whitespace-nowrap">0% Fee</span>
               </Link>
 
               {/* Account / Auth Button */}
               {currentUser ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
                     onClick={openProfileModal}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-xs text-white transition-all group shadow-xs"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-xs text-white transition-all group shadow-xs whitespace-nowrap shrink-0"
                     title="View Profile, Friends & Circles"
                   >
-                    <span className="w-5 h-5 rounded-full bg-[#C5FF35] text-[#0C0D0E] font-display font-black text-[11px] flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-[#C5FF35] text-[#0C0D0E] font-display font-black text-[11px] flex items-center justify-center shrink-0">
                       {currentUser.fullName.charAt(0)}
                     </span>
-                    <span className="font-mono font-bold text-[#C5FF35]">@{currentUser.username}</span>
-                    <span className="text-[10px] font-mono text-white/50 uppercase hidden xl:inline">
-                      ({currentUser.role})
-                    </span>
+                    <span className="font-mono font-bold text-[#C5FF35] whitespace-nowrap">@{currentUser.username}</span>
                   </button>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={() => openAuthModal("signin")}
-                  className="text-xs font-mono text-white/90 hover:text-white px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                  className="text-xs font-mono text-white/90 hover:text-white px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap shrink-0"
                 >
                   Sign In
                 </button>
@@ -145,38 +142,46 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
 
               <Link
                 href="/events"
-                className="spicy-btn inline-flex items-center gap-2 px-4 py-2 bg-white text-[#0C0D0E] hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full text-xs font-mono font-medium tracking-tight transition-all duration-300 group"
+                className="spicy-btn inline-flex items-center gap-2 px-4 py-2 bg-white text-[#0C0D0E] hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full text-xs font-mono font-medium tracking-tight transition-all duration-300 group whitespace-nowrap shrink-0"
               >
-                <span>Explore Events</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] transition-transform group-hover:scale-125" />
+                <span className="whitespace-nowrap">Explore Events</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] transition-transform group-hover:scale-125 shrink-0" />
               </Link>
             </div>
 
-            {/* Mobile Hamburger Button */}
-            <div className="flex sm:hidden items-center gap-2">
+            {/* Mobile / Tablet Header Controls (Visible under xl) */}
+            <div className="flex xl:hidden items-center gap-2 shrink-0">
               {currentUser ? (
                 <button
                   onClick={openProfileModal}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold whitespace-nowrap shrink-0"
                 >
-                  <span className="w-4 h-4 rounded-full bg-[#C5FF35] text-black text-[10px] flex items-center justify-center font-bold">
+                  <span className="w-4 h-4 rounded-full bg-[#C5FF35] text-black text-[10px] flex items-center justify-center font-bold shrink-0">
                     {currentUser.fullName.charAt(0)}
                   </span>
-                  <span>@{currentUser.username}</span>
+                  <span className="whitespace-nowrap">@{currentUser.username}</span>
                 </button>
               ) : (
                 <button
                   onClick={() => openAuthModal("signin")}
-                  className="px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px] font-mono font-medium"
+                  className="px-3 py-1.5 rounded-full bg-white/10 text-white text-[11px] font-mono font-medium whitespace-nowrap shrink-0"
                 >
                   Sign In
                 </button>
               )}
 
+              <Link
+                href="/events"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 bg-white text-black text-[11px] font-mono font-bold rounded-full whitespace-nowrap shrink-0"
+              >
+                <span>Explore</span>
+                <span className="w-1 h-1 rounded-full bg-[#C5FF35]" />
+              </Link>
+
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-white hover:bg-white/10 rounded-full border border-white/10 transition-colors"
+                className="p-2 text-white hover:bg-white/10 rounded-full border border-white/10 transition-colors shrink-0"
                 aria-expanded={mobileMenuOpen}
                 aria-label="Toggle navigation menu"
               >
@@ -186,9 +191,9 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Navigation Drawer (Visible on screens < xl when toggled) */}
         {mobileMenuOpen && (
-          <div className="sm:hidden border-b border-white/10 bg-[#0C0D0E]/98 backdrop-blur-xl px-5 pt-4 pb-8 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="xl:hidden border-b border-white/10 bg-[#0C0D0E]/98 backdrop-blur-xl px-5 pt-4 pb-8 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Campus Header Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[11px] font-mono tracking-wider uppercase text-white/90 rounded-full w-full">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />

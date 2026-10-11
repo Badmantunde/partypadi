@@ -314,10 +314,10 @@ export default function HostEventStudioPage() {
                 )}
 
                 {/* Quick 1-Click Demo Login as Approved Campus Organizer */}
-                <div className="p-5 rounded-2xl bg-white/5 border border-white/10 text-left space-y-3">
-                  <div className="flex items-center justify-between">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 text-left space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#C5FF35] text-[#0C0D0E] font-bold text-sm flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-xl bg-[#C5FF35] text-[#0C0D0E] font-bold text-sm flex items-center justify-center shrink-0">
                         FA
                       </div>
                       <div>
@@ -332,7 +332,7 @@ export default function HostEventStudioPage() {
                     <button
                       type="button"
                       onClick={handleDemoOrganizerLogin}
-                      className="px-4 py-2 rounded-xl bg-[#C5FF35] text-[#0C0D0E] font-mono text-xs font-bold hover:bg-white transition-all shadow-md"
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#C5FF35] text-[#0C0D0E] font-mono text-xs font-bold hover:bg-white transition-all shadow-md shrink-0 text-center"
                     >
                       1-Click Demo Login
                     </button>

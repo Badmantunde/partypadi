@@ -155,3 +155,17 @@ export interface HostEventFormData {
   organizerPhone: string;
   description: string;
 }
+
+export interface EventPhoto {
+  id: string;
+  eventId: string;
+  url: string;
+  category: "all" | "red-carpet" | "crowd" | "stage" | "vip";
+  categoryLabel: string;
+  caption?: string;
+  photographer?: string;
+  uploadedBy: string; // organizer username
+  uploadedAt: string;
+  downloadsCount: number;
+}
+
