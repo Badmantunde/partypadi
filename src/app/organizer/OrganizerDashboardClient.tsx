@@ -352,9 +352,14 @@ export function OrganizerDashboardClient({
           <div className="space-y-6">
             {/* Brand Logo & Studio Badge */}
             <div className="flex items-center justify-between pt-1">
-              <Link href={getPublicUrl("/")} className="flex items-center gap-2 group transition-transform" title="Party Padi">
+              <button
+                type="button"
+                onClick={() => setActiveTab("overview")}
+                className="flex items-center gap-2 group transition-transform text-left cursor-pointer"
+                title="Organizer Overview"
+              >
                 <PartyPadiLogo theme="dark" size="md" />
-              </Link>
+              </button>
               <span className="px-2 py-0.5 rounded-full bg-[#D7F23A]/15 text-[#D7F23A] border border-[#D7F23A]/30 text-[10px] font-mono font-bold tracking-wider uppercase">
                 Studio
               </span>
@@ -481,9 +486,14 @@ export function OrganizerDashboardClient({
           <header className="sticky top-0 z-30 bg-[#0C0D0E]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="lg:hidden">
-                <Link href={getPublicUrl("/")}>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("overview")}
+                  className="text-left cursor-pointer"
+                  title="Organizer Overview"
+                >
                   <PartyPadiLogo theme="dark" size="sm" />
-                </Link>
+                </button>
               </div>
 
               <div>

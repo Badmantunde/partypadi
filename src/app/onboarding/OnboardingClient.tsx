@@ -22,7 +22,8 @@ import {
   User,
   Lock,
   Mail,
-  Compass,
+  Eye,
+  EyeOff,
   LogOut,
   ExternalLink,
 } from "lucide-react";
@@ -37,98 +38,113 @@ const CAMPUS_OPTIONS = [
   { id: "lasu", name: "LASU Ojo", label: "Lagos State University" },
 ];
 
+const VIBE_TAGS = [
+  "Parties & Raves",
+  "Campus Concerts",
+  "Department Galas",
+  "Cultural & Alte",
+  "Sound Clashes",
+  "Tech & Networking",
+];
+
+const STEPS = [
+  { number: 1, title: "Sign up your account" },
+  { number: 2, title: "Set up your workspace" },
+  { number: 3, title: "Set up your profile" },
+];
+
 export function OnboardingClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showToast } = useToast();
   const { currentUser, login, signup, switchRole, logout } = useAuth();
 
-  // Read initial role or mode from URL queries
   const initialRoleParam = searchParams.get("role") as RoleOption | null;
   const initialModeParam = searchParams.get("mode") as AuthMode | null;
 
-  const [selectedRole, setSelectedRole] = useState<RoleOption>(
-    initialRoleParam === "organizer" ? "organizer" : "partygoer"
-  );
-  const [step, setStep] = useState<"choose_role" | "auth_form">(
-    initialRoleParam ? "auth_form" : "choose_role"
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(
+    initialRoleParam ? 2 : 1
   );
   const [authMode, setAuthMode] = useState<AuthMode>(
     initialModeParam === "signin" ? "signin" : "signup"
   );
+  const [selectedRole, setSelectedRole] = useState<RoleOption>(
+    initialRoleParam === "organizer" ? "organizer" : "partygoer"
+  );
 
   // Form states
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [campus, setCampus] = useState("OOU Ago-Iwoye");
+  const [selectedVibes, setSelectedVibes] = useState<string[]>([
+    "Parties & Raves",
+    "Campus Concerts",
+  ]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // If role param changes in URL
   useEffect(() => {
     if (initialRoleParam === "organizer" || initialRoleParam === "partygoer") {
       setSelectedRole(initialRoleParam);
-      setStep("auth_form");
     }
   }, [initialRoleParam]);
 
-  const handleSelectRole = (role: RoleOption) => {
-    setSelectedRole(role);
-    setStep("auth_form");
+  const toggleVibe = (tag: string) => {
+    setSelectedVibes((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
   };
 
-  const handleAuthSubmit = async (e: React.FormEvent) => {
+  // Step 1: Account credentials submission
+  const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email.trim() || !password.trim()) {
       showToast({
         type: "error",
-        title: "Missing Fields",
-        message: "Please enter your email and password to proceed.",
+        title: "Required Fields Missing",
+        message: "Please enter your email and password.",
       });
       return;
     }
 
-    if (authMode === "signup" && !fullName.trim()) {
+    if (password.length < 8) {
       showToast({
         type: "error",
-        title: "Full Name Required",
-        message: "Please provide your full name or organizer brand name.",
+        title: "Password Too Short",
+        message: "Password must be at least 8 characters.",
       });
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      if (authMode === "signup") {
-        const username = email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "");
-        signup({
-          fullName,
-          username: username || `user_${Date.now().toString().slice(-4)}`,
-          email,
-          role: selectedRole,
-          campus,
-        });
+    if (authMode === "signup") {
+      if (!firstName.trim() || !lastName.trim()) {
         showToast({
-          type: "success",
-          title: "Account Created",
-          message: `Welcome to Party Padi! Entering your ${
-            selectedRole === "organizer" ? "Creator Studio" : "Partygoer Dashboard"
-          }.`,
+          type: "error",
+          title: "Name Required",
+          message: "Please provide your first and last name.",
         });
-      } else {
-        login(email);
-        switchRole(selectedRole);
-        showToast({
-          type: "success",
-          title: "Welcome Back",
-          message: `Logged in successfully as ${
-            selectedRole === "organizer" ? "Organizer" : "Partygoer"
-          }.`,
-        });
+        return;
       }
+      // Advance to Step 2 (Workspace / Role Selection)
+      setCurrentStep(2);
+    } else {
+      // Direct sign in
+      handleDirectSignIn();
+    }
+  };
 
-      // Redirect directly into the dedicated app portal
+  const handleDirectSignIn = () => {
+    setIsLoading(true);
+    try {
+      login(email);
+      showToast({
+        type: "success",
+        title: "Welcome Back",
+        message: "Signed in to your Party Padi account.",
+      });
       if (selectedRole === "organizer") {
         router.push("/organizer");
       } else {
@@ -137,7 +153,7 @@ export function OnboardingClient() {
     } catch {
       showToast({
         type: "error",
-        title: "Authentication Failed",
+        title: "Sign In Failed",
         message: "Unable to sign in. Please check your credentials.",
       });
     } finally {
@@ -145,6 +161,52 @@ export function OnboardingClient() {
     }
   };
 
+  // Step 2 -> Step 3
+  const handleStep2Submit = () => {
+    setCurrentStep(3);
+  };
+
+  // Step 3 -> Finish Onboarding and enter dashboard
+  const handleFinishOnboarding = () => {
+    setIsLoading(true);
+    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim() || "Party Padi Member";
+    const username = email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "");
+
+    try {
+      signup({
+        fullName,
+        username: username || `padi_${Date.now().toString().slice(-4)}`,
+        email,
+        role: selectedRole,
+        campus,
+        bio: `${campus} · ${selectedVibes.slice(0, 2).join(" & ")} vibes`,
+      });
+
+      showToast({
+        type: "success",
+        title: "Account Activated!",
+        message: `Welcome ${firstName}! Launching your ${
+          selectedRole === "organizer" ? "Creator Studio" : "Partygoer Dashboard"
+        }...`,
+      });
+
+      if (selectedRole === "organizer") {
+        router.push("/organizer");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch {
+      showToast({
+        type: "error",
+        title: "Registration Error",
+        message: "Could not complete account setup. Please retry.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 1-Click Fast Demo Logins
   const handleDemoLogin = (role: RoleOption) => {
     setIsLoading(true);
     try {
@@ -172,18 +234,9 @@ export function OnboardingClient() {
     }
   };
 
-  const handleContinueExisting = () => {
-    if (!currentUser) return;
-    if (currentUser.role === "organizer") {
-      router.push("/organizer");
-    } else {
-      router.push("/dashboard");
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#0C0D0E] text-white flex flex-col justify-between selection:bg-[#00D54B] selection:text-black">
-      {/* Top App Header */}
+    <div className="min-h-screen bg-[#070809] text-white flex flex-col justify-between selection:bg-[#00D54B] selection:text-black">
+      {/* Top Bar with Brand & Public Website Link */}
       <header className="w-full border-b border-white/10 bg-[#0C0D0E]/80 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -194,14 +247,14 @@ export function OnboardingClient() {
             >
               <PartyPadiLogo theme="dark" size="sm" />
             </Link>
-            <span className="text-white/30 hidden sm:inline">•</span>
+            <span className="text-white/20 hidden sm:inline">•</span>
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-wider text-neutral-300">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00D54B] animate-pulse" />
               App Portal
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Link
               href={getPublicUrl("/")}
               className="text-xs font-mono text-neutral-400 hover:text-white transition-colors flex items-center gap-1.5"
@@ -213,13 +266,13 @@ export function OnboardingClient() {
         </div>
       </header>
 
-      {/* Main Interactive Stage */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col justify-center">
-        {/* If user already has an active session */}
+      {/* Main Center Stage */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-10">
         {currentUser ? (
-          <div className="max-w-lg mx-auto w-full p-6 sm:p-8 rounded-3xl bg-[#141517] border border-white/10 shadow-2xl space-y-6 text-center animate-in fade-in duration-300">
-            <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto">
-              <User className="w-8 h-8 text-[#00D54B]" />
+          /* Active Session Card */
+          <div className="max-w-md w-full p-6 sm:p-8 rounded-3xl bg-[#0C0D0E] border border-white/10 shadow-2xl space-y-6 text-center animate-in fade-in duration-300">
+            <div className="w-16 h-16 rounded-2xl bg-[#00D54B]/10 border border-[#00D54B]/30 flex items-center justify-center mx-auto text-[#00D54B]">
+              <User className="w-8 h-8" />
             </div>
 
             <div className="space-y-1.5">
@@ -236,7 +289,13 @@ export function OnboardingClient() {
 
             <div className="space-y-3 pt-2">
               <button
-                onClick={handleContinueExisting}
+                onClick={() => {
+                  if (currentUser.role === "organizer") {
+                    router.push("/organizer");
+                  } else {
+                    router.push("/dashboard");
+                  }
+                }}
                 className="w-full py-3.5 px-6 rounded-2xl bg-[#00D54B] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center justify-center gap-2 shadow-lg"
               >
                 <span>
@@ -276,261 +335,199 @@ export function OnboardingClient() {
             </div>
           </div>
         ) : (
-          <div className="space-y-8 animate-in fade-in duration-300">
-            {/* Step 1: Role Selection Cards */}
-            {step === "choose_role" && (
-              <div className="space-y-8">
-                <div className="text-center space-y-2 max-w-xl mx-auto">
-                  <span className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-wider text-[#00D54B] font-semibold">
-                    CAMPUS ONBOARDING
+          /* Split-Screen Reference Modal Container */
+          <div className="w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0C0D0E] shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[580px] animate-in fade-in duration-300">
+            {/* ========================================================================= */}
+            {/* LEFT SIDE: AMBIENT NEON GLOW & VERTICAL STEPPER (INSPIRED BY REFERENCE)  */}
+            {/* ========================================================================= */}
+            <div className="lg:col-span-5 relative p-8 sm:p-10 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10 bg-black min-h-[340px] lg:min-h-full">
+              {/* Vibrant Atmospheric Mesh Glow Overlay (Neon Violet + Neon Lime + Padi Green) */}
+              <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+                {/* Upper Left Deep Vibe Violet Bloom */}
+                <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-[#7B3FFF]/50 blur-[90px]" />
+                {/* Central Soft Neon Lime Aura */}
+                <div className="absolute top-1/3 left-1/4 w-72 h-72 rounded-full bg-[#C5FF35]/25 blur-[100px]" />
+                {/* Lower Right Padi Green Radiance */}
+                <div className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full bg-[#00D54B]/35 blur-[95px]" />
+                {/* Ambient Subtle Vignette */}
+                <div className="absolute inset-0 bg-radial from-transparent via-black/25 to-black/85" />
+              </div>
+
+              {/* Top Logo & Branding */}
+              <div className="relative z-10 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#C5FF35] shadow-[0_0_12px_#C5FF35]" />
+                  <span className="font-display font-black text-lg text-white tracking-tight">
+                    Party Padi
                   </span>
-                  <h1 className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
-                    How do you want to use Party Padi?
-                  </h1>
-                  <p className="text-xs sm:text-sm text-neutral-400">
-                    Choose your primary role. You can switch between experiences anytime inside your workspace.
+                </div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">
+                  Campus Beta
+                </span>
+              </div>
+
+              {/* Center Stage: Title & Step Indicator Capsules */}
+              <div className="relative z-10 my-auto py-8 space-y-6">
+                <div className="space-y-2">
+                  <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight">
+                    Get Started with Us
+                  </h2>
+                  <p className="text-xs sm:text-sm text-neutral-300 font-sans max-w-xs leading-relaxed">
+                    Complete these easy steps to register your campus account.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                  {/* Option 1: Partygoer */}
-                  <div
-                    onClick={() => handleSelectRole("partygoer")}
-                    className="group relative p-6 sm:p-8 rounded-3xl bg-[#141517] border border-white/10 hover:border-[#00D54B] transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-6 shadow-xl hover:shadow-[0_0_30px_rgba(0,213,75,0.15)] hover:-translate-y-1"
-                  >
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="w-12 h-12 rounded-2xl bg-[#00D54B]/10 border border-[#00D54B]/30 flex items-center justify-center text-[#00D54B]">
-                          <Sparkles className="w-6 h-6" />
+                {/* Vertical Stepper Capsules Stack (Directly from Reference) */}
+                <div className="space-y-3 max-w-sm pt-2">
+                  {STEPS.map((stepItem) => {
+                    const isActive = currentStep === stepItem.number;
+                    const isCompleted = currentStep > stepItem.number;
+
+                    return (
+                      <div
+                        key={stepItem.number}
+                        onClick={() => {
+                          // Allow stepping back to previous completed steps
+                          if (stepItem.number < currentStep) {
+                            setCurrentStep(stepItem.number as 1 | 2 | 3);
+                          }
+                        }}
+                        className={`w-full py-3 px-4 rounded-2xl flex items-center gap-3 transition-all duration-200 select-none ${
+                          isActive
+                            ? "bg-white text-black font-bold shadow-xl scale-[1.02]"
+                            : isCompleted
+                            ? "bg-white/10 border border-[#00D54B]/40 text-white cursor-pointer hover:bg-white/15"
+                            : "bg-white/5 border border-white/10 text-white/50"
+                        }`}
+                      >
+                        {/* Number Badge or Checkmark */}
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-mono font-bold shrink-0 ${
+                            isActive
+                              ? "bg-black text-white"
+                              : isCompleted
+                              ? "bg-[#00D54B] text-black"
+                              : "bg-white/10 text-white/60"
+                          }`}
+                        >
+                          {isCompleted ? (
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                          ) : (
+                            stepItem.number
+                          )}
                         </div>
-                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-400">
-                          PARTYGOER
+
+                        {/* Title */}
+                        <span className="text-xs font-mono font-semibold truncate">
+                          {stepItem.title}
                         </span>
                       </div>
-
-                      <div className="space-y-1.5">
-                        <h2 className="text-2xl font-display font-bold text-white group-hover:text-[#00D54B] transition-colors">
-                          I&apos;m a Partygoer
-                        </h2>
-                        <p className="text-xs text-neutral-400 leading-relaxed">
-                          Discover campus parties, raves, and cultural events. Reserve digital ticket passes, make squad plans with Padi Circles, and support favorite hosts.
-                        </p>
-                      </div>
-
-                      <div className="pt-2 space-y-2 text-xs font-mono text-neutral-300">
-                        <div className="flex items-center gap-2">
-                          <Ticket className="w-3.5 h-3.5 text-[#00D54B] shrink-0" />
-                          <span>Instant digital QR passes to phone</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Users2 className="w-3.5 h-3.5 text-[#00D54B] shrink-0" />
-                          <span>Padi Circles & squad coordination</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Gift className="w-3.5 h-3.5 text-[#00D54B] shrink-0" />
-                          <span>Gifter badges & creator recognition</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="w-full py-3 rounded-2xl bg-white text-black font-mono text-xs font-bold group-hover:bg-[#00D54B] transition-all flex items-center justify-center gap-2 shadow-md"
-                    >
-                      <span>Continue as Partygoer</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Option 2: Event Organizer */}
-                  <div
-                    onClick={() => handleSelectRole("organizer")}
-                    className="group relative p-6 sm:p-8 rounded-3xl bg-[#141517] border border-white/10 hover:border-[#D7F23A] transition-all duration-300 cursor-pointer flex flex-col justify-between space-y-6 shadow-xl hover:shadow-[0_0_30px_rgba(215,242,58,0.15)] hover:-translate-y-1"
-                  >
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="w-12 h-12 rounded-2xl bg-[#D7F23A]/10 border border-[#D7F23A]/30 flex items-center justify-center text-[#D7F23A]">
-                          <Building2 className="w-6 h-6" />
-                        </div>
-                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-[#D7F23A]/15 text-[#D7F23A] border border-[#D7F23A]/30">
-                          0% LAUNCH FEE
-                        </span>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <h2 className="text-2xl font-display font-bold text-white group-hover:text-[#D7F23A] transition-colors">
-                          I&apos;m an Event Organizer
-                        </h2>
-                        <p className="text-xs text-neutral-400 leading-relaxed">
-                          Host campus raves, live concerts, and dinners. Sell out venues with 0% platform fee, scan passes in real time at the door, and track attendee telemetry.
-                        </p>
-                      </div>
-
-                      <div className="pt-2 space-y-2 text-xs font-mono text-neutral-300">
-                        <div className="flex items-center gap-2">
-                          <ShieldCheck className="w-3.5 h-3.5 text-[#D7F23A] shrink-0" />
-                          <span>0% Platform fee during campus beta</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <QrCode className="w-3.5 h-3.5 text-[#D7F23A] shrink-0" />
-                          <span>Real-time door scanner & gate verify</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <TrendingUp className="w-3.5 h-3.5 text-[#D7F23A] shrink-0" />
-                          <span>Live attendee telemetry & waitlist control</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="w-full py-3 rounded-2xl bg-white text-black font-mono text-xs font-bold group-hover:bg-[#D7F23A] transition-all flex items-center justify-center gap-2 shadow-md"
-                    >
-                      <span>Continue as Organizer</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Instant Quick Demo Shortcuts */}
-                <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-3 text-xs font-mono text-neutral-400">
-                  <span>Fast Demo Shortcuts:</span>
-                  <button
-                    onClick={() => handleDemoLogin("partygoer")}
-                    className="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 text-[#00D54B] border border-white/10 transition-colors"
-                  >
-                    Demo Partygoer (Tade) →
-                  </button>
-                  <button
-                    onClick={() => handleDemoLogin("organizer")}
-                    className="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 text-[#D7F23A] border border-white/10 transition-colors"
-                  >
-                    Demo Organizer (Sub-Zero) →
-                  </button>
+                    );
+                  })}
                 </div>
               </div>
-            )}
 
-            {/* Step 2: Auth Form */}
-            {step === "auth_form" && (
-              <div className="max-w-md mx-auto w-full space-y-6">
-                {/* Back to Role Selector */}
-                <button
-                  type="button"
-                  onClick={() => setStep("choose_role")}
-                  className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-400 hover:text-white transition-colors"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Change Role ({selectedRole === "organizer" ? "Organizer" : "Partygoer"})</span>
-                </button>
+              {/* Bottom Guarantee Badge */}
+              <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+                <span>0% Commission During Campus Beta</span>
+                <span className="text-[#00D54B]">● Live</span>
+              </div>
+            </div>
 
-                <div className="p-6 sm:p-8 rounded-3xl bg-[#141517] border border-white/10 shadow-2xl space-y-6">
-                  {/* Header Badge & Title */}
-                  <div className="space-y-1.5 text-center">
-                    <span
-                      className={`inline-block px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
-                        selectedRole === "organizer"
-                          ? "bg-[#D7F23A]/15 text-[#D7F23A] border border-[#D7F23A]/30"
-                          : "bg-[#00D54B]/15 text-[#00D54B] border border-[#00D54B]/30"
-                      }`}
-                    >
-                      {selectedRole === "organizer" ? "ORGANIZER STUDIO" : "PARTYGOER PORTAL"}
-                    </span>
-                    <h2 className="text-2xl font-display font-bold text-white tracking-tight">
-                      {authMode === "signup" ? "Create your account" : "Sign in to your account"}
-                    </h2>
+            {/* ========================================================================= */}
+            {/* RIGHT SIDE: AUTHENTICATION & FORM STAGE                                  */}
+            {/* ========================================================================= */}
+            <div className="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-center bg-[#0C0D0E]">
+              {/* STEP 1: ACCOUNT CREDENTIALS (SIGN UP OR SIGN IN) */}
+              {currentStep === 1 && (
+                <div className="space-y-6 max-w-md mx-auto w-full animate-in fade-in duration-200">
+                  {/* Top Header */}
+                  <div className="space-y-1.5">
+                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
+                      {authMode === "signup" ? "Sign Up Account" : "Sign In to Account"}
+                    </h3>
                     <p className="text-xs text-neutral-400">
-                      {selectedRole === "organizer"
-                        ? "Manage campus events, ticket tiers, and gate telemetry."
-                        : "Discover vibes, grab passes, and make memories."}
+                      {authMode === "signup"
+                        ? "Enter your personal data to create your account."
+                        : "Welcome back! Enter your student or organizer credentials."}
                     </p>
                   </div>
 
-                  {/* Mode Tabs (Sign Up vs Sign In) */}
-                  <div className="flex rounded-full bg-white/5 p-1 border border-white/10">
+                  {/* Fast 1-Click Demo / Social Logins (Reference Inspired) */}
+                  <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
-                      onClick={() => setAuthMode("signup")}
-                      className={`flex-1 py-1.5 text-xs font-mono rounded-full font-bold transition-all ${
-                        authMode === "signup"
-                          ? "bg-white text-black shadow-xs"
-                          : "text-neutral-400 hover:text-white"
-                      }`}
+                      onClick={() => handleDemoLogin("partygoer")}
+                      className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-neutral-300 hover:text-white transition-all flex items-center justify-center gap-2"
                     >
-                      Create Account
+                      <Sparkles className="w-3.5 h-3.5 text-[#00D54B]" />
+                      <span>Demo Partygoer</span>
                     </button>
+
                     <button
                       type="button"
-                      onClick={() => setAuthMode("signin")}
-                      className={`flex-1 py-1.5 text-xs font-mono rounded-full font-bold transition-all ${
-                        authMode === "signin"
-                          ? "bg-white text-black shadow-xs"
-                          : "text-neutral-400 hover:text-white"
-                      }`}
+                      onClick={() => handleDemoLogin("organizer")}
+                      className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-neutral-300 hover:text-white transition-all flex items-center justify-center gap-2"
                     >
-                      Sign In
+                      <Building2 className="w-3.5 h-3.5 text-[#D7F23A]" />
+                      <span>Demo Organizer</span>
                     </button>
                   </div>
 
-                  {/* Input Form */}
-                  <form onSubmit={handleAuthSubmit} className="space-y-4">
+                  {/* Divider Line */}
+                  <div className="relative flex items-center justify-center">
+                    <div className="w-full border-t border-white/10" />
+                    <span className="absolute px-3 bg-[#0C0D0E] text-[11px] font-mono text-neutral-500 uppercase">
+                      Or
+                    </span>
+                  </div>
+
+                  {/* Form */}
+                  <form onSubmit={handleStep1Submit} className="space-y-4">
                     {authMode === "signup" && (
-                      <div className="space-y-1">
-                        <label className="text-[11px] font-mono text-neutral-300">
-                          {selectedRole === "organizer" ? "Organizer / Brand Name" : "Your Full Name"}
-                        </label>
-                        <div className="relative">
-                          <User className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-neutral-300">
+                            First Name
+                          </label>
                           <input
                             type="text"
                             required
-                            placeholder={
-                              selectedRole === "organizer"
-                                ? "e.g. Sub-Zero Events"
-                                : "e.g. Tade Adeleke"
-                            }
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#00D54B] transition-colors"
+                            placeholder="eg. Tade"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] transition-colors"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-neutral-300">
+                            Last Name
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="eg. Adeleke"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] transition-colors"
                           />
                         </div>
                       </div>
                     )}
 
-                    {authMode === "signup" && (
-                      <div className="space-y-1">
-                        <label className="text-[11px] font-mono text-neutral-300">
-                          Campus Location
-                        </label>
-                        <select
-                          value={campus}
-                          onChange={(e) => setCampus(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-[#141517] border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-[#00D54B] transition-colors"
-                        >
-                          {CAMPUS_OPTIONS.map((c) => (
-                            <option key={c.id} value={c.name} className="bg-[#141517] text-white">
-                              {c.name} ({c.label})
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-
                     <div className="space-y-1">
                       <label className="text-[11px] font-mono text-neutral-300">
-                        {selectedRole === "organizer" ? "Brand / Contact Email" : "Student Email"}
+                        Email Address
                       </label>
-                      <div className="relative">
-                        <Mail className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                        <input
-                          type="email"
-                          required
-                          placeholder="e.g. tade@oou.edu.ng"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#00D54B] transition-colors"
-                        />
-                      </div>
+                      <input
+                        type="email"
+                        required
+                        placeholder="eg. tade@oou.edu.ng"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] transition-colors"
+                      />
                     </div>
 
                     <div className="space-y-1">
@@ -538,66 +535,262 @@ export function OnboardingClient() {
                         Password
                       </label>
                       <div className="relative">
-                        <Lock className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           required
-                          placeholder="••••••••"
+                          placeholder="Enter your password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#00D54B] transition-colors"
+                          className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] transition-colors"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </button>
                       </div>
+                      <p className="text-[10px] font-mono text-neutral-500">
+                        Must be at least 8 characters.
+                      </p>
                     </div>
 
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className={`w-full py-3.5 rounded-2xl font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 ${
-                        selectedRole === "organizer"
-                          ? "bg-[#D7F23A] text-black hover:bg-white"
-                          : "bg-[#00D54B] text-black hover:bg-[#D7F23A]"
-                      }`}
+                      className="w-full py-3.5 rounded-2xl bg-white text-black hover:bg-[#C5FF35] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 mt-2"
                     >
-                      {isLoading ? (
-                        <span>Authenticating...</span>
-                      ) : (
-                        <>
-                          <span>
-                            {authMode === "signup"
-                              ? `Create ${selectedRole === "organizer" ? "Organizer" : "Partygoer"} Account`
-                              : "Sign In"}
-                          </span>
-                          <ArrowRight className="w-4 h-4" />
-                        </>
-                      )}
+                      <span>
+                        {authMode === "signup" ? "Sign Up" : "Sign In"}
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
                     </button>
                   </form>
 
-                  {/* 1-Click Demo Quick Fill */}
-                  <div className="pt-3 border-t border-white/10 space-y-2">
-                    <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider block text-center">
-                      OR INSTANT 1-CLICK ACCESS
+                  {/* Mode Switch Footer */}
+                  <div className="pt-2 text-center text-xs font-mono text-neutral-400">
+                    {authMode === "signup" ? (
+                      <span>
+                        Already have an account?{" "}
+                        <button
+                          type="button"
+                          onClick={() => setAuthMode("signin")}
+                          className="text-white hover:text-[#C5FF35] font-bold underline underline-offset-4"
+                        >
+                          Log in
+                        </button>
+                      </span>
+                    ) : (
+                      <span>
+                        Don&apos;t have an account?{" "}
+                        <button
+                          type="button"
+                          onClick={() => setAuthMode("signup")}
+                          className="text-white hover:text-[#C5FF35] font-bold underline underline-offset-4"
+                        >
+                          Sign up
+                        </button>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 2: SET UP YOUR WORKSPACE / ROLE SELECTION */}
+              {currentStep === 2 && (
+                <div className="space-y-6 max-w-md mx-auto w-full animate-in fade-in duration-200">
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#00D54B]">
+                      STEP 2 OF 3
                     </span>
+                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
+                      Set Up Your Workspace
+                    </h3>
+                    <p className="text-xs text-neutral-400">
+                      Choose how you will participate in the Party Padi ecosystem.
+                    </p>
+                  </div>
+
+                  {/* Role Choice Cards */}
+                  <div className="space-y-3">
+                    {/* Option 1: Partygoer */}
+                    <div
+                      onClick={() => setSelectedRole("partygoer")}
+                      className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${
+                        selectedRole === "partygoer"
+                          ? "bg-[#00D54B]/10 border-[#00D54B] ring-1 ring-[#00D54B]"
+                          : "bg-white/5 border-white/10 hover:border-white/20"
+                      }`}
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#00D54B]/15 text-[#00D54B] flex items-center justify-center shrink-0 mt-0.5">
+                        <Sparkles className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-display font-bold text-sm text-white">
+                            Partygoer
+                          </h4>
+                          <span className="text-[10px] font-mono text-[#00D54B] font-bold uppercase">
+                            Campus Discovery
+                          </span>
+                        </div>
+                        <p className="text-xs text-neutral-400">
+                          Discover events, reserve digital passes, make friend circles, and support hosts.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Option 2: Event Organizer */}
+                    <div
+                      onClick={() => setSelectedRole("organizer")}
+                      className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${
+                        selectedRole === "organizer"
+                          ? "bg-[#D7F23A]/10 border-[#D7F23A] ring-1 ring-[#D7F23A]"
+                          : "bg-white/5 border-white/10 hover:border-white/20"
+                      }`}
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-[#D7F23A]/15 text-[#D7F23A] flex items-center justify-center shrink-0 mt-0.5">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-display font-bold text-sm text-white">
+                            Event Organizer
+                          </h4>
+                          <span className="text-[10px] font-mono text-[#D7F23A] font-bold uppercase">
+                            0% Platform Fee
+                          </span>
+                        </div>
+                        <p className="text-xs text-neutral-400">
+                          Publish events, manage ticket tiers, scan passes at the door, and track telemetry.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex items-center gap-3 pt-2">
                     <button
                       type="button"
-                      onClick={() => handleDemoLogin(selectedRole)}
-                      className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-neutral-300 hover:text-white transition-colors flex items-center justify-center gap-2"
+                      onClick={() => setCurrentStep(1)}
+                      className="py-3 px-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-neutral-300 transition-colors flex items-center gap-1.5"
                     >
-                      <span>
-                        Use Demo {selectedRole === "organizer" ? "Organizer" : "Partygoer"} Credentials
-                      </span>
-                      <span>→</span>
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleStep2Submit}
+                      className="flex-1 py-3 rounded-2xl bg-white text-black hover:bg-[#C5FF35] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg"
+                    >
+                      <span>Continue to Profile</span>
+                      <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* STEP 3: SET UP YOUR PROFILE (CAMPUS & VIBES) */}
+              {currentStep === 3 && (
+                <div className="space-y-6 max-w-md mx-auto w-full animate-in fade-in duration-200">
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C5FF35]">
+                      STEP 3 OF 3
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
+                      Set Up Your Profile
+                    </h3>
+                    <p className="text-xs text-neutral-400">
+                      Select your university campus and favorite vibe preferences.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Campus Selector */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-neutral-300">
+                        Primary Campus
+                      </label>
+                      <select
+                        value={campus}
+                        onChange={(e) => setCampus(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#141517] border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-[#C5FF35] transition-colors"
+                      >
+                        {CAMPUS_OPTIONS.map((c) => (
+                          <option key={c.id} value={c.name} className="bg-[#141517] text-white">
+                            {c.name} ({c.label})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Vibe Tags Pills */}
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-mono text-neutral-300 block">
+                        What vibes are you into?
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {VIBE_TAGS.map((tag) => {
+                          const isSelected = selectedVibes.includes(tag);
+                          return (
+                            <button
+                              key={tag}
+                              type="button"
+                              onClick={() => toggleVibe(tag)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all ${
+                                isSelected
+                                  ? "bg-[#00D54B] text-black font-bold shadow-sm"
+                                  : "bg-white/5 text-neutral-400 hover:text-white border border-white/10"
+                              }`}
+                            >
+                              {tag}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex items-center gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="py-3 px-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-neutral-300 transition-colors flex items-center gap-1.5"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={isLoading}
+                      onClick={handleFinishOnboarding}
+                      className="flex-1 py-3 rounded-2xl bg-[#00D54B] text-black hover:bg-[#D7F23A] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+                    >
+                      <span>
+                        {isLoading
+                          ? "Setting Up Workspace..."
+                          : `Launch My ${selectedRole === "organizer" ? "Creator Studio" : "Dashboard"}`}
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>
 
-      {/* Footer Branding */}
+      {/* Clean Footer */}
       <footer className="w-full border-t border-white/10 py-6 text-center text-xs font-mono text-neutral-500">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>© {new Date().getFullYear()} Party Padi Inc. All rights reserved.</p>

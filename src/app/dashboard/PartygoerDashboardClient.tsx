@@ -304,9 +304,14 @@ export function PartygoerDashboardClient({
           <div className="space-y-6">
             {/* Logo */}
             <div className="flex items-center justify-between pt-1">
-              <Link href={getPublicUrl("/")} className="flex items-center gap-2 group transition-transform" title="Party Padi">
+              <button
+                type="button"
+                onClick={() => setActiveTab("for_you")}
+                className="flex items-center gap-2 group transition-transform text-left cursor-pointer"
+                title="Dashboard Overview"
+              >
                 <PartyPadiLogo theme="dark" size="md" />
-              </Link>
+              </button>
               <span className="px-2 py-0.5 rounded-full bg-[#00D54B]/15 text-[#00D54B] border border-[#00D54B]/30 text-[10px] font-mono font-bold tracking-wider uppercase">
                 Partygoer
               </span>
@@ -446,9 +451,14 @@ export function PartygoerDashboardClient({
           <header className="sticky top-0 z-30 bg-[#0C0D0E]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-3.5 sm:py-4 flex items-center justify-between gap-4">
             {/* Mobile Brand & Logo */}
             <div className="flex lg:hidden items-center gap-3">
-              <Link href="/">
+              <button
+                type="button"
+                onClick={() => setActiveTab("for_you")}
+                className="text-left cursor-pointer"
+                title="Dashboard Overview"
+              >
                 <PartyPadiLogo theme="dark" size="sm" />
-              </Link>
+              </button>
             </div>
 
             {/* Greeting & Campus Selector */}
