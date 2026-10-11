@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   X,
   User,
@@ -16,8 +17,17 @@ import {
   Check,
   Award,
   Sparkles,
+  Heart,
+  ShieldCheck,
+  ArrowRight,
 } from "lucide-react";
-import { useAuth, GIFTER_LEVEL_INFO } from "@/context/AuthContext";
+import {
+  useAuth,
+  GIFTER_LEVEL_INFO,
+  getGifterLevel,
+  getNextLevelProgress,
+} from "@/context/AuthContext";
+import { GifterBadge } from "./GifterBadge";
 import { useToast } from "./Toast";
 import { EVENTS } from "@/data/events";
 
@@ -33,10 +43,13 @@ export function ProfileModal() {
     openCircleModal,
     rsvpEvent,
     allUsers,
+    gifts,
+    getLeaderboard,
+    updatePrivacySettings,
   } = useAuth();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<"friends" | "circles" | "tickets">("friends");
+  const [activeTab, setActiveTab] = useState<"friends" | "circles" | "tickets" | "gifter">("friends");
   const [newFriendTag, setNewFriendTag] = useState("");
 
   if (!profileModalOpen || !currentUser) return null;
@@ -158,7 +171,7 @@ export function ProfileModal() {
         </div>
 
         {/* Nav Tabs */}
-        <div className="grid grid-cols-3 p-1 bg-white/5 border border-white/10 rounded-full my-3 text-[11px] sm:text-xs font-mono shrink-0">
+        <div className="grid grid-cols-4 p-1 bg-white/5 border border-white/10 rounded-full my-3 text-[10px] sm:text-xs font-mono shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab("friends")}
@@ -168,8 +181,8 @@ export function ProfileModal() {
                 : "text-white/70 hover:text-white"
             }`}
           >
-            <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            <span>Padis ({currentUser.friends.length})</span>
+            <Users className="w-3 h-3" />
+            <span className="truncate">Padis ({currentUser.friends.length})</span>
           </button>
 
           <button
@@ -181,8 +194,8 @@ export function ProfileModal() {
                 : "text-white/70 hover:text-white"
             }`}
           >
-            <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            <span>Circles ({myCircles.length})</span>
+            <Calendar className="w-3 h-3" />
+            <span className="truncate">Circles ({myCircles.length})</span>
           </button>
 
           <button
@@ -194,8 +207,21 @@ export function ProfileModal() {
                 : "text-white/70 hover:text-white"
             }`}
           >
-            <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            <span>Passes ({currentUser.eventsAttending.length})</span>
+            <Eye className="w-3 h-3" />
+            <span className="truncate">Passes ({currentUser.eventsAttending.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("gifter")}
+            className={`py-1.5 sm:py-2 rounded-full transition-all text-center font-bold flex items-center justify-center gap-1 ${
+              activeTab === "gifter"
+                ? "bg-[#C5FF35] text-[#0C0D0E] shadow-sm"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            <Heart className="w-3 h-3" />
+            <span className="truncate">Gifter</span>
           </button>
         </div>
 
@@ -450,6 +476,209 @@ export function ProfileModal() {
                   );
                 })
               )}
+            </div>
+          )}
+
+          {/* TAB 4: PADI GIFTER & PATRON STATUS */}
+          {activeTab === "gifter" && (
+            <div className="space-y-4">
+              {(() => {
+                const totalGifted = currentUser.totalGifted || 0;
+                const level = getGifterLevel(totalGifted);
+                const progress = getNextLevelProgress(totalGifted);
+                const isShowPublic = currentUser.showPublicGifts !== false;
+
+                const myGifts = gifts.filter(
+                  (g) =>
+                    g.userId === currentUser.id ||
+                    (g.gifterUsername &&
+                      g.gifterUsername.toLowerCase() === currentUser.username.toLowerCase())
+                );
+
+                const eventsBacked = new Set(
+                  myGifts.filter((g) => g.eventId).map((g) => g.eventId)
+                ).size;
+                const organizersBacked = new Set(
+                  myGifts
+                    .filter((g) => g.organizerId || g.organizerName)
+                    .map((g) => g.organizerId || g.organizerName)
+                ).size;
+
+                const monthlyBoard = getLeaderboard({ period: "month" });
+                const monthlyRankIndex = monthlyBoard.findIndex(
+                  (e) =>
+                    e.userId === currentUser.id ||
+                    (e.username &&
+                      e.username.toLowerCase() === currentUser.username.toLowerCase())
+                );
+                const monthlyRank = monthlyRankIndex >= 0 ? monthlyRankIndex + 1 : null;
+
+                return (
+                  <div className="space-y-4">
+                    {/* Badge Hero Card */}
+                    <div className="relative p-5 rounded-3xl bg-white/[0.04] border border-white/10 flex flex-col items-center text-center space-y-3">
+                      <GifterBadge level={level} size="lg" />
+
+                      {/* Next Level Milestone Progress */}
+                      <div className="w-full pt-2 border-t border-white/10 space-y-1.5">
+                        <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                          <span>{progress.text}</span>
+                          <span>{progress.percent}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-amber-400 to-[#C5FF35] rounded-full transition-all duration-300"
+                            style={{ width: `${progress.percent}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Telemetry Stats Grid */}
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                          Lifetime Contributions
+                        </span>
+                        <span className="font-mono text-base font-bold text-[#C5FF35]">
+                          ₦{totalGifted.toLocaleString()}
+                        </span>
+                      </div>
+
+                      <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                          Monthly Campus Rank
+                        </span>
+                        <span className="font-mono text-base font-bold text-amber-300">
+                          {monthlyRank ? `#${monthlyRank} this month` : "Unranked"}
+                        </span>
+                      </div>
+
+                      <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                          Events Supported
+                        </span>
+                        <span className="font-mono text-base font-bold text-white">
+                          {eventsBacked} Event{eventsBacked !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+
+                      <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                          Organizers Supported
+                        </span>
+                        <span className="font-mono text-base font-bold text-white">
+                          {organizersBacked} Crew{organizersBacked !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Privacy Settings Toggle */}
+                    <div className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10">
+                      <div className="space-y-0.5 max-w-[80%]">
+                        <span className="text-xs text-white block font-medium">
+                          Show Lifetime Support on Leaderboard
+                        </span>
+                        <span className="text-[10px] text-neutral-400 block leading-tight">
+                          {isShowPublic
+                            ? "Your badge and total support appear on public campus leaderboards."
+                            : "Private mode: You appear as 'Anonymous Padi' on all public rankings."}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          updatePrivacySettings(!isShowPublic);
+                          showToast({
+                            type: "info",
+                            title: "Privacy Updated",
+                            message: !isShowPublic
+                              ? "Your contributions are now visible on campus leaderboards."
+                              : "Your contributions are now private on campus leaderboards.",
+                          });
+                        }}
+                        className={`w-11 h-6 rounded-full transition-colors relative p-0.5 shrink-0 ${
+                          isShowPublic ? "bg-[#C5FF35]" : "bg-white/20"
+                        }`}
+                        aria-label="Toggle public leaderboard display"
+                      >
+                        <div
+                          className={`w-5 h-5 rounded-full bg-[#0C0D0E] transition-transform ${
+                            isShowPublic ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Recent Giving History */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400">
+                        <span>MY GIVING HISTORY</span>
+                        <span>
+                          {myGifts.length} Contribution{myGifts.length !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+
+                      {myGifts.length === 0 ? (
+                        <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-center space-y-1">
+                          <p className="text-xs text-neutral-400">
+                            No support contributions recorded yet.
+                          </p>
+                          <p className="text-[11px] text-neutral-500">
+                            Back an event or gift an organizer to earn your verified badge!
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-48 overflow-y-auto pr-0.5">
+                          {myGifts.map((gift) => (
+                            <div
+                              key={gift.id}
+                              className="p-3 bg-white/5 border border-white/10 rounded-2xl space-y-1"
+                            >
+                              <div className="flex items-center justify-between text-xs">
+                                <div>
+                                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-white/10 text-[#C5FF35] mr-1.5 uppercase font-bold">
+                                    {gift.type === "direct_organizer_gift"
+                                      ? "Organizer Gift"
+                                      : "Event Sponsor"}
+                                  </span>
+                                  <span className="font-bold text-white">
+                                    {gift.eventTitle || gift.organizerName || "Campus Event"}
+                                  </span>
+                                </div>
+                                <span className="font-mono font-bold text-[#C5FF35]">
+                                  ₦{gift.amount.toLocaleString()}
+                                </span>
+                              </div>
+                              {gift.message && (
+                                <p className="text-[11px] text-neutral-400 italic">
+                                  &ldquo;{gift.message}&rdquo;
+                                </p>
+                              )}
+                              <span className="text-[9px] font-mono text-neutral-500 block">
+                                {new Date(gift.createdAt).toLocaleDateString()} ·{" "}
+                                {gift.isPublic ? "Public Wall" : "Anonymous"}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Leaderboard Link Button */}
+                    <div className="pt-1">
+                      <Link
+                        href="/leaderboard"
+                        onClick={closeProfileModal}
+                        className="w-full py-2.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-mono text-xs flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <span>View Campus Gifter Leaderboards</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
         </div>

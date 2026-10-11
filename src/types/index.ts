@@ -44,6 +44,8 @@ export interface CampusEvent {
   lineup?: string[];
   dressCode?: string;
   ticketTiers: TicketTier[];
+  sponsorshipGoal?: number;
+  sponsorshipGoalTitle?: string;
 }
 
 export interface CampusOption {
@@ -87,6 +89,7 @@ export interface UserProfile {
   avatarUrl?: string;
   gifterLevel?: 1 | 2 | 3 | 4 | 5 | 6; // Level 1 (Padi) to Level 6 (Legend)
   totalGifted?: number;
+  showPublicGifts?: boolean;
   friends: string[]; // usernames
   eventsAttending: {
     eventId: string;
@@ -174,9 +177,15 @@ export interface EventPhoto {
 
 export type GifterLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
+export type GiftType = "event_sponsorship" | "direct_organizer_gift";
+
 export interface EventGift {
   id: string;
-  eventId: string;
+  type: GiftType;
+  eventId?: string; // set if event_sponsorship
+  eventTitle?: string;
+  organizerId?: string; // organizer username or id
+  organizerName?: string;
   userId?: string;
   gifterName: string;
   gifterUsername?: string;
@@ -184,7 +193,33 @@ export interface EventGift {
   level: GifterLevel;
   message?: string;
   isPublic: boolean;
+  campus?: string;
   createdAt: string;
+}
+
+export interface OrganizerMilestone {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+  unlockedAt?: string;
+  progress: number; // 0 to 100
+  requirement: string;
+}
+
+export interface LeaderboardEntry {
+  rank: number;
+  userId?: string;
+  name: string;
+  username?: string;
+  avatarUrl?: string;
+  gifterLevel: GifterLevel;
+  totalAmount: number;
+  eventsSupportedCount: number;
+  organizersSupportedCount: number;
+  campus: string;
+  isPublic: boolean;
 }
 
 export interface AttendeeMetricItem {

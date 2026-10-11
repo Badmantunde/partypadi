@@ -54,8 +54,14 @@ export function Footer({ onOpenHostModal }: FooterProps = {}) {
                 </Link>
               </li>
               <li>
-                <Link href="/#padi-circle" className="text-neutral-300 hover:text-[#C5FF35] transition-colors">
-                  Padi Circle Preview
+                <Link href="/leaderboard" className="text-neutral-300 hover:text-[#C5FF35] transition-colors flex items-center gap-1.5">
+                  <span>Campus Leaderboard</span>
+                  <span className="text-[9px] font-mono bg-amber-400 text-black px-1.5 py-0.2 rounded-full font-bold">GIFTER</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/circles" className="text-neutral-300 hover:text-[#C5FF35] transition-colors">
+                  Padi Circles
                 </Link>
               </li>
             </ul>

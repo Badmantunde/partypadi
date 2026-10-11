@@ -12,6 +12,7 @@ import { ToastProvider, useToast } from "@/components/Toast";
 import { useAuth, GIFTER_LEVEL_INFO } from "@/context/AuthContext";
 import { EventPhotoGallery } from "@/components/EventPhotoGallery";
 import { GiftSupportModal } from "@/components/GiftSupportModal";
+import { GifterBadge } from "@/components/GifterBadge";
 import {
   Calendar,
   MapPin,
@@ -337,91 +338,168 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                 )}
               </div>
 
-              {/* Campus Supporters & Gifters Wall */}
-              <div className="p-6 bg-neutral-50/70 border border-neutral-200 rounded-3xl space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-amber-500 fill-amber-500" />
-                    <h3 className="font-display font-bold text-lg text-[#11120F]">
-                      Campus Supporters & Gifters Wall
+              {/* "The People Backing This Vibe" - Padi Gifter Section */}
+              <div className="p-6 sm:p-8 bg-neutral-50/70 border border-neutral-200 rounded-3xl space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-200 text-amber-900 text-[10px] font-mono uppercase tracking-wider font-bold">
+                      <Heart className="w-3 h-3 fill-amber-600 text-amber-600" />
+                      <span>PADI GIFTER · EVENT SPONSORSHIP</span>
+                    </div>
+                    <h3 className="font-display font-medium text-xl sm:text-2xl text-[#11120F] tracking-tight">
+                      The People Backing This Vibe
                     </h3>
+                    <p className="text-xs text-neutral-500">
+                      Campus community members backing resident DJs, stage lighting, and production for this event.
+                    </p>
                   </div>
+
                   <button
                     type="button"
                     onClick={() => setGiftModalOpen(true)}
-                    className="px-3 py-1 bg-amber-400 hover:bg-amber-300 text-black rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"
+                    className="spicy-btn px-4 py-2 bg-[#11120F] hover:bg-black text-[#C5FF35] rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm shrink-0"
                   >
-                    <span>+ Gift</span>
+                    <Heart className="w-3.5 h-3.5 fill-[#C5FF35]" />
+                    <span>Support this event</span>
                   </button>
                 </div>
 
                 {(() => {
                   const eventGifts = getEventGifts(event.id);
                   const totalRaised = eventGifts.reduce((acc, g) => acc + g.amount, 0);
+                  const goal = event.sponsorshipGoal;
+                  const percentOfGoal = goal
+                    ? Math.min(100, Math.round((totalRaised / goal) * 100))
+                    : null;
+
+                  // Sort by amount descending for the event supporters leaderboard
+                  const rankedGifts = [...eventGifts].sort((a, b) => b.amount - a.amount);
 
                   return (
-                    <div className="space-y-3">
-                      <div className="p-3 bg-white rounded-2xl border border-neutral-200 flex items-center justify-between text-xs font-mono">
-                        <span className="text-neutral-500">TOTAL COMMUNITY GIFTS:</span>
-                        <span className="font-bold text-amber-600 text-sm">
-                          ₦{totalRaised.toLocaleString()} ({eventGifts.length} Supporter{eventGifts.length !== 1 ? "s" : ""})
-                        </span>
+                    <div className="space-y-4">
+                      {/* Telemetry Stats & Optional Sponsorship Goal */}
+                      <div className="p-4 sm:p-5 bg-white rounded-2xl border border-neutral-200 space-y-3">
+                        <div className="flex flex-wrap items-baseline justify-between gap-2">
+                          <div>
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                              VERIFIED SUPPORT RAISED
+                            </span>
+                            <span className="font-mono text-2xl font-black text-[#11120F]">
+                              ₦{totalRaised.toLocaleString()}
+                            </span>
+                          </div>
+
+                          <div className="text-right">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                              PATRONS & SPONSORS
+                            </span>
+                            <span className="font-mono text-sm font-bold text-neutral-700">
+                              {eventGifts.length} Supporter{eventGifts.length !== 1 ? "s" : ""}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Sponsorship Goal Progress (Only shown if organizer configured one) */}
+                        {goal && (
+                          <div className="space-y-1.5 pt-3 border-t border-neutral-100">
+                            <div className="flex items-center justify-between text-xs font-mono">
+                              <span className="text-neutral-700 font-medium">
+                                {event.sponsorshipGoalTitle || "Campus Production Fund"}:{" "}
+                                <strong className="text-black">₦{goal.toLocaleString()}</strong>
+                              </span>
+                              <span className="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 text-[11px]">
+                                {percentOfGoal}% Funded
+                              </span>
+                            </div>
+                            <div className="w-full h-2.5 bg-neutral-100 rounded-full overflow-hidden p-0.5 border border-neutral-200/60">
+                              <div
+                                className="h-full bg-gradient-to-r from-amber-400 to-[#C5FF35] rounded-full transition-all duration-500"
+                                style={{ width: `${percentOfGoal}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      {eventGifts.length === 0 ? (
-                        <div className="p-5 text-center bg-white rounded-2xl border border-neutral-200 space-y-2">
-                          <p className="text-xs text-neutral-500">
-                            Be the first to send a gift and unlock the <strong>Level 1 Gifter 🥉</strong> badge!
+                      {/* Event Supporters Leaderboard Roster */}
+                      {rankedGifts.length === 0 ? (
+                        <div className="p-6 text-center bg-white rounded-2xl border border-neutral-200 space-y-2.5">
+                          <p className="text-xs text-neutral-600 max-w-sm mx-auto">
+                            No sponsorship contributions recorded yet. Be the first to back this vibe and unlock the{" "}
+                            <strong>Level 1 Padi</strong> badge!
                           </p>
                           <button
                             type="button"
                             onClick={() => setGiftModalOpen(true)}
                             className="px-4 py-2 bg-black text-[#C5FF35] rounded-full text-xs font-mono font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors"
                           >
-                            Send First Gift →
+                            Support Event First →
                           </button>
                         </div>
                       ) : (
-                        <div className="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
-                          {eventGifts.map((gift) => {
-                            const badge = GIFTER_LEVEL_INFO[gift.level];
+                        <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+                          {rankedGifts.map((gift, idx) => {
+                            const isTop3 = idx < 3;
+                            const rankIcons = ["👑", "🥈", "🥉"];
+
                             return (
                               <div
                                 key={gift.id}
-                                className="p-3.5 bg-white rounded-2xl border border-neutral-200 space-y-1.5"
+                                className={`p-3.5 bg-white rounded-2xl border transition-all space-y-1.5 ${
+                                  idx === 0
+                                    ? "border-amber-300 ring-1 ring-amber-200/50 shadow-xs"
+                                    : "border-neutral-200"
+                                }`}
                               >
                                 <div className="flex items-center justify-between gap-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
-                                      {gift.gifterName.charAt(0)}
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    {/* Rank Marker */}
+                                    <div
+                                      className={`w-6 h-6 rounded-full flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                                        idx === 0
+                                          ? "bg-amber-400 text-black shadow-xs"
+                                          : idx === 1
+                                          ? "bg-slate-200 text-slate-800"
+                                          : idx === 2
+                                          ? "bg-amber-100 text-amber-800"
+                                          : "bg-neutral-100 text-neutral-600"
+                                      }`}
+                                    >
+                                      {isTop3 ? rankIcons[idx] : `#${idx + 1}`}
                                     </div>
-                                    <div>
-                                      <span className="font-display font-bold text-xs text-[#11120F] block">
-                                        {gift.gifterName}
-                                      </span>
-                                      {gift.gifterUsername && (
-                                        <span className="font-mono text-[10px] text-neutral-500">
+
+                                    {/* Supporter Identity */}
+                                    <div className="truncate">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="font-display font-bold text-xs sm:text-sm text-[#11120F] truncate">
+                                          {gift.isPublic ? gift.gifterName : "Anonymous Padi"}
+                                        </span>
+                                        <GifterBadge level={gift.level} size="sm" theme="light" />
+                                      </div>
+                                      {gift.isPublic && gift.gifterUsername && (
+                                        <span className="font-mono text-[10px] text-neutral-400 block">
                                           @{gift.gifterUsername}
                                         </span>
                                       )}
                                     </div>
                                   </div>
 
-                                  <div className="text-right">
-                                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 font-mono text-[10px] font-bold">
-                                      <div className="w-3.5 h-3.5 rounded-full overflow-hidden relative shrink-0">
-                                        <Image src={badge.imageUrl} alt={badge.name} fill className="object-contain" />
-                                      </div>
-                                      <span>{badge.badge}</span>
-                                    </span>
-                                    <span className="font-mono text-xs font-bold text-[#11120F] block mt-0.5">
+                                  {/* Amount */}
+                                  <div className="text-right shrink-0">
+                                    <span className="font-mono text-xs sm:text-sm font-bold text-[#11120F] block">
                                       ₦{gift.amount.toLocaleString()}
+                                    </span>
+                                    <span className="text-[9px] font-mono text-neutral-400">
+                                      {new Date(gift.createdAt).toLocaleDateString([], {
+                                        month: "short",
+                                        day: "numeric",
+                                      })}
                                     </span>
                                   </div>
                                 </div>
 
                                 {gift.message && (
-                                  <p className="text-xs text-neutral-600 bg-neutral-50 p-2 rounded-xl italic">
+                                  <p className="text-xs text-neutral-600 bg-neutral-50/80 p-2 rounded-xl italic">
                                     &ldquo;{gift.message}&rdquo;
                                   </p>
                                 )}
@@ -430,6 +508,18 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                           })}
                         </div>
                       )}
+
+                      {/* Footer Link to Campus Leaderboard */}
+                      <div className="pt-1 flex items-center justify-between text-xs font-mono text-neutral-600 border-t border-neutral-200/60">
+                        <span>Rankings updated upon confirmed transaction</span>
+                        <Link
+                          href="/leaderboard"
+                          className="font-bold text-black hover:text-amber-600 inline-flex items-center gap-1"
+                        >
+                          <span>Campus Leaderboard</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
                     </div>
                   );
                 })()}
@@ -537,13 +627,14 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                 </button>
 
                 {/* Gift & Support Organizer Button */}
+                {/* Support This Event Button */}
                 <button
                   type="button"
                   onClick={() => setGiftModalOpen(true)}
                   className="w-full py-3 px-4 rounded-full border border-amber-400/50 bg-amber-50 hover:bg-amber-100 text-[#11120F] text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs"
                 >
                   <Heart className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                  <span>Gift & Support Organizer · Earn Badge</span>
+                  <span>Support this event · Earn Badge</span>
                 </button>
 
                 <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 font-mono text-center">

@@ -5,14 +5,28 @@ import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { HostEventModal } from "@/components/HostEventModal";
+import { GiftSupportModal } from "@/components/GiftSupportModal";
+import { useAuth, getOrganizerMilestones } from "@/context/AuthContext";
 import {
   Users,
   CreditCard,
   Building,
+  Heart,
+  CheckCircle2,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Award,
 } from "lucide-react";
 
 export default function OrganizersPage() {
+  const { gifts } = useAuth();
   const [hostModalOpen, setHostModalOpen] = useState(false);
+  const [giftModalOpen, setGiftModalOpen] = useState(false);
+  const [selectedOrganizer, setSelectedOrganizer] = useState<{ id?: string; name: string }>({
+    id: "fassa_execs",
+    name: "FASSA Social Committee",
+  });
   const [ticketPrice, setTicketPrice] = useState(3000);
   const [expectedAttendees, setExpectedAttendees] = useState(500);
 
@@ -213,6 +227,163 @@ export default function OrganizersPage() {
           </div>
         </section>
 
+        {/* Direct Organizer Support Directory */}
+        <section className="py-20 bg-white border-b border-neutral-200" id="directory">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 text-xs font-mono uppercase tracking-wider font-bold">
+                  <Heart className="w-3.5 h-3.5 fill-amber-600 text-amber-600" />
+                  <span>PADI GIFTER · DIRECT ORGANIZER SUPPORT</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-display font-medium tracking-tight">
+                  Support Campus Organizers Directly
+                </h2>
+                <p className="text-sm text-neutral-600 max-w-xl">
+                  Show appreciation to the student committees and independent curators who build campus culture. Direct gifts help them fund future events and logistics.
+                </p>
+              </div>
+
+              <Link
+                href="/leaderboard"
+                className="spicy-btn px-5 py-2.5 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded-full text-xs font-mono font-bold flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+              >
+                <span>View Campus Leaderboards</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  id: "fassa_execs",
+                  name: "FASSA Social Committee",
+                  shortName: "FASSA Socials",
+                  role: "Faculty Association Executive",
+                  campus: "Main Campus",
+                  avatar: "🎓",
+                  bio: "Official faculty social directorate coordinating faculty weeks, annual black-tie dinners, and campus linkups.",
+                },
+                {
+                  id: "vibe_tribe",
+                  name: "Vibe Tribe & Campus Socials",
+                  shortName: "Vibe Tribe",
+                  role: "Official Campus Promoter",
+                  campus: "Main Campus",
+                  avatar: "🔥",
+                  bio: "Pioneering sunset parties, sound clashes, and semester kickoffs across Nigerian campus culture.",
+                },
+                {
+                  id: "soundhaus",
+                  name: "SoundHaus Collective",
+                  shortName: "SoundHaus",
+                  role: "Independent Sound Curators",
+                  campus: "Club Vegas & Garden",
+                  avatar: "🔊",
+                  bio: "Underground afro-house, alte sounds, and nocturnal garden sessions powered by acoustic connoisseurs.",
+                },
+              ].map((org) => {
+                const totalSupport = gifts
+                  .filter(
+                    (g) =>
+                      g.organizerId === org.id ||
+                      (g.organizerName && g.organizerName.includes(org.shortName))
+                  )
+                  .reduce((sum, g) => sum + g.amount, 0);
+                const uniquePatrons = new Set(
+                  gifts
+                    .filter(
+                      (g) =>
+                        g.organizerId === org.id ||
+                        (g.organizerName && g.organizerName.includes(org.shortName))
+                    )
+                    .map((g) => g.userId || g.gifterName)
+                ).size;
+                const milestones = getOrganizerMilestones(totalSupport, uniquePatrons);
+
+                return (
+                  <div
+                    key={org.id}
+                    className="p-8 rounded-3xl bg-neutral-50 border border-neutral-200 hover:border-black transition-all space-y-5 flex flex-col justify-between shadow-xs"
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-2xl bg-[#11120F] text-[#C5FF35] flex items-center justify-center text-xl font-bold">
+                            {org.avatar}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <h3 className="font-display font-bold text-base text-[#11120F]">
+                                {org.name}
+                              </h3>
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            </div>
+                            <span className="text-xs font-mono text-neutral-500 block">
+                              {org.role} · {org.campus}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-neutral-600 leading-relaxed">
+                        {org.bio}
+                      </p>
+
+                      {/* Milestones Unlocked */}
+                      <div className="space-y-2 pt-2 border-t border-neutral-200">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-semibold block">
+                          MILESTONE ACHIEVEMENTS:
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          {milestones.map((m) => (
+                            <div
+                              key={m.id}
+                              className={`p-2 rounded-xl border text-[10px] font-mono ${
+                                m.unlocked
+                                  ? "bg-amber-50 border-amber-300 text-amber-900 font-bold"
+                                  : "bg-white border-neutral-200 text-neutral-400"
+                              }`}
+                            >
+                              <div className="flex items-center gap-1">
+                                <span>{m.icon}</span>
+                                <span className="truncate">{m.title}</span>
+                              </div>
+                              <span className="text-[9px] block text-neutral-500 truncate mt-0.5">
+                                {m.unlocked ? "Unlocked ✓" : m.requirement}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Telemetry Stats */}
+                      <div className="p-3 bg-white rounded-2xl border border-neutral-200 flex items-center justify-between text-xs font-mono">
+                        <span className="text-neutral-500">Total Backing:</span>
+                        <span className="font-bold text-[#11120F]">
+                          ₦{totalSupport.toLocaleString()} ({uniquePatrons} Patrons)
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedOrganizer({ id: org.id, name: org.name });
+                        setGiftModalOpen(true);
+                      }}
+                      className="spicy-btn w-full py-3 bg-[#11120F] text-white hover:bg-neutral-800 rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+                    >
+                      <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                      <span>Gift {org.shortName}</span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         {/* Final CTA Bar */}
         <section className="py-20 bg-white text-center">
           <div className="max-w-3xl mx-auto px-4 space-y-6">
@@ -239,6 +410,15 @@ export default function OrganizersPage() {
 
       <Footer onOpenHostModal={() => setHostModalOpen(true)} />
       <HostEventModal isOpen={hostModalOpen} onClose={() => setHostModalOpen(false)} />
+
+      {/* Direct Organizer Gift Modal */}
+      <GiftSupportModal
+        isOpen={giftModalOpen}
+        onClose={() => setGiftModalOpen(false)}
+        organizerName={selectedOrganizer.name}
+        organizerId={selectedOrganizer.id}
+        initialType="direct_organizer_gift"
+      />
     </div>
   );
 }

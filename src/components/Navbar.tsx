@@ -38,9 +38,9 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
     { label: "Home", href: "/" },
     { label: "Discover", href: "/events" },
     { label: "Padi Circles", href: "/circles" },
-    { label: "How It Works", href: "/how-it-works" },
+    { label: "Leaderboard", href: "/leaderboard" },
     { label: "Organizers", href: "/organizers" },
-    { label: "About", href: "/about" },
+    { label: "How It Works", href: "/how-it-works" },
   ];
 
   const checkIsActive = (href: string) => {

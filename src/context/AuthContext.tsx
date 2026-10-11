@@ -7,8 +7,11 @@ import {
   CircleEventSuggestion,
   CircleActivityItem,
   EventGift,
+  GiftType,
   GifterLevel,
   AttendeeMetricItem,
+  OrganizerMilestone,
+  LeaderboardEntry,
 } from "@/types";
 import {
   supabase,
@@ -97,55 +100,115 @@ const SEED_USERS: UserProfile[] = [
   },
 ];
 
-// Seed Gifts & Support Contributions
+// Seed Gifts & Support Contributions (Sponsorships and Direct Gifts)
 const SEED_GIFTS: EventGift[] = [
   {
     id: "gift-1",
+    type: "event_sponsorship",
     eventId: "after-class-sunset",
+    eventTitle: "AFTER CLASS: Sunset Sessions",
+    organizerName: "Vibe Tribe & Campus Socials",
     userId: "user-2",
     gifterName: "Fola Coker",
     gifterUsername: "fola_vibes",
     amount: 15000,
-    level: 2,
+    level: 2, // Plug
     message: "Drinks support for the sound engineering crew! Keep the energy high 🔊🔥",
     isPublic: true,
+    campus: "Main Campus",
     createdAt: "2026-10-10T16:20:00Z",
   },
   {
     id: "gift-2",
+    type: "event_sponsorship",
     eventId: "after-class-sunset",
+    eventTitle: "AFTER CLASS: Sunset Sessions",
+    organizerName: "Vibe Tribe & Campus Socials",
     userId: "user-1",
     gifterName: "Tade Adeyemi",
     gifterUsername: "tade_vibes",
     amount: 3500,
-    level: 1,
+    level: 1, // Padi
     message: "Shoutout to DJ Tee! Sunset sessions always hits different 🌅",
     isPublic: true,
+    campus: "Main Campus",
     createdAt: "2026-10-10T18:45:00Z",
   },
   {
     id: "gift-3",
+    type: "event_sponsorship",
     eventId: "after-class-sunset",
+    eventTitle: "AFTER CLASS: Sunset Sessions",
+    organizerName: "Vibe Tribe & Campus Socials",
     userId: "user-4",
     gifterName: "Adebayo Johnson",
     gifterUsername: "bayo_tech",
     amount: 25000,
-    level: 3,
+    level: 3, // Hype Padi
     message: "Supporting campus tech & nightlife culture! Table 4 on me 🍾",
     isPublic: true,
+    campus: "Main Campus",
     createdAt: "2026-10-11T01:10:00Z",
   },
   {
     id: "gift-4",
-    eventId: "green-room-sessions",
+    type: "direct_organizer_gift",
+    organizerId: "fassa_execs",
+    organizerName: "FASSA Social Committee",
     userId: "user-3",
     gifterName: "Chioma Kalu",
     gifterUsername: "chioma_k",
-    amount: 2000,
-    level: 1,
-    message: "For the photobooth team and light operators! 📸✨",
+    amount: 55000,
+    level: 4, // Big Padi
+    message: "Direct support for the executive committee planning faculty week! Keep doing great work 🎓✨",
     isPublic: true,
+    campus: "Main Campus",
     createdAt: "2026-10-10T20:15:00Z",
+  },
+  {
+    id: "gift-5",
+    type: "event_sponsorship",
+    eventId: "green-room-sessions",
+    eventTitle: "THE GREEN ROOM: Sound & Afro-Electronic",
+    organizerName: "SoundHaus Collective",
+    userId: "user-6",
+    gifterName: "Tunde Ednut Fan Club",
+    gifterUsername: "tunde_fan",
+    amount: 110000,
+    level: 5, // Headliner
+    message: "Massive sponsorship for the acoustic rig! Lagos to OOU we turn up ⚡",
+    isPublic: true,
+    campus: "Main Campus",
+    createdAt: "2026-10-08T12:00:00Z",
+  },
+  {
+    id: "gift-6",
+    type: "direct_organizer_gift",
+    organizerId: "fassa_execs",
+    organizerName: "FASSA Social Committee",
+    userId: "user-7",
+    gifterName: "Chief Alabi Aloma",
+    gifterUsername: "alabi_legend",
+    amount: 260000,
+    level: 6, // Legend
+    message: "Honouring campus traditions. Keep lifting student spirit high 👑🏆",
+    isPublic: true,
+    campus: "Main Campus",
+    createdAt: "2026-10-07T09:30:00Z",
+  },
+  {
+    id: "gift-7",
+    type: "event_sponsorship",
+    eventId: "after-class-sunset",
+    eventTitle: "AFTER CLASS: Sunset Sessions",
+    organizerName: "Vibe Tribe & Campus Socials",
+    gifterName: "Anonymous Padi",
+    amount: 15000,
+    level: 2,
+    message: "Anonymous energy boost for the DJ! 🔊",
+    isPublic: false,
+    campus: "Main Campus",
+    createdAt: "2026-10-11T02:00:00Z",
   },
 ];
 
@@ -437,72 +500,176 @@ const SEED_CIRCLES: PartyCircle[] = [
 ];
 
 export const getGifterLevel = (totalGifted: number): GifterLevel => {
-  if (totalGifted >= 150000) return 6;
-  if (totalGifted >= 75000) return 5;
-  if (totalGifted >= 35000) return 4;
-  if (totalGifted >= 15000) return 3;
+  if (totalGifted >= 250000) return 6;
+  if (totalGifted >= 100000) return 5;
+  if (totalGifted >= 50000) return 4;
+  if (totalGifted >= 20000) return 3;
   if (totalGifted >= 5000) return 2;
   return 1;
 };
 
 export const GIFTER_LEVEL_INFO: Record<
   GifterLevel,
-  { name: string; icon: string; minAmount: number; color: string; badge: string; imageUrl: string; description: string }
+  {
+    name: string;
+    icon: string;
+    minAmount: number;
+    maxAmount?: number;
+    color: string;
+    badgeStyle: string;
+    badge: string;
+    imageUrl: string;
+    description: string;
+    meaning: string;
+  }
 > = {
   1: {
     name: "Padi",
-    icon: "🥉",
-    minAmount: 1000,
-    color: "#CD7F32",
-    badge: "Level 1 Gifter 🥉",
+    icon: "🌱",
+    minAmount: 1,
+    maxAmount: 4999,
+    color: "#22C55E",
+    badgeStyle: "Green badge with a spark motif",
+    badge: "Padi",
     imageUrl: "/images/gifterbadge/Padi-level-1.png",
-    description: "Contributed ₦1k+ to campus event culture",
+    description: "₦1 – ₦4,999",
+    meaning: "A supporter who has started giving",
   },
   2: {
     name: "Plug",
-    icon: "🥈",
+    icon: "⚡",
     minAmount: 5000,
-    color: "#E2E8F0",
-    badge: "Level 2 Gifter 🥈",
+    maxAmount: 19999,
+    color: "#38BDF8",
+    badgeStyle: "Blue badge with a connection motif",
+    badge: "Plug",
     imageUrl: "/images/gifterbadge/Plug-level-2.png",
-    description: "Contributed ₦5k+ boosting DJs, light & drinks",
+    description: "₦5,000 – ₦19,999",
+    meaning: "A regular supporter of campus events",
   },
   3: {
     name: "Hype Padi",
-    icon: "🥇",
-    minAmount: 15000,
-    color: "#FACC15",
-    badge: "Level 3 Gifter 🥇",
+    icon: "💥",
+    minAmount: 20000,
+    maxAmount: 49999,
+    color: "#A855F7",
+    badgeStyle: "Violet badge with a burst motif",
+    badge: "Hype Padi",
     imageUrl: "/images/gifterbadge/Hype-padi.png",
-    description: "Contributed ₦15k+ powering squad energy & stage hype",
+    description: "₦20,000 – ₦49,999",
+    meaning: "An active supporter who helps events thrive",
   },
   4: {
     name: "Big Padi",
-    icon: "💎",
-    minAmount: 35000,
-    color: "#38BDF8",
-    badge: "Level 4 Gifter 💎",
+    icon: "✨",
+    minAmount: 50000,
+    maxAmount: 99999,
+    color: "#E2E8F0",
+    badgeStyle: "Silver badge with a bold geometric emblem",
+    badge: "Big Padi",
     imageUrl: "/images/gifterbadge/Big-Padi-level-4.png",
-    description: "Contributed ₦35k+ VIP patron of campus nightlife",
+    description: "₦50,000 – ₦99,999",
+    meaning: "A significant contributor to the event community",
   },
   5: {
     name: "Headliner",
-    icon: "👑",
-    minAmount: 75000,
-    color: "#A855F7",
-    badge: "Level 5 Headliner 👑",
+    icon: "⭐",
+    minAmount: 100000,
+    maxAmount: 249999,
+    color: "#EAB308",
+    badgeStyle: "Gold badge with a spotlight motif",
+    badge: "Headliner",
     imageUrl: "/images/gifterbadge/Headliner-level-5.png",
-    description: "Contributed ₦75k+ campus headliner & benefactor",
+    description: "₦100,000 – ₦249,999",
+    meaning: "A leading supporter of organizers and events",
   },
   6: {
     name: "Legend",
-    icon: "🏆",
-    minAmount: 150000,
-    color: "#C5FF35",
-    badge: "Level 6 Legend 🏆",
+    icon: "👑",
+    minAmount: 250000,
+    color: "#F59E0B",
+    badgeStyle: "Special gold and violet emblem",
+    badge: "Legend",
     imageUrl: "/images/gifterbadge/legend-level-6.png",
-    description: "Contributed ₦150k+ immortal campus benefactor & icon",
+    description: "₦250,000+",
+    meaning: "An exceptional supporter of the Party Padi community",
   },
+};
+
+export const getNextLevelProgress = (totalGifted: number) => {
+  const currentLevel = getGifterLevel(totalGifted);
+  if (currentLevel === 6) {
+    return {
+      currentLevel,
+      nextLevel: null,
+      nextLevelName: null,
+      amountNeeded: 0,
+      percent: 100,
+      text: "You've unlocked the highest Legend tier! 🏆",
+    };
+  }
+
+  const nextLevel = (currentLevel + 1) as GifterLevel;
+  const nextInfo = GIFTER_LEVEL_INFO[nextLevel];
+  const currentInfo = GIFTER_LEVEL_INFO[currentLevel];
+  const amountNeeded = Math.max(0, nextInfo.minAmount - totalGifted);
+
+  const range = nextInfo.minAmount - currentInfo.minAmount;
+  const progress = Math.max(0, totalGifted - currentInfo.minAmount);
+  const percent = Math.min(100, Math.round((progress / (range || 1)) * 100));
+
+  return {
+    currentLevel,
+    nextLevel,
+    nextLevelName: nextInfo.name,
+    amountNeeded,
+    percent,
+    text: `You're ₦${amountNeeded.toLocaleString()} away from becoming a ${nextInfo.name}.`,
+  };
+};
+
+export const getOrganizerMilestones = (
+  totalSupportReceived: number,
+  uniqueSupportersCount: number
+): OrganizerMilestone[] => {
+  return [
+    {
+      id: "first_gift",
+      title: "First Gift",
+      description: "Received first verified gift from a campus supporter.",
+      icon: "🌱",
+      unlocked: uniqueSupportersCount >= 1,
+      progress: uniqueSupportersCount >= 1 ? 100 : 0,
+      requirement: "1 supporter",
+    },
+    {
+      id: "crowd_favourite",
+      title: "Crowd Favourite",
+      description: "Received gifts from 5+ unique campus supporters.",
+      icon: "🔥",
+      unlocked: uniqueSupportersCount >= 5,
+      progress: Math.min(100, Math.round((uniqueSupportersCount / 5) * 100)),
+      requirement: "5 unique supporters",
+    },
+    {
+      id: "community_backed",
+      title: "Community Backed",
+      description: "Reached ₦100,000+ in verified campus sponsorship.",
+      icon: "💎",
+      unlocked: totalSupportReceived >= 100000,
+      progress: Math.min(100, Math.round((totalSupportReceived / 100000) * 100)),
+      requirement: "₦100k verified support",
+    },
+    {
+      id: "campus_favourite",
+      title: "Campus Favourite",
+      description: "Achieved ₦250,000+ verified community support across campus.",
+      icon: "👑",
+      unlocked: totalSupportReceived >= 250000,
+      progress: Math.min(100, Math.round((totalSupportReceived / 250000) * 100)),
+      requirement: "₦250k verified support",
+    },
+  ];
 };
 
 interface AuthContextType {
@@ -535,6 +702,18 @@ interface AuthContextType {
   ) => Promise<{ success: boolean; message: string }>;
   signInWithMagicLink: (email: string) => Promise<{ success: boolean; message: string }>;
   // Gifting & Metrics
+  sendGift: (data: {
+    type: GiftType;
+    eventId?: string;
+    eventTitle?: string;
+    organizerId?: string;
+    organizerName?: string;
+    amount: number;
+    message?: string;
+    isPublic?: boolean;
+    customName?: string;
+    campus?: string;
+  }) => { success: boolean; gift: EventGift; newGifterLevel: GifterLevel };
   sendGiftToEvent: (data: {
     eventId: string;
     amount: number;
@@ -542,7 +721,19 @@ interface AuthContextType {
     isPublic?: boolean;
     customName?: string;
   }) => { success: boolean; gift: EventGift; newGifterLevel: GifterLevel };
+  sendOrganizerGift: (data: {
+    organizerId?: string;
+    organizerName: string;
+    amount: number;
+    message?: string;
+    isPublic?: boolean;
+    customName?: string;
+    campus?: string;
+  }) => { success: boolean; gift: EventGift; newGifterLevel: GifterLevel };
   getEventGifts: (eventId: string) => EventGift[];
+  getOrganizerGifts: (organizerIdOrName: string) => EventGift[];
+  getLeaderboard: (options?: { period?: "month" | "all_time"; campus?: string }) => LeaderboardEntry[];
+  updatePrivacySettings: (showPublicGifts: boolean) => void;
   getEventAttendees: (eventId: string) => AttendeeMetricItem[];
   promoteWaitlistAttendee: (attendeeId: string) => boolean;
   checkInAttendee: (attendeeId: string) => boolean;
@@ -761,30 +952,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return await signInWithOtp(email);
   };
 
-  const sendGiftToEvent = (data: {
-    eventId: string;
+  const sendGift = (data: {
+    type: GiftType;
+    eventId?: string;
+    eventTitle?: string;
+    organizerId?: string;
+    organizerName?: string;
     amount: number;
     message?: string;
     isPublic?: boolean;
     customName?: string;
+    campus?: string;
   }) => {
-    const gifterName = currentUser ? currentUser.fullName : data.customName || "Campus Supporter";
-    const gifterUsername = currentUser ? currentUser.username : undefined;
+    const isPublic = data.isPublic !== false;
+    const gifterName = isPublic
+      ? currentUser
+        ? currentUser.fullName
+        : data.customName || "Campus Supporter"
+      : "Anonymous Padi";
+    const gifterUsername = isPublic && currentUser ? currentUser.username : undefined;
 
     const currentTotal = currentUser?.totalGifted || 0;
     const newTotal = currentTotal + data.amount;
     const newGifterLevel = getGifterLevel(newTotal);
 
+    const defaultMsg =
+      data.type === "direct_organizer_gift"
+        ? "Keep elevating campus nightlife and sound culture! 🌟"
+        : "Big support to the organizing crew & sound engineers! 🔥";
+
     const newGift: EventGift = {
       id: `gift-${Date.now()}`,
+      type: data.type,
       eventId: data.eventId,
+      eventTitle: data.eventTitle,
+      organizerId: data.organizerId,
+      organizerName: data.organizerName,
       userId: currentUser?.id,
       gifterName,
       gifterUsername,
       amount: data.amount,
       level: newGifterLevel,
-      message: data.message || "Big support to the organizing crew & sound engineers! 🔥",
-      isPublic: data.isPublic !== false,
+      message: data.message || defaultMsg,
+      isPublic,
+      campus: data.campus || currentUser?.campus || "Main Campus",
       createdAt: new Date().toISOString(),
     };
 
@@ -821,8 +1032,138 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   };
 
+  const sendGiftToEvent = (data: {
+    eventId: string;
+    amount: number;
+    message?: string;
+    isPublic?: boolean;
+    customName?: string;
+  }) => {
+    return sendGift({
+      type: "event_sponsorship",
+      eventId: data.eventId,
+      amount: data.amount,
+      message: data.message,
+      isPublic: data.isPublic,
+      customName: data.customName,
+    });
+  };
+
+  const sendOrganizerGift = (data: {
+    organizerId?: string;
+    organizerName: string;
+    amount: number;
+    message?: string;
+    isPublic?: boolean;
+    customName?: string;
+    campus?: string;
+  }) => {
+    return sendGift({
+      type: "direct_organizer_gift",
+      organizerId: data.organizerId,
+      organizerName: data.organizerName,
+      amount: data.amount,
+      message: data.message,
+      isPublic: data.isPublic,
+      customName: data.customName,
+      campus: data.campus,
+    });
+  };
+
   const getEventGifts = (eventId: string): EventGift[] => {
     return gifts.filter((g) => g.eventId === eventId);
+  };
+
+  const getOrganizerGifts = (organizerIdOrName: string): EventGift[] => {
+    const query = organizerIdOrName.toLowerCase();
+    return gifts.filter(
+      (g) =>
+        (g.organizerId && g.organizerId.toLowerCase() === query) ||
+        (g.organizerName && g.organizerName.toLowerCase().includes(query))
+    );
+  };
+
+  const updatePrivacySettings = (showPublicGifts: boolean) => {
+    if (!currentUser) return;
+    const updatedUser: UserProfile = {
+      ...currentUser,
+      showPublicGifts,
+    };
+    saveUser(updatedUser);
+    const updatedUsers = allUsers.map((u) => (u.id === currentUser.id ? updatedUser : u));
+    setAllUsers(updatedUsers);
+    localStorage.setItem("pp_all_users", JSON.stringify(updatedUsers));
+  };
+
+  const getLeaderboard = (options?: { period?: "month" | "all_time"; campus?: string }): LeaderboardEntry[] => {
+    const period = options?.period || "month";
+    const targetCampus = options?.campus;
+
+    // In Next.js static prerender, use static semester month anchor
+    const currentYearMonth = "2026-10";
+
+    const eligibleGifts = gifts.filter((gift) => {
+      if (period === "month") {
+        const giftMonth = gift.createdAt.substring(0, 7);
+        if (giftMonth !== currentYearMonth) return false;
+      }
+      if (targetCampus && targetCampus !== "all" && gift.campus && gift.campus !== targetCampus) {
+        return false;
+      }
+      return true;
+    });
+
+    const map = new Map<
+      string,
+      {
+        name: string;
+        username?: string;
+        userId?: string;
+        avatarUrl?: string;
+        totalAmount: number;
+        eventsSupported: Set<string>;
+        organizersSupported: Set<string>;
+        campus: string;
+        isPublic: boolean;
+      }
+    >();
+
+    for (const gift of eligibleGifts) {
+      const key = gift.userId || gift.gifterUsername || gift.gifterName;
+      const existing = map.get(key) || {
+        name: gift.gifterName,
+        username: gift.gifterUsername,
+        userId: gift.userId,
+        avatarUrl: undefined,
+        totalAmount: 0,
+        eventsSupported: new Set<string>(),
+        organizersSupported: new Set<string>(),
+        campus: gift.campus || "Main Campus",
+        isPublic: gift.isPublic,
+      };
+
+      existing.totalAmount += gift.amount;
+      if (gift.eventId) existing.eventsSupported.add(gift.eventId);
+      if (gift.organizerId || gift.organizerName) existing.organizersSupported.add(gift.organizerId || gift.organizerName!);
+      if (!gift.isPublic) existing.isPublic = false;
+      map.set(key, existing);
+    }
+
+    return Array.from(map.values())
+      .sort((a, b) => b.totalAmount - a.totalAmount)
+      .map((item, index): LeaderboardEntry => ({
+        rank: index + 1,
+        userId: item.userId,
+        name: item.isPublic ? item.name : "Anonymous Padi",
+        username: item.isPublic ? item.username : undefined,
+        avatarUrl: item.avatarUrl,
+        gifterLevel: getGifterLevel(item.totalAmount),
+        totalAmount: item.totalAmount,
+        eventsSupportedCount: item.eventsSupported.size,
+        organizersSupportedCount: item.organizersSupported.size,
+        campus: item.campus,
+        isPublic: item.isPublic,
+      }));
   };
 
   const getEventAttendees = (eventId: string): AttendeeMetricItem[] => {
@@ -1356,8 +1697,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signInWithSupabase,
         signUpWithSupabase,
         signInWithMagicLink,
+        sendGift,
         sendGiftToEvent,
+        sendOrganizerGift,
         getEventGifts,
+        getOrganizerGifts,
+        getLeaderboard,
+        updatePrivacySettings,
         getEventAttendees,
         promoteWaitlistAttendee,
         checkInAttendee,

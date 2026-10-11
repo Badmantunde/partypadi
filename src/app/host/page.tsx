@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { useAuth, GIFTER_LEVEL_INFO } from "@/context/AuthContext";
+import { useAuth, GIFTER_LEVEL_INFO, getOrganizerMilestones } from "@/context/AuthContext";
+import { GifterBadge } from "@/components/GifterBadge";
 import { CreatorTicketTier } from "@/types";
 import { EVENTS } from "@/data/events";
 import {
@@ -1057,79 +1058,134 @@ export default function HostEventStudioPage() {
                           </table>
                         </div>
                       ) : (
-                        /* Gifts & Support Telemetry Table */
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-left border-collapse text-xs">
-                            <thead>
-                              <tr className="border-b border-white/10 bg-white/[0.02] text-[10px] font-mono uppercase tracking-wider text-neutral-400">
-                                <th className="py-3.5 px-4">Patron Supporter</th>
-                                <th className="py-3.5 px-4">Badge Level</th>
-                                <th className="py-3.5 px-4">Amount (₦)</th>
-                                <th className="py-3.5 px-4">Cheer Message</th>
-                                <th className="py-3.5 px-4">Timestamp</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/5 font-sans">
-                              {filteredGifts.length === 0 ? (
-                                <tr>
-                                  <td colSpan={5} className="py-12 text-center text-neutral-400 font-mono text-xs">
-                                    No gift contributions recorded yet.
-                                  </td>
-                                </tr>
-                              ) : (
-                                filteredGifts.map((gift) => {
-                                  const badge = GIFTER_LEVEL_INFO[gift.level];
-                                  return (
-                                    <tr key={gift.id} className="hover:bg-white/[0.02] transition-colors">
-                                      <td className="py-3 px-4">
-                                        <div className="flex items-center gap-2.5">
-                                          <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-300 font-bold flex items-center justify-center text-xs">
-                                            {gift.gifterName.charAt(0)}
-                                          </div>
-                                          <div>
-                                            <span className="font-display font-bold text-xs text-white block">
-                                              {gift.gifterName}
-                                            </span>
-                                            {gift.gifterUsername && (
-                                              <span className="font-mono text-[10px] text-neutral-400">
-                                                @{gift.gifterUsername}
-                                              </span>
-                                            )}
-                                          </div>
-                                        </div>
-                                      </td>
+                        /* Gifts & Support Telemetry View */
+                        <div className="space-y-6">
+                          {(() => {
+                            const totalSupport = filteredGifts.reduce((s, g) => s + g.amount, 0);
+                            const uniqueSupporters = new Set(filteredGifts.map((g) => g.userId || g.gifterName)).size;
+                            const milestones = getOrganizerMilestones(totalSupport, uniqueSupporters);
 
-                                      <td className="py-3 px-4 font-mono">
-                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] font-bold">
-                                          <div className="w-3.5 h-3.5 rounded-full overflow-hidden relative shrink-0">
-                                            <Image src={badge.imageUrl} alt={badge.name} fill className="object-contain" />
-                                          </div>
-                                          <span>{badge.badge}</span>
-                                          <span className="text-neutral-400 font-normal">· {badge.name}</span>
+                            return (
+                              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <Award className="w-4 h-4 text-amber-400" />
+                                    <span className="font-display font-bold text-sm text-white">
+                                      Organizer Support Milestones
+                                    </span>
+                                  </div>
+                                  <span className="text-[11px] font-mono text-neutral-400">
+                                    ₦{totalSupport.toLocaleString()} raised across {uniqueSupporters} campus patron{uniqueSupporters !== 1 ? "s" : ""}
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                                  {milestones.map((m) => (
+                                    <div
+                                      key={m.id}
+                                      className={`p-2.5 rounded-xl border text-[11px] font-mono transition-all space-y-1 ${
+                                        m.unlocked
+                                          ? "bg-amber-400/10 border-amber-400/30 text-amber-300 font-bold"
+                                          : "bg-white/[0.02] border-white/5 text-neutral-500"
+                                      }`}
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-sm">{m.icon}</span>
+                                        <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-white/10">
+                                          {m.unlocked ? "UNLOCKED ✓" : `${m.progress}%`}
                                         </span>
-                                      </td>
+                                      </div>
+                                      <span className="block truncate text-white">{m.title}</span>
+                                      <span className="text-[9px] text-neutral-400 block truncate">
+                                        {m.requirement}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })()}
 
-                                      <td className="py-3 px-4 font-mono font-bold text-[#C5FF35]">
-                                        ₦{gift.amount.toLocaleString()}
-                                      </td>
+                          {/* Gifts Table */}
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse text-xs">
+                              <thead>
+                                <tr className="border-b border-white/10 bg-white/[0.02] text-[10px] font-mono uppercase tracking-wider text-neutral-400">
+                                  <th className="py-3.5 px-4">Patron Supporter</th>
+                                  <th className="py-3.5 px-4">Giving Type</th>
+                                  <th className="py-3.5 px-4">Badge Tier</th>
+                                  <th className="py-3.5 px-4">Amount (₦)</th>
+                                  <th className="py-3.5 px-4">Cheer Message</th>
+                                  <th className="py-3.5 px-4">Timestamp</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-white/5 font-sans">
+                                {filteredGifts.length === 0 ? (
+                                  <tr>
+                                    <td colSpan={6} className="py-12 text-center text-neutral-400 font-mono text-xs">
+                                      No gift contributions recorded yet.
+                                    </td>
+                                  </tr>
+                                ) : (
+                                  filteredGifts.map((gift) => {
+                                    return (
+                                      <tr key={gift.id} className="hover:bg-white/[0.02] transition-colors">
+                                        <td className="py-3 px-4">
+                                          <div className="flex items-center gap-2.5">
+                                            <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-300 font-bold flex items-center justify-center text-xs">
+                                              {gift.gifterName.charAt(0)}
+                                            </div>
+                                            <div>
+                                              <span className="font-display font-bold text-xs text-white block">
+                                                {gift.gifterName}
+                                              </span>
+                                              {gift.gifterUsername && (
+                                                <span className="font-mono text-[10px] text-neutral-400">
+                                                  @{gift.gifterUsername}
+                                                </span>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </td>
 
-                                      <td className="py-3 px-4 text-neutral-300 max-w-xs">
-                                        {gift.message ? (
-                                          <span className="italic">&ldquo;{gift.message}&rdquo;</span>
-                                        ) : (
-                                          <span className="text-neutral-600">—</span>
-                                        )}
-                                      </td>
+                                        <td className="py-3 px-4 font-mono">
+                                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] bg-white/5 border border-white/10 text-neutral-300">
+                                            {gift.type === "direct_organizer_gift"
+                                              ? "Organizer Gift"
+                                              : "Event Sponsor"}
+                                          </span>
+                                        </td>
 
-                                      <td className="py-3 px-4 font-mono text-[10px] text-neutral-400">
-                                        {new Date(gift.createdAt).toLocaleDateString()} · {new Date(gift.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                      </td>
-                                    </tr>
-                                  );
-                                })
-                              )}
-                            </tbody>
-                          </table>
+                                        <td className="py-3 px-4">
+                                          <GifterBadge level={gift.level} size="sm" />
+                                        </td>
+
+                                        <td className="py-3 px-4 font-mono font-bold text-[#C5FF35]">
+                                          ₦{gift.amount.toLocaleString()}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-neutral-300 max-w-xs">
+                                          {gift.message ? (
+                                            <span className="italic">&ldquo;{gift.message}&rdquo;</span>
+                                          ) : (
+                                            <span className="text-neutral-600">—</span>
+                                          )}
+                                        </td>
+
+                                        <td className="py-3 px-4 font-mono text-[10px] text-neutral-400">
+                                          {new Date(gift.createdAt).toLocaleDateString()} ·{" "}
+                                          {new Date(gift.createdAt).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                          })}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       )}
                     </div>

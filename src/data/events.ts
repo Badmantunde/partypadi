@@ -92,6 +92,8 @@ export const EVENTS: CampusEvent[] = [
         available: true,
       },
     ],
+    sponsorshipGoal: 150000,
+    sponsorshipGoalTitle: "Campus Stage Acoustics & Drinks Support Fund",
   },
   {
     id: "green-room-sessions",
@@ -141,6 +143,8 @@ export const EVENTS: CampusEvent[] = [
         available: true,
       },
     ],
+    sponsorshipGoal: 80000,
+    sponsorshipGoalTitle: "Sound System & Ambient Light Engineering",
   },
   {
     id: "campus-unplugged",
