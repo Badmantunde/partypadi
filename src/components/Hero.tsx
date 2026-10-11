@@ -200,7 +200,7 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
           </div>
 
           {/* Cards Arc Container */}
-          <div className="flex sm:flex-row flex-nowrap items-end justify-center overflow-x-auto sm:overflow-visible pb-8 sm:pb-0 px-4 sm:px-0 gap-3 sm:gap-0 scrollbar-none">
+          <div className="flex sm:flex-row flex-nowrap items-end justify-start sm:justify-center overflow-x-auto sm:overflow-visible pt-8 pb-8 sm:pt-6 sm:pb-2 px-6 sm:px-0 gap-4 sm:gap-0 scrollbar-none snap-x snap-mandatory">
             {cards.map((card) => {
               const isCenter = card.isCenter;
 
@@ -208,7 +208,7 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
                 <div
                   key={card.id}
                   onClick={() => onSelectEvent(card.id)}
-                  className={`relative shrink-0 rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-300 hover:scale-105 hover:z-40 hover:rotate-0 hover:-translate-y-6 cursor-pointer border border-white/20 ${card.zIndex} ${card.rotation} ${card.translateY} ${card.translateX} ${
+                  className={`relative shrink-0 snap-center my-1 rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-300 hover:scale-105 hover:z-40 hover:rotate-0 hover:-translate-y-6 cursor-pointer border border-white/20 ${card.zIndex} ${card.rotation} ${card.translateY} ${card.translateX} ${
                     isCenter
                       ? "w-[260px] sm:w-[280px] h-[360px] sm:h-[400px] ring-2 ring-[#C5FF35]/80"
                       : "w-[220px] sm:w-[240px] h-[320px] sm:h-[350px] opacity-90 hover:opacity-100"

@@ -45,7 +45,9 @@ export function HowItWorks() {
           <h2 className="font-display font-medium text-3xl sm:text-5xl lg:text-6xl tracking-tight text-[#11120F] leading-[1.05]">
             Less Searching.
             <br />
-            <span className="font-serif italic font-normal text-[#7C3AED]">More Showing Up.</span>
+            <span className="font-serif italic font-normal text-[#11120F] underline decoration-[#C5FF35] decoration-4 underline-offset-4">
+              More Showing Up.
+            </span>
           </h2>
           <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
             PartyPadi strips out the hassle of campus event ticketing so you and your people can focus on being where things happen.
@@ -53,24 +55,24 @@ export function HowItWorks() {
         </div>
 
         {/* 3 Concise Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {steps.map((step) => (
             <div
               key={step.num}
-              className="p-8 bg-neutral-50/60 border border-neutral-200 rounded-3xl flex flex-col justify-between space-y-8 hover:border-[#11120F] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-xs"
+              className="p-5 sm:p-8 bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl flex flex-col justify-between space-y-6 sm:space-y-8 hover:border-[#11120F] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 shadow-xs"
             >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-neutral-200/80 pb-4">
-                  <span className="font-mono text-3xl font-black text-[#11120F]">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-3 sm:pb-4">
+                  <span className="font-mono text-2xl sm:text-3xl font-black text-[#11120F]">
                     {step.num}
                   </span>
-                  <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-500 bg-white px-3 py-1 rounded-full border border-neutral-200">
+                  <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full border border-neutral-200">
                     {step.name}
                   </span>
                 </div>
 
-                <div className="space-y-2">
-                  <h3 className="font-display font-bold text-xl text-[#11120F]">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-[#11120F]">
                     {step.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
@@ -79,10 +81,10 @@ export function HowItWorks() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-neutral-200/80 space-y-2">
+              <div className="pt-3 sm:pt-4 border-t border-neutral-100 space-y-2">
                 {step.details.map((detail, idx) => (
                   <div key={idx} className="flex items-center gap-2 text-xs text-neutral-800">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED] shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#11120F] shrink-0" />
                     <span>{detail}</span>
                   </div>
                 ))}

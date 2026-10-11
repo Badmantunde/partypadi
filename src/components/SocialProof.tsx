@@ -41,7 +41,9 @@ export function SocialProof() {
             <h2 className="font-display font-medium text-4xl sm:text-6xl tracking-tight text-[#11120F] leading-[1.02]">
               Good Nights{" "}
               <br />
-              <span className="font-serif italic font-normal text-[#7C3AED]">Become</span>{" "}
+              <span className="font-serif italic font-normal text-[#11120F] underline decoration-[#C5FF35] decoration-4 underline-offset-4">
+                Become
+              </span>{" "}
               Great Stories.
             </h2>
           </div>
@@ -52,7 +54,7 @@ export function SocialProof() {
             </p>
 
             {/* Social Proof Metric Snippet */}
-            <div className="p-5 bg-neutral-50/70 border border-neutral-200 rounded-3xl space-y-3 shadow-xs">
+            <div className="p-5 bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl space-y-3 shadow-xs">
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
                   <div className="w-8 h-8 rounded-full border-2 border-white bg-[#11120F] flex items-center justify-center text-white text-xs font-bold">
@@ -104,11 +106,11 @@ export function SocialProof() {
         </div>
 
         {/* Oversized Numerical Grid (Swiss Discipline) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {principles.map((item, idx) => (
             <div
               key={idx}
-              className="p-7 bg-neutral-50/50 border border-neutral-200 rounded-3xl flex flex-col justify-between space-y-6 relative overflow-hidden hover:border-[#11120F] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-xs"
+              className="p-5 sm:p-7 bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl flex flex-col justify-between space-y-4 sm:space-y-6 relative overflow-hidden hover:border-[#11120F] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 shadow-xs"
             >
               <div className="space-y-4">
                 {/* Oversized Number */}

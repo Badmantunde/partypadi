@@ -34,9 +34,9 @@ export function CampusDiscoveryStrip({
   ];
 
   return (
-    <section className="w-full border-b border-[#DADBD4] bg-white">
+    <section className="w-full border-b border-neutral-200 bg-white">
       {/* Top Editorial Ticker Bar */}
-      <div className="border-b border-[#DADBD4] px-4 sm:px-6 lg:px-8 py-2.5 bg-[#11120F] text-[#F5F5F0] overflow-hidden">
+      <div className="border-b border-neutral-800 px-4 sm:px-6 lg:px-8 py-2.5 bg-[#11120F] text-[#F5F5F0] overflow-hidden">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-[11px] font-mono tracking-widest uppercase">
           <div className="flex items-center gap-3">
             <span className="w-1.5 h-1.5 bg-[#C5FF35] animate-pulse" />
