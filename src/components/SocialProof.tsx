@@ -30,7 +30,7 @@ export function SocialProof() {
 
   return (
     <section className="w-full py-20 sm:py-28 bg-white border-b border-neutral-200/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Section Header with Oversized Typography & Social Metric Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end pb-8 border-b border-neutral-200/80">
           <div className="lg:col-span-8 space-y-3">

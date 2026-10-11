@@ -10,7 +10,7 @@ export function StorySection() {
       {/* Subtle background glow */}
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#C5FF35]/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Left Column (Reference 2 style) */}
           <div className="lg:col-span-5 space-y-4">

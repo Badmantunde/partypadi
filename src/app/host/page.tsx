@@ -365,7 +365,7 @@ export default function HostEventStudioPage() {
         </section>
 
         {/* Main Studio Frame */}
-        <div id="studio-canvas" className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div id="studio-canvas" className="max-w-[1536px] w-full mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           {/* Breadcrumb & Studio Badge */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2 text-xs font-mono text-white/50">
@@ -910,8 +910,97 @@ export default function HostEventStudioPage() {
                     {/* Main Table Container */}
                     <div className="rounded-2xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl">
                       {metricsFilter !== "gifts" ? (
-                        /* Attendee Roster Table */
-                        <div className="overflow-x-auto">
+                        <>
+                          {/* Mobile View: Sleek Attendee Cards (< md) */}
+                          <div className="block md:hidden p-3.5 space-y-3 divide-y divide-white/5">
+                            {filteredAttendees.length === 0 ? (
+                              <div className="py-8 text-center text-neutral-400 font-mono text-xs">
+                                No attendees found matching filter.
+                              </div>
+                            ) : (
+                              filteredAttendees.map((att) => {
+                                const gifterBadge = att.gifterLevel ? GIFTER_LEVEL_INFO[att.gifterLevel] : null;
+                                return (
+                                  <div key={`mob-${att.id}`} className="pt-3 first:pt-0 space-y-2.5">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="flex items-center gap-2.5 min-w-0">
+                                        <div className="w-8 h-8 rounded-xl bg-white/10 text-white font-display font-bold flex items-center justify-center text-xs shrink-0">
+                                          {att.name.charAt(0)}
+                                        </div>
+                                        <div className="min-w-0">
+                                          <div className="flex items-center gap-1.5">
+                                            <span className="font-display font-bold text-xs text-white block truncate">
+                                              {att.name}
+                                            </span>
+                                            {gifterBadge && (
+                                              <GifterBadge level={att.gifterLevel!} size="sm" />
+                                            )}
+                                          </div>
+                                          <span className="text-[10px] font-mono text-neutral-400 block truncate">
+                                            {att.username ? `@${att.username}` : att.email}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      {att.status === "checked_in" ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold shrink-0">
+                                          <Check className="w-2.5 h-2.5" />
+                                          <span>Checked In</span>
+                                        </span>
+                                      ) : att.status === "paid" ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[10px] font-bold shrink-0">
+                                          <Ticket className="w-2.5 h-2.5" />
+                                          <span>Paid Pass</span>
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[10px] font-bold shrink-0">
+                                          <Clock className="w-2.5 h-2.5" />
+                                          <span>Waitlist</span>
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    <div className="flex items-center justify-between text-xs font-mono bg-white/[0.02] p-2.5 rounded-xl border border-white/5">
+                                      <div>
+                                        <span className="text-neutral-400 text-[9px] block">TIER</span>
+                                        <span className="text-white font-bold text-[11px]">{att.ticketTier}</span>
+                                      </div>
+                                      <div>
+                                        <span className="text-neutral-400 text-[9px] block">PAID</span>
+                                        <span className="text-[#C5FF35] font-bold text-[11px]">
+                                          {att.amountPaid > 0 ? `₦${att.amountPaid.toLocaleString()}` : "Free Pass"}
+                                        </span>
+                                      </div>
+                                      <div className="text-right">
+                                        <span className="text-neutral-400 text-[9px] block">CODE</span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleCopyCode(att.ticketCode)}
+                                          className="inline-flex items-center gap-1 text-[11px] text-white hover:text-[#C5FF35] font-bold"
+                                        >
+                                          <span>{att.ticketCode}</span>
+                                          <Copy className="w-2.5 h-2.5 opacity-60" />
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    {att.status !== "checked_in" && (
+                                      <button
+                                        type="button"
+                                        onClick={() => handleCheckInAttendee(att.id)}
+                                        className="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-mono text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                                      >
+                                        <Check className="w-3.5 h-3.5" />
+                                        <span>Check In at Gate</span>
+                                      </button>
+                                    )}
+                                  </div>
+                                );
+                              })
+                            )}
+                          </div>
+
+                          {/* Desktop Table View (md and above) */}
+                          <div className="hidden md:block overflow-x-auto">
                           <table className="w-full text-left border-collapse text-xs">
                             <thead>
                               <tr className="border-b border-white/10 bg-white/[0.02] text-[10px] font-mono uppercase tracking-wider text-neutral-400">
@@ -1063,6 +1152,7 @@ export default function HostEventStudioPage() {
                             </tbody>
                           </table>
                         </div>
+                        </>
                       ) : (
                         /* Gifts & Support Telemetry View */
                         <div className="space-y-6">

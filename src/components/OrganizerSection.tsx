@@ -32,7 +32,7 @@ export function OrganizerSection({ onOpenHostModal }: OrganizerSectionProps) {
       {/* Subtle background glow */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#C5FF35]/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Proposition & Conversion (Col 1-7) */}
           <div className="lg:col-span-7 space-y-8">

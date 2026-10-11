@@ -47,7 +47,7 @@ export function PadiCircle() {
 
   return (
     <section id="padi-circle" className="w-full py-20 sm:py-28 bg-[#0C0D0E] text-[#F5F5F0] border-y border-neutral-800 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end pb-8 border-b border-neutral-800">
           <div className="lg:col-span-7 space-y-3">
@@ -179,7 +179,7 @@ export function PadiCircle() {
               <span>You&apos;re on the priority waitlist!</span>
             </div>
           ) : (
-            <form onSubmit={handleJoin} className="flex w-full md:w-auto gap-2">
+            <form onSubmit={handleJoin} className="flex flex-col sm:flex-row w-full md:w-auto gap-2.5 sm:gap-2">
               <input
                 type="email"
                 required

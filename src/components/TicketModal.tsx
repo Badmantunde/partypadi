@@ -183,10 +183,10 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="ticket-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
     >
       <div
-        className="relative w-full max-w-2xl bg-white border border-neutral-200 rounded-3xl shadow-2xl my-8 overflow-hidden text-[#11120F]"
+        className="relative w-full max-w-2xl bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl shadow-2xl my-auto max-h-[92vh] overflow-y-auto text-[#11120F]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header Bar */}
@@ -208,7 +208,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
 
         {/* Success View: The Authentic Digital Campus Pass */}
         {isSuccess ? (
-          <div className="p-6 sm:p-8 space-y-6">
+          <div className="p-4 sm:p-8 space-y-5 sm:space-y-6">
             <div className="text-center space-y-1">
               <span className="inline-block px-3 py-1 text-[10px] font-mono uppercase tracking-wider bg-[#C5FF35] text-[#11120F] font-bold rounded-full shadow-xs">
                 CONFIRMED & READY
@@ -328,7 +328,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
           </div>
         ) : (
           /* Checkout Booking View */
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-6">
             {/* Event Header Snippet */}
             <div className="flex gap-4 pb-5 border-b border-neutral-200">
               <div className="relative w-20 h-20 bg-[#11120F] shrink-0 rounded-2xl overflow-hidden border border-neutral-200 shadow-xs">

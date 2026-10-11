@@ -197,7 +197,7 @@ function EventsPageContent({ initialEvents }: EventsPageClientProps) {
         </section>
 
         {/* Discovery Feed Container (Pure White) */}
-        <div id="events-feed" className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
+        <div id="events-feed" className="max-w-[1536px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
 
         {/* Results Counter */}
         <div className="flex items-center justify-between text-xs font-mono text-neutral-500">

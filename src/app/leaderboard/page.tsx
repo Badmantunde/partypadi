@@ -173,7 +173,7 @@ export default function LeaderboardPage() {
           {/* Ambient Radial Lights */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-amber-500/15 via-[#C5FF35]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative space-y-6 text-center">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 relative space-y-6 text-center">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-wider text-amber-300">
               <Trophy className="w-3.5 h-3.5 fill-amber-300" />
               <span>PADI GIFTER · CAMPUS HALL OF FAME</span>
@@ -188,37 +188,37 @@ export default function LeaderboardPage() {
             </p>
 
             {/* Filter Controls: Period & Campus */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 pt-4 w-full max-w-md sm:max-w-none mx-auto">
               {/* Period Switcher (Monthly Primary) */}
-              <div className="flex p-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono">
+              <div className="flex w-full sm:w-auto p-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono">
                 <button
                   type="button"
                   onClick={() => setPeriod("month")}
-                  className={`px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-full transition-all flex items-center justify-center gap-1.5 ${
                     period === "month"
                       ? "bg-[#C5FF35] text-black font-bold shadow-md"
                       : "text-neutral-400 hover:text-white"
                   }`}
                 >
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>This Month ({currentMonthLabel})</span>
+                  <Calendar className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">This Month</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPeriod("all_time")}
-                  className={`px-4 py-2 rounded-full transition-all flex items-center gap-1.5 ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-full transition-all flex items-center justify-center gap-1.5 ${
                     period === "all_time"
                       ? "bg-[#C5FF35] text-black font-bold shadow-md"
                       : "text-neutral-400 hover:text-white"
                   }`}
                 >
-                  <Trophy className="w-3.5 h-3.5" />
-                  <span>All-Time Legends</span>
+                  <Trophy className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">All-Time</span>
                 </button>
               </div>
 
               {/* Campus Selector */}
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono">
+              <div className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-mono">
                 <span className="text-neutral-400">Campus:</span>
                 <select
                   value={selectedCampus}
@@ -237,7 +237,7 @@ export default function LeaderboardPage() {
 
         {/* User Standing Capsule (if logged in) */}
         {currentUser && myStanding && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
             <div className="p-4 sm:p-5 rounded-3xl bg-[#0F1012] border border-amber-400/30 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 rounded-2xl bg-[#C5FF35] text-[#070809] flex items-center justify-center font-display font-black text-xl shadow-md">
@@ -282,7 +282,7 @@ export default function LeaderboardPage() {
           </div>
         )}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-16">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 space-y-12 sm:space-y-16">
           {/* TOP 3 PODIUM SHOWCASE */}
           {top3.length > 0 && (
             <div className="space-y-6">
@@ -295,14 +295,14 @@ export default function LeaderboardPage() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end pt-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-5 items-end pt-2 sm:pt-4">
                 {/* 2nd Place (Left) */}
                 {top3[1] && (
-                  <div className="p-6 rounded-3xl bg-white/[0.03] border border-slate-300/30 text-center space-y-3 relative group hover:border-slate-300 transition-all order-2 md:order-1">
-                    <div className="w-8 h-8 rounded-full bg-slate-300 text-slate-900 font-mono font-bold text-sm mx-auto flex items-center justify-center shadow-md">
+                  <div className="p-4 sm:p-6 rounded-3xl bg-white/[0.03] border border-slate-300/30 text-center space-y-2.5 sm:space-y-3 relative group hover:border-slate-300 transition-all order-2 md:order-1">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-300 text-slate-900 font-mono font-bold text-xs sm:text-sm mx-auto flex items-center justify-center shadow-md">
                       2
                     </div>
-                    <div className="w-16 h-16 rounded-2xl mx-auto overflow-hidden relative border border-slate-300/40 p-2 bg-black/40">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl mx-auto overflow-hidden relative border border-slate-300/40 p-1.5 sm:p-2 bg-black/40">
                       <Image
                         src={GIFTER_LEVEL_INFO[top3[1].gifterLevel].imageUrl}
                         alt={top3[1].name}
@@ -311,23 +311,23 @@ export default function LeaderboardPage() {
                       />
                     </div>
                     <div>
-                      <h3 className="font-display font-bold text-lg text-white">
+                      <h3 className="font-display font-bold text-base sm:text-lg text-white">
                         {top3[1].name}
                       </h3>
                       {top3[1].username && (
-                        <span className="text-xs font-mono text-neutral-400">
+                        <span className="text-[11px] sm:text-xs font-mono text-neutral-400">
                           @{top3[1].username}
                         </span>
                       )}
                     </div>
-                    <div className="pt-1">
+                    <div className="pt-0.5">
                       <GifterBadge level={top3[1].gifterLevel} size="sm" />
                     </div>
-                    <div className="p-2.5 rounded-2xl bg-white/5 border border-white/5 text-center">
-                      <span className="text-[10px] font-mono text-neutral-400 block uppercase">
+                    <div className="p-2 sm:p-2.5 rounded-2xl bg-white/5 border border-white/5 text-center">
+                      <span className="text-[9px] sm:text-[10px] font-mono text-neutral-400 block uppercase">
                         Total Support
                       </span>
-                      <span className="font-mono text-base font-bold text-white">
+                      <span className="font-mono text-sm sm:text-base font-bold text-white">
                         ₦{top3[1].totalAmount.toLocaleString()}
                       </span>
                     </div>
@@ -336,13 +336,13 @@ export default function LeaderboardPage() {
 
                 {/* 1st Place (Center - Elevated & Gold) */}
                 {top3[0] && (
-                  <div className="p-7 rounded-3xl bg-gradient-to-b from-amber-500/10 to-white/[0.04] border-2 border-amber-400/60 text-center space-y-4 relative shadow-[0_0_40px_rgba(245,158,11,0.2)] md:-translate-y-4 order-1 md:order-2">
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-amber-400 text-black font-mono font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-lg">
-                      <Crown className="w-3.5 h-3.5 fill-black" />
+                  <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-b from-amber-500/10 to-white/[0.04] border-2 border-amber-400/60 text-center space-y-3 sm:space-y-4 relative shadow-[0_0_40px_rgba(245,158,11,0.2)] md:-translate-y-4 order-1 md:order-2">
+                    <div className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-400 text-black font-mono font-black text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap">
+                      <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-black" />
                       <span>#1 CAMPUS HEADLINER</span>
                     </div>
 
-                    <div className="w-20 h-20 rounded-2xl mx-auto overflow-hidden relative border-2 border-amber-400/80 p-2 bg-black/60 shadow-xl mt-2">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl mx-auto overflow-hidden relative border-2 border-amber-400/80 p-1.5 sm:p-2 bg-black/60 shadow-xl mt-1 sm:mt-2">
                       <Image
                         src={GIFTER_LEVEL_INFO[top3[0].gifterLevel].imageUrl}
                         alt={top3[0].name}
@@ -352,28 +352,28 @@ export default function LeaderboardPage() {
                     </div>
 
                     <div>
-                      <h3 className="font-display font-black text-xl sm:text-2xl text-white">
+                      <h3 className="font-display font-black text-lg sm:text-2xl text-white">
                         {top3[0].name}
                       </h3>
                       {top3[0].username && (
-                        <span className="text-xs font-mono text-neutral-400">
+                        <span className="text-[11px] sm:text-xs font-mono text-neutral-400">
                           @{top3[0].username}
                         </span>
                       )}
                     </div>
 
-                    <div className="pt-1">
+                    <div className="pt-0.5">
                       <GifterBadge level={top3[0].gifterLevel} size="md" />
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-amber-400/15 border border-amber-400/30 text-center">
-                      <span className="text-[10px] font-mono text-amber-300 block uppercase font-bold">
+                    <div className="p-2.5 sm:p-3 rounded-2xl bg-amber-400/15 border border-amber-400/30 text-center">
+                      <span className="text-[9px] sm:text-[10px] font-mono text-amber-300 block uppercase font-bold">
                         Verified Contributions
                       </span>
-                      <span className="font-mono text-xl sm:text-2xl font-black text-[#C5FF35]">
+                      <span className="font-mono text-lg sm:text-2xl font-black text-[#C5FF35]">
                         ₦{top3[0].totalAmount.toLocaleString()}
                       </span>
-                      <span className="text-[10px] font-mono text-neutral-400 block mt-0.5">
+                      <span className="text-[9px] sm:text-[10px] font-mono text-neutral-400 block mt-0.5">
                         {top3[0].eventsSupportedCount} events · {top3[0].organizersSupportedCount} crews supported
                       </span>
                     </div>
@@ -382,11 +382,11 @@ export default function LeaderboardPage() {
 
                 {/* 3rd Place (Right) */}
                 {top3[2] && (
-                  <div className="p-6 rounded-3xl bg-white/[0.03] border border-amber-700/30 text-center space-y-3 relative group hover:border-amber-600 transition-all order-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-700 text-amber-100 font-mono font-bold text-sm mx-auto flex items-center justify-center shadow-md">
+                  <div className="p-4 sm:p-6 rounded-3xl bg-white/[0.03] border border-amber-700/30 text-center space-y-2.5 sm:space-y-3 relative group hover:border-amber-600 transition-all order-3">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-700 text-amber-100 font-mono font-bold text-xs sm:text-sm mx-auto flex items-center justify-center shadow-md">
                       3
                     </div>
-                    <div className="w-16 h-16 rounded-2xl mx-auto overflow-hidden relative border border-amber-700/40 p-2 bg-black/40">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl mx-auto overflow-hidden relative border border-amber-700/40 p-1.5 sm:p-2 bg-black/40">
                       <Image
                         src={GIFTER_LEVEL_INFO[top3[2].gifterLevel].imageUrl}
                         alt={top3[2].name}
@@ -395,23 +395,23 @@ export default function LeaderboardPage() {
                       />
                     </div>
                     <div>
-                      <h3 className="font-display font-bold text-lg text-white">
+                      <h3 className="font-display font-bold text-base sm:text-lg text-white">
                         {top3[2].name}
                       </h3>
                       {top3[2].username && (
-                        <span className="text-xs font-mono text-neutral-400">
+                        <span className="text-[11px] sm:text-xs font-mono text-neutral-400">
                           @{top3[2].username}
                         </span>
                       )}
                     </div>
-                    <div className="pt-1">
+                    <div className="pt-0.5">
                       <GifterBadge level={top3[2].gifterLevel} size="sm" />
                     </div>
                     <div className="p-2.5 rounded-2xl bg-white/5 border border-white/5 text-center">
-                      <span className="text-[10px] font-mono text-neutral-400 block uppercase">
+                      <span className="text-[9px] sm:text-[10px] font-mono text-neutral-400 block uppercase">
                         Total Support
                       </span>
-                      <span className="font-mono text-base font-bold text-white">
+                      <span className="font-mono text-sm sm:text-base font-bold text-white">
                         ₦{top3[2].totalAmount.toLocaleString()}
                       </span>
                     </div>
@@ -448,7 +448,59 @@ export default function LeaderboardPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-[#0C0D0E] overflow-hidden shadow-xl">
+            {/* Mobile View: Sleek Ranked Supporter Cards (< md) */}
+            <div className="block md:hidden space-y-2.5">
+              {filteredLeaderboard.length === 0 ? (
+                <div className="p-8 text-center text-neutral-400 font-mono text-xs rounded-2xl bg-white/[0.02] border border-white/10">
+                  No supporters found for this filter. Be the first to back an event!
+                </div>
+              ) : (
+                filteredLeaderboard.map((entry) => (
+                  <div
+                    key={`mob-${entry.rank}-${entry.name}`}
+                    className="p-3.5 rounded-2xl bg-[#0F1012] border border-white/10 flex items-center justify-between gap-3 shadow-sm hover:border-white/20 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span
+                        className={`w-7 h-7 rounded-full inline-flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                          entry.rank === 1
+                            ? "bg-amber-400 text-black shadow-xs"
+                            : entry.rank === 2
+                            ? "bg-slate-200 text-slate-900"
+                            : entry.rank === 3
+                            ? "bg-amber-700 text-amber-100"
+                            : "bg-white/10 text-neutral-300"
+                        }`}
+                      >
+                        #{entry.rank}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-display font-bold text-xs text-white truncate">
+                            {entry.name}
+                          </span>
+                          <GifterBadge level={entry.gifterLevel} size="sm" />
+                        </div>
+                        <span className="text-[10px] font-mono text-neutral-400 block truncate">
+                          {entry.campus} · {entry.eventsSupportedCount} event{entry.eventsSupportedCount !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="font-mono text-xs font-bold text-[#C5FF35] block">
+                        ₦{entry.totalAmount.toLocaleString()}
+                      </span>
+                      <span className="text-[9px] font-mono text-neutral-500 uppercase block">
+                        Verified
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Desktop View: Full Data Table (md and above) */}
+            <div className="hidden md:block rounded-3xl border border-white/10 bg-[#0C0D0E] overflow-hidden shadow-xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>

@@ -70,10 +70,10 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
     <div className="min-h-screen bg-white text-[#11120F] flex flex-col">
       <Navbar onOpenHostModal={() => setHostModalOpen(true)} />
 
-      <main className="flex-1 pb-20">
+      <main className="flex-1 pb-28 lg:pb-20">
         {/* Breadcrumb Bar */}
         <div className="w-full bg-neutral-50 border-b border-neutral-200 py-3.5 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between text-xs font-mono">
+          <div className="max-w-[1536px] mx-auto flex items-center justify-between text-xs font-mono">
             <Link
               href="/events"
               className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-black transition-colors"
@@ -88,7 +88,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
         </div>
 
         {/* Hero Banner Section */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
           <div className="relative min-h-[360px] sm:min-h-0 aspect-auto sm:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-2xl bg-black">
             <Image
               src={event.imageUrl}
@@ -147,7 +147,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
         </div>
 
         {/* 2-Column Main Content & Booking Panel */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pt-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
             {/* Left Column: Event Intel & Description (Col 1-7) */}
             <div className="lg:col-span-7 space-y-10">
@@ -645,7 +645,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
         </div>
 
         {/* Event Photos & Picture Pickup Section */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
           <EventPhotoGallery
             eventId={event.id}
             eventTitle={event.title}
@@ -655,7 +655,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
 
         {/* Related Events Section */}
         {relatedEvents.length > 0 && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pt-20">
             <div className="border-t border-neutral-200 pt-12 space-y-8">
               <div className="flex items-end justify-between">
                 <div>
@@ -706,6 +706,38 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
             </div>
           </div>
         )}
+
+        {/* Mobile Sticky Booking Dock (Visible on Mobile & Tablet only, zero chunkiness) */}
+        <div className="fixed bottom-0 left-0 right-0 z-30 bg-[#0C0D0E]/95 backdrop-blur-xl border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3 lg:hidden shadow-2xl">
+          <div className="min-w-0">
+            <span className="text-[9px] font-mono uppercase text-neutral-400 block tracking-wider">
+              PASSES FROM
+            </span>
+            <span className="font-mono text-base font-bold text-white block truncate">
+              {event.priceStartingFrom === 0 ? "FREE ENTRY" : `₦${event.priceStartingFrom.toLocaleString()}`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setGiftModalOpen(true)}
+              className="p-2.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20 transition-all shrink-0"
+              title="Support Event"
+              aria-label="Support Event"
+            >
+              <Heart className="w-4 h-4 text-amber-400 fill-amber-400" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setTicketModalOpen(true)}
+              className="spicy-btn py-2.5 px-4 sm:px-5 bg-white text-black hover:bg-[#C5FF35] rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md transition-all shrink-0"
+            >
+              <span>Get Tickets</span>
+              <ArrowRight className="w-3.5 h-3.5 text-black" />
+            </button>
+          </div>
+        </div>
       </main>
 
       <Footer onOpenHostModal={() => setHostModalOpen(true)} />

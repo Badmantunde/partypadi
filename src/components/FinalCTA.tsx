@@ -12,13 +12,13 @@ export function FinalCTA({ onOpenHostModal }: FinalCTAProps) {
   return (
     <section className="w-full py-24 sm:py-36 bg-[#0C0D0E] text-[#F5F5F0] border-t border-neutral-800 relative overflow-hidden">
       {/* Swiss grid accent lines */}
-      <div className="absolute inset-0 pointer-events-none max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-12 opacity-5">
+      <div className="absolute inset-0 pointer-events-none max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-12 opacity-5">
         <div className="border-r border-white h-full col-span-4" />
         <div className="border-r border-white h-full col-span-4" />
         <div className="border-r border-white h-full col-span-4" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+      <div className="relative max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-wider text-white/80 shadow-xs">
           <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />
           <span>YOUR TICKET TO CAMPUS CULTURE</span>

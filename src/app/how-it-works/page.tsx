@@ -103,7 +103,7 @@ export default function HowItWorksPage() {
 
         {/* Step-by-Step Flow Section */}
         <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
             {activeTab === "students" ? (
               /* Student Flow */
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

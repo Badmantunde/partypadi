@@ -57,11 +57,11 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
             : "bg-[#0C0D0E] border-b border-white/5"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Desktop Layout (xl and above): 3-Track Grid Centering Center Nav Mathematically */}
-          <div className="hidden xl:grid grid-cols-[1fr_auto_1fr] items-center h-20 w-full">
+        <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          {/* Desktop Layout (xl and above): Fluid 3-Section Flex that Prevents Overlaps */}
+          <div className="hidden xl:flex items-center justify-between h-20 w-full gap-4 xl:gap-6 2xl:gap-8">
             {/* Left: Star Mark & PartyPadi Wordmark */}
-            <div className="flex items-center justify-start shrink-0">
+            <div className="flex items-center shrink-0 min-w-0">
               <Link
                 href="/"
                 className="outline-none focus-visible:ring-1 focus-visible:ring-white flex items-center gap-2 group transition-transform hover:scale-[1.02] shrink-0"
@@ -70,9 +70,9 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               </Link>
             </div>
 
-            {/* Center: Floating Dark Capsule Navigation (Mathematically centered) */}
+            {/* Center: Floating Dark Capsule Navigation (Centered in free space) */}
             <nav
-              className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner shrink-0 justify-self-center"
+              className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner shrink-0 mx-auto"
               aria-label="Main Navigation"
             >
               {navLinks.map((link) => {
@@ -81,7 +81,7 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`relative px-3.5 py-1.5 text-xs font-mono rounded-full transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                    className={`relative px-3 2xl:px-3.5 py-1.5 text-xs font-mono rounded-full transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                       active
                         ? "bg-white/15 text-white font-bold border border-white/25 shadow-xs"
                         : "text-white/70 hover:text-white hover:bg-white/10"
@@ -96,12 +96,12 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               })}
             </nav>
 
-            {/* Right: Action Buttons on Desktop (Right-aligned) */}
-            <div className="flex items-center justify-end gap-2.5 shrink-0">
+            {/* Right: Action Buttons on Desktop (Right-aligned, never overlaps center or logo) */}
+            <div className="flex items-center justify-end gap-2 2xl:gap-2.5 shrink-0">
               {/* Host an Event button */}
               <Link
                 href="/host"
-                className={`text-xs font-mono px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                className={`text-xs font-mono px-3 2xl:px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                   checkIsActive("/host")
                     ? "bg-white/15 text-white font-bold border border-white/25 shadow-xs"
                     : "text-white/80 hover:text-white hover:bg-white/5"
@@ -134,7 +134,9 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
                     <span className="w-5 h-5 rounded-full bg-[#C5FF35] text-[#0C0D0E] font-display font-black text-[11px] flex items-center justify-center shrink-0">
                       {currentUser.fullName.charAt(0)}
                     </span>
-                    <span className="font-mono font-bold text-[#C5FF35] whitespace-nowrap">@{currentUser.username}</span>
+                    <span className="font-mono font-bold text-[#C5FF35] whitespace-nowrap max-w-[120px] 2xl:max-w-none truncate">
+                      @{currentUser.username}
+                    </span>
                   </button>
                 </div>
               ) : (
@@ -149,7 +151,7 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
 
               <Link
                 href="/events"
-                className="spicy-btn inline-flex items-center gap-2 px-4 py-2 bg-white text-[#0C0D0E] hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full text-xs font-mono font-medium tracking-tight transition-all duration-300 group whitespace-nowrap shrink-0"
+                className="spicy-btn hidden 2xl:inline-flex items-center gap-2 px-4 py-2 bg-white text-[#0C0D0E] hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full text-xs font-mono font-medium tracking-tight transition-all duration-300 group whitespace-nowrap shrink-0"
               >
                 <span className="whitespace-nowrap">Explore Events</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] transition-transform group-hover:scale-125 shrink-0" />
@@ -166,16 +168,16 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               <PartyPadiLogo theme="dark" size="md" />
             </Link>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {currentUser ? (
                 <button
                   onClick={openProfileModal}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold whitespace-nowrap shrink-0"
+                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold whitespace-nowrap shrink-0 max-w-[130px] sm:max-w-none"
                 >
                   <span className="w-4 h-4 rounded-full bg-[#C5FF35] text-black text-[10px] flex items-center justify-center font-bold shrink-0">
                     {currentUser.fullName.charAt(0)}
                   </span>
-                  <span className="whitespace-nowrap">@{currentUser.username}</span>
+                  <span className="truncate max-w-[70px] sm:max-w-none">@{currentUser.username}</span>
                 </button>
               ) : (
                 <button

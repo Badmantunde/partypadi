@@ -100,7 +100,7 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
         <span className="absolute top-48 left-[82%] w-1 h-1 rounded-full bg-white/25" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+      <div className="relative max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         {/* 1. Eyebrow Pill (Reference: Early Access — Build Your Identity) */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-wider text-white/80 shadow-inner backdrop-blur-md mb-6 sm:mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] animate-pulse" />

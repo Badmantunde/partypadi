@@ -83,7 +83,7 @@ export default function CirclesHubPage() {
         <section className="relative py-16 sm:py-24 bg-[#0C0D0E] border-b border-white/10 overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#C5FF35]/5 blur-[120px] rounded-full pointer-events-none" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl mx-auto text-center space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-wider text-white/90">
                 <span className="w-2 h-2 rounded-full bg-[#C5FF35] animate-pulse" />
@@ -99,11 +99,11 @@ export default function CirclesHubPage() {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2">
                 <button
                   type="button"
                   onClick={() => openCircleModal()}
-                  className="spicy-btn px-6 py-3.5 bg-[#C5FF35] text-[#0C0D0E] hover:bg-white rounded-full text-xs font-mono font-bold tracking-tight shadow-[0_0_25px_rgba(197,255,53,0.35)] flex items-center gap-2 transition-all"
+                  className="spicy-btn w-full sm:w-auto px-6 py-3.5 bg-[#C5FF35] text-[#0C0D0E] hover:bg-white rounded-full text-xs font-mono font-bold tracking-tight shadow-[0_0_25px_rgba(197,255,53,0.35)] flex items-center justify-center gap-2 transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   <span>+ Create a Circle</span>
@@ -111,20 +111,22 @@ export default function CirclesHubPage() {
 
                 <form
                   onSubmit={handleJoinWithCode}
-                  className="flex items-center gap-2 bg-white/5 border border-white/15 rounded-full p-1 pl-4 focus-within:border-[#C5FF35] transition-all"
+                  className="w-full sm:w-auto flex items-center justify-between gap-2 bg-white/5 border border-white/15 rounded-full p-1 pl-4 focus-within:border-[#C5FF35] transition-all"
                 >
-                  <Hash className="w-3.5 h-3.5 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={inviteCodeInput}
-                    onChange={(e) => setInviteCodeInput(e.target.value.toUpperCase())}
-                    placeholder="Enter Invite Code (e.g. SUNSET26)"
-                    className="bg-transparent text-xs font-mono text-white placeholder:text-neutral-500 focus:outline-none w-48 sm:w-56 uppercase"
-                  />
+                  <div className="flex items-center gap-2 min-w-0 flex-1 sm:flex-initial">
+                    <Hash className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                    <input
+                      type="text"
+                      value={inviteCodeInput}
+                      onChange={(e) => setInviteCodeInput(e.target.value.toUpperCase())}
+                      placeholder="Invite Code (e.g. SUNSET26)"
+                      className="bg-transparent text-xs font-mono text-white placeholder:text-neutral-500 focus:outline-none w-full sm:w-52 uppercase"
+                    />
+                  </div>
                   <button
                     type="submit"
                     disabled={joining}
-                    className="px-4 py-2 bg-white/10 hover:bg-white text-white hover:text-black rounded-full text-xs font-mono font-bold transition-all"
+                    className="px-4 py-2 bg-white/10 hover:bg-white text-white hover:text-black rounded-full text-xs font-mono font-bold transition-all shrink-0"
                   >
                     {joining ? "Joining..." : "Join"}
                   </button>
@@ -135,7 +137,7 @@ export default function CirclesHubPage() {
         </section>
 
         {/* Content Container */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
           {/* USER'S ACTIVE CIRCLES */}
           {currentUser && (
             <div className="space-y-6">

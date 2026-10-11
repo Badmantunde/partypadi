@@ -37,7 +37,7 @@ export function CampusDiscoveryStrip({
     <section className="w-full border-b border-neutral-200 bg-white">
       {/* Top Editorial Ticker Bar */}
       <div className="border-b border-neutral-800 px-4 sm:px-6 lg:px-8 py-2.5 bg-[#11120F] text-[#F5F5F0] overflow-hidden">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-[11px] font-mono tracking-widest uppercase">
+        <div className="max-w-[1536px] mx-auto flex items-center justify-between text-[11px] font-mono tracking-widest uppercase">
           <div className="flex items-center gap-3">
             <span className="w-1.5 h-1.5 bg-[#C5FF35] animate-pulse" />
             <span className="font-bold text-white">YOUR CAMPUS IS CALLING.</span>
@@ -56,7 +56,7 @@ export function CampusDiscoveryStrip({
       </div>
 
       {/* Campus Selector & Category Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Campus Selector Dropdown */}
           <div className="relative shrink-0">

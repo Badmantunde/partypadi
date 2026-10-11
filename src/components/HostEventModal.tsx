@@ -88,10 +88,10 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="host-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
     >
       <div
-        className="relative w-full max-w-2xl bg-[#0E0F0C] border border-neutral-800 text-[#F5F5F0] rounded-3xl shadow-2xl my-8 overflow-hidden"
+        className="relative w-full max-w-2xl bg-[#0E0F0C] border border-neutral-800 text-[#F5F5F0] rounded-2xl sm:rounded-3xl shadow-2xl my-auto max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Bar */}
@@ -112,7 +112,7 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
         </div>
 
         {isSuccess ? (
-          <div className="p-6 sm:p-8 space-y-6 text-center">
+          <div className="p-4 sm:p-8 space-y-5 sm:space-y-6 text-center">
             <div className="w-14 h-14 bg-[#141513] border border-[#C5FF35] rounded-2xl mx-auto flex items-center justify-center shadow-sm">
               <Check className="w-7 h-7 text-[#C5FF35] stroke-[2.5]" />
             </div>
@@ -160,7 +160,7 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-6">
             <div className="space-y-1">
               <h3
                 id="host-modal-title"

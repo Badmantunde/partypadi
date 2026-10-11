@@ -55,7 +55,7 @@ export default function AboutPage() {
 
         {/* The Reality Split Section (Reference 2 Inspiration) */}
         <section className="py-20 sm:py-28 bg-[#0C0D0E] text-white border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               {/* Left Column: Lime Tag & Bold Title */}
               <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
@@ -109,7 +109,7 @@ export default function AboutPage() {
 
         {/* The PartyPadi Philosophy & Pillars (Pure White) */}
         <section className="py-20 sm:py-28 bg-white text-[#11120F] border-b border-neutral-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
             <div className="max-w-3xl space-y-4">
               <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 font-semibold block">
                 OUR PRINCIPLES
@@ -161,7 +161,7 @@ export default function AboutPage() {
 
         {/* Campus Rollout Map */}
         <section className="py-20 bg-neutral-50 border-b border-neutral-200" id="ambassadors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div className="space-y-3 max-w-xl">
                 <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 font-semibold block">

@@ -184,7 +184,7 @@ export default function OrganizersPage() {
 
         {/* Association & Faculty Features */}
         <section className="py-20 bg-neutral-50 border-b border-neutral-200" id="faculty">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="max-w-3xl space-y-4">
               <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 font-semibold block">
                 BUILT FOR STUDENT EXECUTIVES
@@ -230,7 +230,7 @@ export default function OrganizersPage() {
 
         {/* Direct Organizer Support Directory */}
         <section className="py-20 bg-white border-b border-neutral-200" id="directory">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 text-xs font-mono uppercase tracking-wider font-bold">

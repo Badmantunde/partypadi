@@ -50,7 +50,7 @@ export function FeaturedEvents({
 
   return (
     <section id="events" className="w-full py-12 sm:py-20 bg-white border-b border-neutral-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-neutral-200">
           <div className="space-y-2 sm:space-y-3 max-w-2xl">
@@ -206,19 +206,19 @@ export function FeaturedEvents({
                   </div>
 
                   {/* Pricing & CTA */}
-                  <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-3">
+                  <div className="pt-3 border-t border-neutral-100 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3">
                     <div>
                       <span className="text-[9px] font-mono uppercase text-neutral-400 block">
                         TICKETS FROM
                       </span>
-                      <span className="font-mono text-lg sm:text-xl font-bold text-[#11120F]">
+                      <span className="font-mono text-base sm:text-xl font-bold text-[#11120F]">
                         {leadEvent.priceStartingFrom === 0
                           ? "FREE ENTRY"
                           : `₦${leadEvent.priceStartingFrom.toLocaleString()}`}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                       <Link
                         href={`/events/${leadEvent.id}`}
                         className="py-2 px-3 sm:py-2.5 sm:px-4 rounded-full border border-neutral-200 text-[#11120F] hover:bg-neutral-100 text-xs font-mono font-medium transition-all"
@@ -228,7 +228,7 @@ export function FeaturedEvents({
                       <button
                         type="button"
                         onClick={() => onSelectEvent(leadEvent)}
-                        className="spicy-btn flex items-center gap-1.5 py-2 px-4 sm:py-2.5 sm:px-5 bg-[#11120F] text-white hover:bg-black rounded-full text-xs font-mono font-medium uppercase tracking-wider transition-all shadow-xs"
+                        className="spicy-btn flex items-center gap-1.5 py-2 px-3.5 sm:py-2.5 sm:px-5 bg-[#11120F] text-white hover:bg-black rounded-full text-xs font-mono font-medium uppercase tracking-wider transition-all shadow-xs"
                       >
                         <span>Get Tickets</span>
                         <ArrowRight className="w-3.5 h-3.5 text-[#C5FF35]" />
