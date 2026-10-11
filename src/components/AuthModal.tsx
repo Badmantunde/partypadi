@@ -1,25 +1,47 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Sparkles, User, ShieldCheck, ArrowRight, Check } from "lucide-react";
+import {
+  X,
+  Sparkles,
+  User,
+  ShieldCheck,
+  ArrowRight,
+  Check,
+  Mail,
+  KeyRound,
+  Zap,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "./Toast";
 
 export function AuthModal() {
-  const { authModalOpen, closeAuthModal, login, signup } = useAuth();
+  const {
+    authModalOpen,
+    closeAuthModal,
+    login,
+    signup,
+    isSupabaseConfigured,
+    signInWithSupabase,
+    signUpWithSupabase,
+    signInWithMagicLink,
+  } = useAuth();
   const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signup");
+  const [authMode, setAuthMode] = useState<"password" | "magic_link">("password");
   const [role, setRole] = useState<"partygoer" | "organizer">("partygoer");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [campus, setCampus] = useState("Main Campus");
   const [loginIdentifier, setLoginIdentifier] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (!authModalOpen) return null;
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginIdentifier.trim()) {
       showToast({
@@ -30,14 +52,64 @@ export function AuthModal() {
       return;
     }
 
-    const success = login(loginIdentifier);
-    if (success) {
+    setLoading(true);
+
+    try {
+      if (isSupabaseConfigured && loginIdentifier.includes("@")) {
+        // Attempt Supabase sign in if email provided
+        const res = await signInWithSupabase(loginIdentifier, password || undefined);
+        if (!res.success) {
+          showToast({
+            type: "error",
+            title: "Supabase Sign In",
+            message: res.message,
+          });
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Synchronize with local profile state
+      const success = login(loginIdentifier);
+      if (success) {
+        showToast({
+          type: "success",
+          title: "Signed In Successfully",
+          message: `Welcome back to PartyPadi!`,
+        });
+        closeAuthModal();
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const targetEmail = activeTab === "signin" ? loginIdentifier : email;
+    if (!targetEmail || !targetEmail.includes("@")) {
       showToast({
-        type: "success",
-        title: "Signed In Successfully",
-        message: `Welcome back to PartyPadi!`,
+        type: "error",
+        title: "Valid Email Required",
+        message: "Please enter your email to receive a login link.",
       });
-      closeAuthModal();
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await signInWithMagicLink(targetEmail);
+      showToast({
+        type: res.success ? "success" : "error",
+        title: res.success ? "Magic Link Dispatched!" : "Magic Link Error",
+        message: res.message,
+      });
+      if (res.success) {
+        login(targetEmail);
+        closeAuthModal();
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,7 +123,7 @@ export function AuthModal() {
     closeAuthModal();
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !username.trim() || !email.trim()) {
       showToast({
@@ -62,31 +134,52 @@ export function AuthModal() {
       return;
     }
 
-    const success = signup({
-      fullName,
-      username,
-      email,
-      role,
-      campus,
-    });
+    setLoading(true);
+    try {
+      if (isSupabaseConfigured) {
+        const res = await signUpWithSupabase(email, password || "PartyPadi2026!", {
+          fullName,
+          username,
+          role,
+          campus,
+        });
+        if (!res.success) {
+          showToast({
+            type: "error",
+            title: "Registration Notice",
+            message: res.message,
+          });
+        }
+      }
 
-    if (success) {
-      showToast({
-        type: "success",
-        title: "Account Created!",
-        message: `Welcome @${username.replace(/^@/, "")}! Your PartyPadi profile is ready.`,
+      const success = signup({
+        fullName,
+        username,
+        email,
+        role,
+        campus,
       });
-      closeAuthModal();
+
+      if (success) {
+        showToast({
+          type: "success",
+          title: "Account Created!",
+          message: `Welcome @${username.replace(/^@/, "")}! Your PartyPadi profile is ready.`,
+        });
+        closeAuthModal();
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={closeAuthModal}
     >
       <div
-        className="relative w-full max-w-md bg-[#0C0D0E] border border-white/10 text-white rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden"
+        className="relative w-full max-w-md bg-[#0C0D0E] border border-white/10 text-white rounded-3xl p-5 sm:p-7 shadow-2xl overflow-hidden max-h-[94vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Ambient Top Glow */}
@@ -95,30 +188,36 @@ export function AuthModal() {
         {/* Close Button */}
         <button
           onClick={closeAuthModal}
-          className="absolute top-5 right-5 p-2 text-white/60 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+          className="absolute top-4 right-4 p-2 text-white/60 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
-        <div className="space-y-1.5 text-center pt-2 pb-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />
-            <span>CAMPUS COMMUNITY AUTH</span>
+        <div className="space-y-1.5 text-center pt-1 pb-4 shrink-0">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white/80">
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isSupabaseConfigured ? "bg-[#C5FF35] animate-pulse" : "bg-sky-400"
+              }`}
+            />
+            <span>
+              {isSupabaseConfigured ? "SUPABASE AUTH CONNECTED ⚡" : "CAMPUS COMMUNITY AUTH"}
+            </span>
           </div>
-          <h3 className="font-display font-medium text-2xl sm:text-3xl text-white">
+          <h3 className="font-display font-medium text-xl sm:text-2xl text-white">
             {activeTab === "signin" ? "Sign In to PartyPadi" : "Join Your Campus Circle"}
           </h3>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-neutral-400 max-w-xs mx-auto">
             {activeTab === "signin"
-              ? "Access your tickets, friend radar, and gatherings."
-              : "Create an account as a partygoer or event organizer."}
+              ? "Access your tickets, friends radar, and gathering circles."
+              : "Register as a partygoer or official event host."}
           </p>
         </div>
 
         {/* Tabs: Sign In / Create Account */}
-        <div className="grid grid-cols-2 p-1 bg-white/5 border border-white/10 rounded-full mb-6 text-xs font-mono">
+        <div className="grid grid-cols-2 p-1 bg-white/5 border border-white/10 rounded-full mb-4 text-xs font-mono shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab("signup")}
@@ -143,188 +242,232 @@ export function AuthModal() {
           </button>
         </div>
 
-        {activeTab === "signup" ? (
-          <form onSubmit={handleSignUp} className="space-y-4">
-            {/* Role Selection */}
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
-                SELECT YOUR ROLE
-              </label>
-              <div className="grid grid-cols-2 gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setRole("partygoer")}
-                  className={`p-3 rounded-2xl border text-left transition-all ${
-                    role === "partygoer"
-                      ? "bg-white/10 border-[#C5FF35] text-white"
-                      : "bg-white/5 border-white/10 text-neutral-400 hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <User className={`w-4 h-4 ${role === "partygoer" ? "text-[#C5FF35]" : ""}`} />
-                    {role === "partygoer" && <Check className="w-3.5 h-3.5 text-[#C5FF35]" />}
-                  </div>
-                  <span className="font-display font-bold text-xs block text-white">Partygoer</span>
-                  <span className="text-[10px] text-neutral-400 block leading-tight mt-0.5">
-                    Connect with friends & circles
-                  </span>
-                </button>
+        {/* Scrollable Form Content */}
+        <div className="overflow-y-auto pr-0.5 space-y-4">
+          {activeTab === "signup" ? (
+            <form onSubmit={handleSignUp} className="space-y-3.5">
+              {/* Role Selection */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block">
+                  SELECT YOUR ROLE
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRole("partygoer")}
+                    className={`p-2.5 rounded-2xl border text-left transition-all ${
+                      role === "partygoer"
+                        ? "bg-white/10 border-[#C5FF35] text-white"
+                        : "bg-white/5 border-white/10 text-neutral-400 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <User className={`w-4 h-4 ${role === "partygoer" ? "text-[#C5FF35]" : ""}`} />
+                      {role === "partygoer" && <Check className="w-3.5 h-3.5 text-[#C5FF35]" />}
+                    </div>
+                    <span className="font-display font-bold text-xs block text-white">Partygoer</span>
+                    <span className="text-[9px] text-neutral-400 block leading-tight mt-0.5">
+                      Connect with friends & circles
+                    </span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => setRole("organizer")}
-                  className={`p-3 rounded-2xl border text-left transition-all ${
-                    role === "organizer"
-                      ? "bg-white/10 border-[#C5FF35] text-white"
-                      : "bg-white/5 border-white/10 text-neutral-400 hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <ShieldCheck className={`w-4 h-4 ${role === "organizer" ? "text-[#C5FF35]" : ""}`} />
-                    {role === "organizer" && <Check className="w-3.5 h-3.5 text-[#C5FF35]" />}
-                  </div>
-                  <span className="font-display font-bold text-xs block text-white">Organizer</span>
-                  <span className="text-[10px] text-neutral-400 block leading-tight mt-0.5">
-                    Host events & 0% fee tickets
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole("organizer")}
+                    className={`p-2.5 rounded-2xl border text-left transition-all ${
+                      role === "organizer"
+                        ? "bg-white/10 border-[#C5FF35] text-white"
+                        : "bg-white/5 border-white/10 text-neutral-400 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <ShieldCheck className={`w-4 h-4 ${role === "organizer" ? "text-[#C5FF35]" : ""}`} />
+                      {role === "organizer" && <Check className="w-3.5 h-3.5 text-[#C5FF35]" />}
+                    </div>
+                    <span className="font-display font-bold text-xs block text-white">Organizer</span>
+                    <span className="text-[9px] text-neutral-400 block leading-tight mt-0.5">
+                      Host events & live metrics
+                    </span>
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Full Name */}
-            <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                FULL NAME *
-              </label>
-              <input
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Babatunde Adeyemi"
-                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
-              />
-            </div>
-
-            {/* Username */}
-            <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                USERNAME (@TAG) *
-              </label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 text-xs font-mono">
-                  @
-                </span>
+              {/* Full Name */}
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                  FULL NAME *
+                </label>
                 <input
                   type="text"
                   required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
-                  placeholder="tade_vibes"
-                  className="w-full pl-8 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] font-mono"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="e.g. Babatunde Adeyemi"
+                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
                 />
               </div>
-              <span className="text-[9px] text-neutral-500 font-mono block mt-1">
-                Friends will search this tag to add you to circles.
-              </span>
-            </div>
 
-            {/* Email */}
-            <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                EMAIL ADDRESS *
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@email.com"
-                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
-              />
-            </div>
+              {/* Username */}
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                  USERNAME (@TAG) *
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 text-xs font-mono">
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
+                    placeholder="tade_vibes"
+                    className="w-full pl-8 pr-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] font-mono"
+                  />
+                </div>
+              </div>
 
-            {/* Campus */}
-            <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                PRIMARY CAMPUS
-              </label>
-              <select
-                value={campus}
-                onChange={(e) => setCampus(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#141517] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#C5FF35]"
+              {/* Email */}
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                  EMAIL ADDRESS *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@email.com"
+                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                  PASSWORD {isSupabaseConfigured && "*"}
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
+                />
+              </div>
+
+              {/* Campus */}
+              <div>
+                <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                  PRIMARY CAMPUS
+                </label>
+                <select
+                  value={campus}
+                  onChange={(e) => setCampus(e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-[#141517] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#C5FF35]"
+                >
+                  <option value="Main Campus">Main Campus / General</option>
+                  <option value="UNILAG Akoka">UNILAG (Akoka)</option>
+                  <option value="OOU Ago-Iwoye">OOU (Ago-Iwoye)</option>
+                  <option value="UI Ibadan">UI (Ibadan)</option>
+                  <option value="LASU Ojo">LASU (Ojo)</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="spicy-btn w-full py-3 bg-[#C5FF35] text-[#0C0D0E] font-mono font-bold text-xs uppercase tracking-wider rounded-full hover:bg-[#b5f220] transition-all shadow-md flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
               >
-                <option value="Main Campus">Main Campus / General</option>
-                <option value="UNILAG Akoka">UNILAG (Akoka)</option>
-                <option value="OOU Ago-Iwoye">OOU (Ago-Iwoye)</option>
-                <option value="UI Ibadan">UI (Ibadan)</option>
-                <option value="LASU Ojo">LASU (Ojo)</option>
-              </select>
-            </div>
+                <span>{loading ? "Creating Profile..." : "Create Account"}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </form>
+          ) : (
+            <div className="space-y-4">
+              <form onSubmit={handleSignIn} className="space-y-3.5">
+                <div>
+                  <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                    USERNAME OR EMAIL
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={loginIdentifier}
+                    onChange={(e) => setLoginIdentifier(e.target.value)}
+                    placeholder="@username or you@email.com"
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white font-mono"
+                  />
+                </div>
 
-            <button
-              type="submit"
-              className="spicy-btn w-full py-3 bg-[#C5FF35] text-[#0C0D0E] font-mono font-bold text-xs uppercase tracking-wider rounded-full hover:bg-[#b5f220] transition-all shadow-md flex items-center justify-center gap-2 mt-2"
-            >
-              <span>Create Account</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleSignIn} className="space-y-4">
-            <div>
-              <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                USERNAME OR EMAIL
-              </label>
-              <input
-                type="text"
-                required
-                value={loginIdentifier}
-                onChange={(e) => setLoginIdentifier(e.target.value)}
-                placeholder="@username or you@email.com"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white font-mono"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="spicy-btn w-full py-3 bg-white text-[#0C0D0E] font-mono font-bold text-xs uppercase tracking-wider rounded-full hover:bg-neutral-200 transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <span>Sign In</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Quick Demo Logins for Instant Testing */}
-            <div className="pt-4 border-t border-white/10 space-y-2">
-              <span className="text-[10px] font-mono uppercase text-neutral-500 block text-center">
-                OR TEST WITH DEMO ACCOUNTS
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemoLogin("tade_vibes")}
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
-                >
-                  <span className="font-mono text-xs font-bold text-[#C5FF35] block">@tade_vibes</span>
-                  <span className="text-[9px] text-neutral-400 block">Partygoer · Campus VIP</span>
-                </button>
+                {loginIdentifier.includes("@") && (
+                  <div>
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
+                      PASSWORD (OPTIONAL)
+                    </label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white"
+                    />
+                  </div>
+                )}
 
                 <button
-                  type="button"
-                  onClick={() => handleQuickDemoLogin("fassa_execs")}
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
+                  type="submit"
+                  disabled={loading}
+                  className="spicy-btn w-full py-3 bg-white text-[#0C0D0E] font-mono font-bold text-xs uppercase tracking-wider rounded-full hover:bg-neutral-200 transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <span className="font-mono text-xs font-bold text-white block">@fassa_execs</span>
-                  <span className="text-[9px] text-neutral-400 block">Organizer · Social Directorate</span>
+                  <span>{loading ? "Signing In..." : "Sign In"}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
+              </form>
+
+              {/* Magic Link OTP Trigger */}
+              <button
+                type="button"
+                onClick={handleMagicLink}
+                disabled={loading}
+                className="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 hover:text-white font-mono text-[11px] flex items-center justify-center gap-2 transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5 text-[#C5FF35]" />
+                <span>Send Magic Login Link (OTP)</span>
+              </button>
+
+              {/* Quick Demo Logins for Instant Testing */}
+              <div className="pt-3 border-t border-white/10 space-y-2">
+                <span className="text-[10px] font-mono uppercase text-neutral-500 block text-center">
+                  OR TEST WITH DEMO ACCOUNTS
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleQuickDemoLogin("tade_vibes")}
+                    className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
+                  >
+                    <span className="font-mono text-xs font-bold text-[#C5FF35] block">@tade_vibes</span>
+                    <span className="text-[9px] text-neutral-400 block">Partygoer · Gifter 🥉</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleQuickDemoLogin("fassa_execs")}
+                    className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
+                  >
+                    <span className="font-mono text-xs font-bold text-white block">@fassa_execs</span>
+                    <span className="text-[9px] text-neutral-400 block">Organizer · Live Metrics</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </form>
-        )}
+          )}
+        </div>
 
-        <div className="pt-5 text-center">
+        <div className="pt-3 text-center shrink-0">
           <p className="text-[10px] text-neutral-500 font-mono">
-            Guest checkout is always supported · No account required to buy tickets
+            Guest checkout supported · No account required to purchase tickets
           </p>
         </div>
       </div>

@@ -1,9 +1,25 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { UserProfile, PartyCircle, CircleEventSuggestion, CircleActivityItem } from "@/types";
+import {
+  UserProfile,
+  PartyCircle,
+  CircleEventSuggestion,
+  CircleActivityItem,
+  EventGift,
+  GifterLevel,
+  AttendeeMetricItem,
+} from "@/types";
+import {
+  supabase,
+  isSupabaseConfigured,
+  signOutUser,
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithOtp,
+} from "@/lib/supabase";
 
-// Seed community users across campus life
+// Seed community users across campus life with Gifter Badges
 const SEED_USERS: UserProfile[] = [
   {
     id: "user-1",
@@ -13,6 +29,8 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Main Hall vibes & sunset sessions lover",
+    gifterLevel: 1, // Level 1 Gifter 🥉
+    totalGifted: 3500,
     friends: ["fola_vibes", "chioma_k"],
     eventsAttending: [
       { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-829141", purchasedAt: "2026-10-09" },
@@ -27,6 +45,8 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Moot court by day, campus concerts by night",
+    gifterLevel: 2, // Level 2 Gifter 🥈
+    totalGifted: 15000,
     friends: ["tade_vibes", "chioma_k", "kemilaw"],
     eventsAttending: [
       { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-449102", purchasedAt: "2026-10-08" },
@@ -41,6 +61,8 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Campus paparazzi & cultural night hypeman",
+    gifterLevel: 1, // Level 1 Gifter 🥉
+    totalGifted: 2000,
     friends: ["tade_vibes", "fola_vibes"],
     eventsAttending: [
       { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-301982", purchasedAt: "2026-10-10" },
@@ -55,6 +77,8 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Computer Science '25 · Building hackathons & campus sound clashes",
+    gifterLevel: 3, // Level 3 Gifter 🥇
+    totalGifted: 25000,
     friends: ["tade_vibes"],
     eventsAttending: [
       { eventId: "builders-hangout", allowFriendsToSee: true, ticketCode: "PP-990184", purchasedAt: "2026-10-10" },
@@ -70,6 +94,209 @@ const SEED_USERS: UserProfile[] = [
     bio: "Official Social Directorate, Faculty Social Committee",
     friends: [],
     eventsAttending: [],
+  },
+];
+
+// Seed Gifts & Support Contributions
+const SEED_GIFTS: EventGift[] = [
+  {
+    id: "gift-1",
+    eventId: "after-class-sunset",
+    userId: "user-2",
+    gifterName: "Fola Coker",
+    gifterUsername: "fola_vibes",
+    amount: 15000,
+    level: 2,
+    message: "Drinks support for the sound engineering crew! Keep the energy high 🔊🔥",
+    isPublic: true,
+    createdAt: "2026-10-10T16:20:00Z",
+  },
+  {
+    id: "gift-2",
+    eventId: "after-class-sunset",
+    userId: "user-1",
+    gifterName: "Tade Adeyemi",
+    gifterUsername: "tade_vibes",
+    amount: 3500,
+    level: 1,
+    message: "Shoutout to DJ Tee! Sunset sessions always hits different 🌅",
+    isPublic: true,
+    createdAt: "2026-10-10T18:45:00Z",
+  },
+  {
+    id: "gift-3",
+    eventId: "after-class-sunset",
+    userId: "user-4",
+    gifterName: "Adebayo Johnson",
+    gifterUsername: "bayo_tech",
+    amount: 25000,
+    level: 3,
+    message: "Supporting campus tech & nightlife culture! Table 4 on me 🍾",
+    isPublic: true,
+    createdAt: "2026-10-11T01:10:00Z",
+  },
+  {
+    id: "gift-4",
+    eventId: "green-room-sessions",
+    userId: "user-3",
+    gifterName: "Chioma Kalu",
+    gifterUsername: "chioma_k",
+    amount: 2000,
+    level: 1,
+    message: "For the photobooth team and light operators! 📸✨",
+    isPublic: true,
+    createdAt: "2026-10-10T20:15:00Z",
+  },
+];
+
+// Seed Attendee Metrics for Organizer Dashboard
+const SEED_ATTENDEES: AttendeeMetricItem[] = [
+  {
+    id: "att-1",
+    eventId: "after-class-sunset",
+    name: "Tade Adeyemi",
+    username: "tade_vibes",
+    email: "tade@gmail.com",
+    phone: "0801 234 5678",
+    ticketTier: "Regular Pass",
+    amountPaid: 2500,
+    ticketCode: "PP-829141",
+    status: "checked_in",
+    registeredAt: "2026-10-09 14:22",
+    checkedInAt: "2026-10-10 17:15",
+    gifterLevel: 1,
+    companionsCount: 0,
+  },
+  {
+    id: "att-2",
+    eventId: "after-class-sunset",
+    name: "Fola Coker",
+    username: "fola_vibes",
+    email: "fola@gmail.com",
+    phone: "0802 345 6789",
+    ticketTier: "Squad Table (Pass for 5)",
+    amountPaid: 15000,
+    ticketCode: "PP-449102",
+    status: "checked_in",
+    registeredAt: "2026-10-08 19:40",
+    checkedInAt: "2026-10-10 17:30",
+    gifterLevel: 2,
+    companionsCount: 4,
+  },
+  {
+    id: "att-3",
+    eventId: "after-class-sunset",
+    name: "Chioma Kalu",
+    username: "chioma_k",
+    email: "chioma@gmail.com",
+    phone: "0803 456 7890",
+    ticketTier: "Early Bird",
+    amountPaid: 1500,
+    ticketCode: "PP-301982",
+    status: "paid",
+    registeredAt: "2026-10-10 11:05",
+    gifterLevel: 1,
+    companionsCount: 0,
+  },
+  {
+    id: "att-4",
+    eventId: "after-class-sunset",
+    name: "Adebayo Johnson",
+    username: "bayo_tech",
+    email: "bayo@gmail.com",
+    phone: "0804 567 8901",
+    ticketTier: "Squad Table (Pass for 5)",
+    amountPaid: 15000,
+    ticketCode: "PP-990184",
+    status: "paid",
+    registeredAt: "2026-10-10 13:50",
+    gifterLevel: 3,
+    companionsCount: 4,
+  },
+  {
+    id: "att-5",
+    eventId: "after-class-sunset",
+    name: "Kemi Adeleke",
+    username: "kemilaw",
+    email: "kemi.law@gmail.com",
+    phone: "0805 678 9012",
+    ticketTier: "Regular Pass",
+    amountPaid: 2500,
+    ticketCode: "PP-671294",
+    status: "paid",
+    registeredAt: "2026-10-10 15:10",
+    companionsCount: 0,
+  },
+  {
+    id: "att-6",
+    eventId: "after-class-sunset",
+    name: "Olamide Balogun",
+    username: "baddo_vibes",
+    email: "olamide.b@gmail.com",
+    phone: "0806 789 0123",
+    ticketTier: "Early Bird",
+    amountPaid: 0,
+    ticketCode: "WL-28401",
+    status: "waitlist",
+    registeredAt: "2026-10-10 18:22",
+    companionsCount: 0,
+  },
+  {
+    id: "att-7",
+    eventId: "after-class-sunset",
+    name: "Zainab Aliyu",
+    username: "zainab_a",
+    email: "zainab.aliyu@gmail.com",
+    phone: "0807 890 1234",
+    ticketTier: "Squad Table (Pass for 5)",
+    amountPaid: 0,
+    ticketCode: "WL-39102",
+    status: "waitlist",
+    registeredAt: "2026-10-10 19:04",
+    companionsCount: 4,
+  },
+  {
+    id: "att-8",
+    eventId: "after-class-sunset",
+    name: "Emeka Okafor",
+    username: "emeka_sound",
+    email: "emeka.ok@gmail.com",
+    phone: "0808 901 2345",
+    ticketTier: "Regular Pass",
+    amountPaid: 0,
+    ticketCode: "WL-44021",
+    status: "waitlist",
+    registeredAt: "2026-10-10 21:15",
+    companionsCount: 0,
+  },
+  {
+    id: "att-9",
+    eventId: "after-class-sunset",
+    name: "Funke Daniels",
+    username: "funke_d",
+    email: "funke.d@gmail.com",
+    phone: "0809 012 3456",
+    ticketTier: "Regular Pass",
+    amountPaid: 2500,
+    ticketCode: "PP-552109",
+    status: "checked_in",
+    registeredAt: "2026-10-09 22:30",
+    checkedInAt: "2026-10-10 17:45",
+    companionsCount: 0,
+  },
+  {
+    id: "att-10",
+    eventId: "after-class-sunset",
+    name: "David Adeleke Jr",
+    username: "davido_fan",
+    email: "david.fan@gmail.com",
+    phone: "0810 123 4567",
+    ticketTier: "Regular Pass",
+    amountPaid: 2500,
+    ticketCode: "PP-663810",
+    status: "paid",
+    registeredAt: "2026-10-10 09:12",
+    companionsCount: 0,
   },
 ];
 
@@ -209,10 +436,82 @@ const SEED_CIRCLES: PartyCircle[] = [
   },
 ];
 
+export const getGifterLevel = (totalGifted: number): GifterLevel => {
+  if (totalGifted >= 150000) return 6;
+  if (totalGifted >= 75000) return 5;
+  if (totalGifted >= 35000) return 4;
+  if (totalGifted >= 15000) return 3;
+  if (totalGifted >= 5000) return 2;
+  return 1;
+};
+
+export const GIFTER_LEVEL_INFO: Record<
+  GifterLevel,
+  { name: string; icon: string; minAmount: number; color: string; badge: string; imageUrl: string; description: string }
+> = {
+  1: {
+    name: "Padi",
+    icon: "🥉",
+    minAmount: 1000,
+    color: "#CD7F32",
+    badge: "Level 1 Gifter 🥉",
+    imageUrl: "/images/gifterbadge/Padi-level-1.png",
+    description: "Contributed ₦1k+ to campus event culture",
+  },
+  2: {
+    name: "Plug",
+    icon: "🥈",
+    minAmount: 5000,
+    color: "#E2E8F0",
+    badge: "Level 2 Gifter 🥈",
+    imageUrl: "/images/gifterbadge/Plug-level-2.png",
+    description: "Contributed ₦5k+ boosting DJs, light & drinks",
+  },
+  3: {
+    name: "Hype Padi",
+    icon: "🥇",
+    minAmount: 15000,
+    color: "#FACC15",
+    badge: "Level 3 Gifter 🥇",
+    imageUrl: "/images/gifterbadge/Hype-padi.png",
+    description: "Contributed ₦15k+ powering squad energy & stage hype",
+  },
+  4: {
+    name: "Big Padi",
+    icon: "💎",
+    minAmount: 35000,
+    color: "#38BDF8",
+    badge: "Level 4 Gifter 💎",
+    imageUrl: "/images/gifterbadge/Big-Padi-level-4.png",
+    description: "Contributed ₦35k+ VIP patron of campus nightlife",
+  },
+  5: {
+    name: "Headliner",
+    icon: "👑",
+    minAmount: 75000,
+    color: "#A855F7",
+    badge: "Level 5 Headliner 👑",
+    imageUrl: "/images/gifterbadge/Headliner-level-5.png",
+    description: "Contributed ₦75k+ campus headliner & benefactor",
+  },
+  6: {
+    name: "Legend",
+    icon: "🏆",
+    minAmount: 150000,
+    color: "#C5FF35",
+    badge: "Level 6 Legend 🏆",
+    imageUrl: "/images/gifterbadge/legend-level-6.png",
+    description: "Contributed ₦150k+ immortal campus benefactor & icon",
+  },
+};
+
 interface AuthContextType {
   currentUser: UserProfile | null;
   allUsers: UserProfile[];
   circles: PartyCircle[];
+  gifts: EventGift[];
+  attendees: AttendeeMetricItem[];
+  isSupabaseConfigured: boolean;
   authModalOpen: boolean;
   circleModalOpen: boolean;
   profileModalOpen: boolean;
@@ -227,6 +526,28 @@ interface AuthContextType {
     bio?: string;
   }) => boolean;
   logout: () => void;
+  // Supabase Auth methods
+  signInWithSupabase: (email: string, password?: string) => Promise<{ success: boolean; message: string }>;
+  signUpWithSupabase: (
+    email: string,
+    password: string,
+    userData: { fullName: string; username: string; role: "partygoer" | "organizer"; campus: string }
+  ) => Promise<{ success: boolean; message: string }>;
+  signInWithMagicLink: (email: string) => Promise<{ success: boolean; message: string }>;
+  // Gifting & Metrics
+  sendGiftToEvent: (data: {
+    eventId: string;
+    amount: number;
+    message?: string;
+    isPublic?: boolean;
+    customName?: string;
+  }) => { success: boolean; gift: EventGift; newGifterLevel: GifterLevel };
+  getEventGifts: (eventId: string) => EventGift[];
+  getEventAttendees: (eventId: string) => AttendeeMetricItem[];
+  promoteWaitlistAttendee: (attendeeId: string) => boolean;
+  checkInAttendee: (attendeeId: string) => boolean;
+  addAttendeeMetric: (item: Omit<AttendeeMetricItem, "id" | "registeredAt">) => void;
+  // Social circles & Friends
   addFriend: (friendUsername: string) => boolean;
   removeFriend: (friendUsername: string) => void;
   getCircle: (circleId: string) => PartyCircle | undefined;
@@ -262,6 +583,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [allUsers, setAllUsers] = useState<UserProfile[]>(SEED_USERS);
   const [circles, setCircles] = useState<PartyCircle[]>(SEED_CIRCLES);
+  const [gifts, setGifts] = useState<EventGift[]>(SEED_GIFTS);
+  const [attendees, setAttendees] = useState<AttendeeMetricItem[]>(SEED_ATTENDEES);
 
   // Modal controls
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -269,7 +592,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [activeTargetEventId, setActiveTargetEventId] = useState<string | undefined>(undefined);
 
-  // Hydrate from localStorage on client mount
+  // Hydrate from localStorage on client mount & subscribe to Supabase
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("pp_current_user");
@@ -284,8 +607,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (storedCircles) {
         setCircles(JSON.parse(storedCircles));
       }
+      const storedGifts = localStorage.getItem("pp_gifts");
+      if (storedGifts) {
+        setGifts(JSON.parse(storedGifts));
+      }
+      const storedAttendees = localStorage.getItem("pp_attendees");
+      if (storedAttendees) {
+        setAttendees(JSON.parse(storedAttendees));
+      }
     } catch (e) {
       console.warn("Storage hydration error", e);
+    }
+
+    if (isSupabaseConfigured) {
+      const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          const sbUser = session.user;
+          const meta = sbUser.user_metadata || {};
+          const username = meta.username || sbUser.email?.split("@")[0] || "campus_padi";
+          const fullName = meta.full_name || meta.fullName || "Party Padi User";
+          const role = (meta.role as "partygoer" | "organizer") || "partygoer";
+          const campus = meta.campus || "Main Campus";
+
+          const profile: UserProfile = {
+            id: sbUser.id,
+            username,
+            fullName,
+            email: sbUser.email || "",
+            role,
+            campus,
+            bio: meta.bio || "Active PartyPadi member",
+            friends: ["tade_vibes", "fola_vibes"],
+            eventsAttending: [],
+          };
+          saveUser(profile);
+        }
+      });
+
+      return () => {
+        authListener?.subscription?.unsubscribe();
+      };
     }
   }, []);
 
@@ -297,6 +658,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("pp_current_user");
     }
   };
+
 
   const login = (emailOrUsername: string): boolean => {
     const clean = emailOrUsername.trim().toLowerCase().replace(/^@/, "");
@@ -374,7 +736,149 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    signOutUser();
     saveUser(null);
+  };
+
+  const signInWithSupabase = async (email: string, password?: string) => {
+    return await signInWithEmail(email, password);
+  };
+
+  const signUpWithSupabase = async (
+    email: string,
+    password: string,
+    userData: {
+      fullName: string;
+      username: string;
+      role: "partygoer" | "organizer";
+      campus: string;
+    }
+  ) => {
+    return await signUpWithEmail(email, password, userData);
+  };
+
+  const signInWithMagicLink = async (email: string) => {
+    return await signInWithOtp(email);
+  };
+
+  const sendGiftToEvent = (data: {
+    eventId: string;
+    amount: number;
+    message?: string;
+    isPublic?: boolean;
+    customName?: string;
+  }) => {
+    const gifterName = currentUser ? currentUser.fullName : data.customName || "Campus Supporter";
+    const gifterUsername = currentUser ? currentUser.username : undefined;
+
+    const currentTotal = currentUser?.totalGifted || 0;
+    const newTotal = currentTotal + data.amount;
+    const newGifterLevel = getGifterLevel(newTotal);
+
+    const newGift: EventGift = {
+      id: `gift-${Date.now()}`,
+      eventId: data.eventId,
+      userId: currentUser?.id,
+      gifterName,
+      gifterUsername,
+      amount: data.amount,
+      level: newGifterLevel,
+      message: data.message || "Big support to the organizing crew & sound engineers! 🔥",
+      isPublic: data.isPublic !== false,
+      createdAt: new Date().toISOString(),
+    };
+
+    const updatedGifts = [newGift, ...gifts];
+    setGifts(updatedGifts);
+    localStorage.setItem("pp_gifts", JSON.stringify(updatedGifts));
+
+    if (currentUser) {
+      const updatedUser: UserProfile = {
+        ...currentUser,
+        totalGifted: newTotal,
+        gifterLevel: newGifterLevel,
+      };
+      saveUser(updatedUser);
+
+      const updatedUsers = allUsers.map((u) => (u.id === currentUser.id ? updatedUser : u));
+      setAllUsers(updatedUsers);
+      localStorage.setItem("pp_all_users", JSON.stringify(updatedUsers));
+
+      const updatedAttendees = attendees.map((att) => {
+        if (att.username === currentUser.username) {
+          return { ...att, gifterLevel: newGifterLevel };
+        }
+        return att;
+      });
+      setAttendees(updatedAttendees);
+      localStorage.setItem("pp_attendees", JSON.stringify(updatedAttendees));
+    }
+
+    return {
+      success: true,
+      gift: newGift,
+      newGifterLevel,
+    };
+  };
+
+  const getEventGifts = (eventId: string): EventGift[] => {
+    return gifts.filter((g) => g.eventId === eventId);
+  };
+
+  const getEventAttendees = (eventId: string): AttendeeMetricItem[] => {
+    return attendees.filter((a) => a.eventId === eventId);
+  };
+
+  const promoteWaitlistAttendee = (attendeeId: string): boolean => {
+    let found = false;
+    const updated = attendees.map((att) => {
+      if (att.id === attendeeId) {
+        found = true;
+        return {
+          ...att,
+          status: "paid" as const,
+          ticketCode: `PP-PRM-${Math.floor(100000 + Math.random() * 900000)}`,
+          amountPaid: att.amountPaid > 0 ? att.amountPaid : 2500,
+        };
+      }
+      return att;
+    });
+    if (found) {
+      setAttendees(updated);
+      localStorage.setItem("pp_attendees", JSON.stringify(updated));
+    }
+    return found;
+  };
+
+  const checkInAttendee = (attendeeId: string): boolean => {
+    let found = false;
+    const updated = attendees.map((att) => {
+      if (att.id === attendeeId) {
+        found = true;
+        return {
+          ...att,
+          status: "checked_in" as const,
+          checkedInAt: new Date().toISOString().replace("T", " ").substring(0, 16),
+        };
+      }
+      return att;
+    });
+    if (found) {
+      setAttendees(updated);
+      localStorage.setItem("pp_attendees", JSON.stringify(updated));
+    }
+    return found;
+  };
+
+  const addAttendeeMetric = (item: Omit<AttendeeMetricItem, "id" | "registeredAt">) => {
+    const newAttendee: AttendeeMetricItem = {
+      ...item,
+      id: `att-${Date.now()}`,
+      registeredAt: new Date().toISOString().replace("T", " ").substring(0, 16),
+    };
+    const updated = [newAttendee, ...attendees];
+    setAttendees(updated);
+    localStorage.setItem("pp_attendees", JSON.stringify(updated));
   };
 
   const addFriend = (friendUsername: string): boolean => {
@@ -839,6 +1343,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         currentUser,
         allUsers,
         circles,
+        gifts,
+        attendees,
+        isSupabaseConfigured,
         authModalOpen,
         circleModalOpen,
         profileModalOpen,
@@ -846,6 +1353,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         signup,
         logout,
+        signInWithSupabase,
+        signUpWithSupabase,
+        signInWithMagicLink,
+        sendGiftToEvent,
+        getEventGifts,
+        getEventAttendees,
+        promoteWaitlistAttendee,
+        checkInAttendee,
+        addAttendeeMetric,
         addFriend,
         removeFriend,
         getCircle,

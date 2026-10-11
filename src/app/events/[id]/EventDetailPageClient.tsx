@@ -9,8 +9,9 @@ import { Footer } from "@/components/Footer";
 import { TicketModal } from "@/components/TicketModal";
 import { HostEventModal } from "@/components/HostEventModal";
 import { ToastProvider, useToast } from "@/components/Toast";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, GIFTER_LEVEL_INFO } from "@/context/AuthContext";
 import { EventPhotoGallery } from "@/components/EventPhotoGallery";
+import { GiftSupportModal } from "@/components/GiftSupportModal";
 import {
   Calendar,
   MapPin,
@@ -22,6 +23,9 @@ import {
   ArrowRight,
   ArrowLeft,
   Camera,
+  Heart,
+  Award,
+  Sparkles,
 } from "lucide-react";
 
 interface EventDetailPageClientProps {
@@ -34,11 +38,13 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
   const {
     currentUser,
     getFriendsAttendingEvent,
+    getEventGifts,
     openCircleModal,
     openAuthModal,
   } = useAuth();
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
   const [hostModalOpen, setHostModalOpen] = useState(false);
+  const [giftModalOpen, setGiftModalOpen] = useState(false);
   const [selectedTierId, setSelectedTierId] = useState(event.ticketTiers[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
 
@@ -330,11 +336,109 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                   </div>
                 )}
               </div>
+
+              {/* Campus Supporters & Gifters Wall */}
+              <div className="p-6 bg-neutral-50/70 border border-neutral-200 rounded-3xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-amber-500 fill-amber-500" />
+                    <h3 className="font-display font-bold text-lg text-[#11120F]">
+                      Campus Supporters & Gifters Wall
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setGiftModalOpen(true)}
+                    className="px-3 py-1 bg-amber-400 hover:bg-amber-300 text-black rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"
+                  >
+                    <span>+ Gift</span>
+                  </button>
+                </div>
+
+                {(() => {
+                  const eventGifts = getEventGifts(event.id);
+                  const totalRaised = eventGifts.reduce((acc, g) => acc + g.amount, 0);
+
+                  return (
+                    <div className="space-y-3">
+                      <div className="p-3 bg-white rounded-2xl border border-neutral-200 flex items-center justify-between text-xs font-mono">
+                        <span className="text-neutral-500">TOTAL COMMUNITY GIFTS:</span>
+                        <span className="font-bold text-amber-600 text-sm">
+                          ₦{totalRaised.toLocaleString()} ({eventGifts.length} Supporter{eventGifts.length !== 1 ? "s" : ""})
+                        </span>
+                      </div>
+
+                      {eventGifts.length === 0 ? (
+                        <div className="p-5 text-center bg-white rounded-2xl border border-neutral-200 space-y-2">
+                          <p className="text-xs text-neutral-500">
+                            Be the first to send a gift and unlock the <strong>Level 1 Gifter 🥉</strong> badge!
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setGiftModalOpen(true)}
+                            className="px-4 py-2 bg-black text-[#C5FF35] rounded-full text-xs font-mono font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors"
+                          >
+                            Send First Gift →
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+                          {eventGifts.map((gift) => {
+                            const badge = GIFTER_LEVEL_INFO[gift.level];
+                            return (
+                              <div
+                                key={gift.id}
+                                className="p-3.5 bg-white rounded-2xl border border-neutral-200 space-y-1.5"
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
+                                      {gift.gifterName.charAt(0)}
+                                    </div>
+                                    <div>
+                                      <span className="font-display font-bold text-xs text-[#11120F] block">
+                                        {gift.gifterName}
+                                      </span>
+                                      {gift.gifterUsername && (
+                                        <span className="font-mono text-[10px] text-neutral-500">
+                                          @{gift.gifterUsername}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div className="text-right">
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 font-mono text-[10px] font-bold">
+                                      <div className="w-3.5 h-3.5 rounded-full overflow-hidden relative shrink-0">
+                                        <Image src={badge.imageUrl} alt={badge.name} fill className="object-contain" />
+                                      </div>
+                                      <span>{badge.badge}</span>
+                                    </span>
+                                    <span className="font-mono text-xs font-bold text-[#11120F] block mt-0.5">
+                                      ₦{gift.amount.toLocaleString()}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {gift.message && (
+                                  <p className="text-xs text-neutral-600 bg-neutral-50 p-2 rounded-xl italic">
+                                    &ldquo;{gift.message}&rdquo;
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
             </div>
 
             {/* Right Column: Interactive Pass Booking Box (Col 8-12) */}
             <div className="lg:col-span-5">
-              <div className="sticky top-24 p-6 sm:p-8 bg-neutral-50/70 border border-neutral-200 rounded-3xl space-y-6 shadow-xl">
+              <div className="sticky top-24 p-6 sm:p-8 bg-neutral-50/70 border border-neutral-200 rounded-3xl space-y-5 shadow-xl">
                 <div className="space-y-1 pb-4 border-b border-neutral-200">
                   <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 block">
                     INSTANT CHECKOUT
@@ -432,12 +536,23 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                   <ArrowRight className="w-4 h-4 text-[#C5FF35] transition-transform group-hover:translate-x-1" />
                 </button>
 
+                {/* Gift & Support Organizer Button */}
+                <button
+                  type="button"
+                  onClick={() => setGiftModalOpen(true)}
+                  className="w-full py-3 px-4 rounded-full border border-amber-400/50 bg-amber-50 hover:bg-amber-100 text-[#11120F] text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs"
+                >
+                  <Heart className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                  <span>Gift & Support Organizer · Earn Badge</span>
+                </button>
+
                 <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 font-mono text-center">
                   <ShieldCheck className="w-4 h-4 text-[#11120F]" />
                   <span>Instant digital QR token delivered to email & WhatsApp</span>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -518,6 +633,15 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
       <HostEventModal
         isOpen={hostModalOpen}
         onClose={() => setHostModalOpen(false)}
+      />
+
+      {/* Gift & Support Modal */}
+      <GiftSupportModal
+        eventId={event.id}
+        eventTitle={event.title}
+        organizerName={event.organizer.name}
+        isOpen={giftModalOpen}
+        onClose={() => setGiftModalOpen(false)}
       />
     </div>
   );

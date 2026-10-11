@@ -5,8 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, GIFTER_LEVEL_INFO } from "@/context/AuthContext";
 import { CreatorTicketTier } from "@/types";
+import { EVENTS } from "@/data/events";
 import {
   Sparkles,
   CheckCircle2,
@@ -25,6 +26,15 @@ import {
   AlertCircle,
   Clock,
   Ticket,
+  Search,
+  Download,
+  Check,
+  Copy,
+  Heart,
+  Award,
+  Filter,
+  Eye,
+  RefreshCw,
 } from "lucide-react";
 
 type HostStep = "essentials" | "tiers" | "gate" | "payout";
@@ -59,10 +69,110 @@ const PRESET_BANNERS: PresetBanner[] = [
 ];
 
 export default function HostEventStudioPage() {
-  const { currentUser, login, signup, openAuthModal } = useAuth();
+  const {
+    currentUser,
+    login,
+    signup,
+    openAuthModal,
+    attendees,
+    gifts,
+    getEventAttendees,
+    getEventGifts,
+    promoteWaitlistAttendee,
+    checkInAttendee,
+  } = useAuth();
 
   const [activeStep, setActiveStep] = useState<HostStep>("essentials");
   const [activeTabNav, setActiveTabNav] = useState("Overview");
+
+  // Organizer metrics table states
+  const [selectedEventId, setSelectedEventId] = useState("after-class-sunset");
+  const [metricsSearch, setMetricsSearch] = useState("");
+  const [metricsFilter, setMetricsFilter] = useState<"all" | "paid" | "waitlist" | "checked_in" | "gifts">("all");
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [copiedCsv, setCopiedCsv] = useState(false);
+
+  const handleCopyCode = (code: string) => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard?.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 2000);
+    }
+  };
+
+  const handleExportCsv = () => {
+    const currentList = getEventAttendees(selectedEventId);
+    const headers = "ID,Name,Username,Email,Phone,Tier,AmountPaid,TicketCode,Status,GifterLevel\n";
+    const rows = currentList
+      .map(
+        (a) =>
+          `"${a.id}","${a.name}","@${a.username || ""}","${a.email}","${a.phone || ""}","${a.ticketTier}","${a.amountPaid}","${a.ticketCode}","${a.status}","${a.gifterLevel || ""}"`
+      )
+      .join("\n");
+    const csvContent = headers + rows;
+
+    if (typeof window !== "undefined") {
+      navigator.clipboard?.writeText(csvContent);
+      setCopiedCsv(true);
+      setTimeout(() => setCopiedCsv(false), 2500);
+    }
+  };
+
+  const handlePromoteAttendee = (attendeeId: string) => {
+    promoteWaitlistAttendee(attendeeId);
+  };
+
+  const handleCheckInAttendee = (attendeeId: string) => {
+    checkInAttendee(attendeeId);
+  };
+
+  // Live Metrics Calculations for the Organizer Dashboard
+  const currentEventAttendees = getEventAttendees(selectedEventId);
+  const currentEventGifts = getEventGifts(selectedEventId);
+  const targetEvent = EVENTS.find((e) => e.id === selectedEventId) || EVENTS[0];
+
+  const paidAttendees = currentEventAttendees.filter(
+    (a) => a.status === "paid" || a.status === "checked_in"
+  );
+  const checkedInAttendees = currentEventAttendees.filter((a) => a.status === "checked_in");
+  const waitlistAttendees = currentEventAttendees.filter((a) => a.status === "waitlist");
+  const grossTicketRevenue = currentEventAttendees.reduce((acc, a) => acc + (a.amountPaid || 0), 0);
+  const totalGiftsReceived = currentEventGifts.reduce((acc, g) => acc + (g.amount || 0), 0);
+  const totalCompanions = currentEventAttendees.reduce((acc, a) => acc + (a.companionsCount || 0), 0);
+  const checkInRate =
+    paidAttendees.length > 0
+      ? Math.round((checkedInAttendees.length / paidAttendees.length) * 100)
+      : 0;
+
+  // Filtered attendees based on search and tab filter
+  const filteredAttendees = currentEventAttendees.filter((item) => {
+    if (metricsFilter === "paid" && item.status !== "paid") return false;
+    if (metricsFilter === "waitlist" && item.status !== "waitlist") return false;
+    if (metricsFilter === "checked_in" && item.status !== "checked_in") return false;
+
+    if (metricsSearch.trim()) {
+      const q = metricsSearch.toLowerCase().trim();
+      const matchName = item.name.toLowerCase().includes(q);
+      const matchUsername = item.username?.toLowerCase().includes(q);
+      const matchEmail = item.email.toLowerCase().includes(q);
+      const matchCode = item.ticketCode.toLowerCase().includes(q);
+      const matchTier = item.ticketTier.toLowerCase().includes(q);
+      return matchName || matchUsername || matchEmail || matchCode || matchTier;
+    }
+    return true;
+  });
+
+  const filteredGifts = currentEventGifts.filter((g) => {
+    if (metricsSearch.trim()) {
+      const q = metricsSearch.toLowerCase().trim();
+      return (
+        g.gifterName.toLowerCase().includes(q) ||
+        g.gifterUsername?.toLowerCase().includes(q) ||
+        g.message?.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
 
   // Organizer auth gate state
   const [authGateTab, setAuthGateTab] = useState<"signin" | "register">("signin");
@@ -500,21 +610,45 @@ export default function HostEventStudioPage() {
                   </div>
 
                   {/* Capsule Navigation Pills */}
-                  <div className="hidden sm:inline-flex items-center gap-1 p-1 bg-white/5 border border-white/10 rounded-full text-xs font-mono">
-                    {["Overview", "Ticket Tiers", "Gate Scanner", "Bank Payouts"].map((tab) => {
-                      const isActive = activeTabNav === tab;
+                  <div className="flex overflow-x-auto no-scrollbar items-center gap-1 p-1 bg-white/5 border border-white/10 rounded-full text-xs font-mono max-w-full">
+                    {[
+                      { id: "Overview", label: `Live Metrics (${currentEventAttendees.length})` },
+                      { id: "Event Studio", label: "Event Studio" },
+                      { id: "Ticket Tiers", label: `Tiers (${ticketTiers.length})` },
+                      { id: "Gate Scanner", label: "Scanner" },
+                      { id: "Bank Payouts", label: "Payouts" },
+                    ].map((tab) => {
+                      const isActive =
+                        activeTabNav === tab.id ||
+                        (activeTabNav === "Event Studio" &&
+                          ((tab.id === "Ticket Tiers" && activeStep === "tiers") ||
+                            (tab.id === "Gate Scanner" && activeStep === "gate") ||
+                            (tab.id === "Bank Payouts" && activeStep === "payout")));
                       return (
                         <button
-                          key={tab}
+                          key={tab.id}
                           type="button"
-                          onClick={() => setActiveTabNav(tab)}
-                          className={`px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+                          onClick={() => {
+                            if (tab.id === "Ticket Tiers") {
+                              setActiveTabNav("Event Studio");
+                              setActiveStep("tiers");
+                            } else if (tab.id === "Gate Scanner") {
+                              setActiveTabNav("Event Studio");
+                              setActiveStep("gate");
+                            } else if (tab.id === "Bank Payouts") {
+                              setActiveTabNav("Event Studio");
+                              setActiveStep("payout");
+                            } else {
+                              setActiveTabNav(tab.id);
+                            }
+                          }}
+                          className={`px-3 py-1.5 rounded-full whitespace-nowrap transition-all duration-200 ${
                             isActive
                               ? "bg-white text-black font-semibold shadow-sm"
                               : "text-white/70 hover:text-white hover:bg-white/10"
                           }`}
                         >
-                          {tab}
+                          {tab.label}
                         </button>
                       );
                     })}
@@ -539,8 +673,471 @@ export default function HostEventStudioPage() {
                 </div>
               </div>
 
-              {/* Two-Column Master Canvas */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
+              {activeTabNav === "Overview" ? (
+                /* Organizer Live Metrics & Attendee Table View */
+                <div className="p-4 sm:p-8 space-y-7 animate-in fade-in duration-200">
+                  {/* Event Selector & Telemetry Bar */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#C5FF35] text-[#0C0D0E] flex items-center justify-center font-display font-black text-sm shrink-0">
+                        PP
+                      </div>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-xs font-mono uppercase text-neutral-400">EVENT TELEMETRY:</span>
+                          <select
+                            value={selectedEventId}
+                            onChange={(e) => setSelectedEventId(e.target.value)}
+                            className="bg-[#141517] border border-white/15 rounded-lg px-2.5 py-1 text-xs text-white font-display font-bold focus:outline-none focus:border-[#C5FF35]"
+                          >
+                            {EVENTS.map((ev) => (
+                              <option key={ev.id} value={ev.id}>
+                                {ev.title} ({ev.campus})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <span className="text-[11px] font-mono text-neutral-400 block mt-0.5">
+                          {targetEvent?.date} · {targetEvent?.venue}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 self-end md:self-auto">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                        <span>GATE TELEMETRY: REAL-TIME</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTabNav("Event Studio")}
+                        className="spicy-btn px-3.5 py-1.5 rounded-xl bg-white text-black text-xs font-mono font-bold flex items-center gap-1.5 hover:bg-neutral-200 transition-all shadow-sm"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>+ Event Studio</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Top 5 KPI Summary Metric Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+                    {/* KPI 1: Gross Ticket Revenue */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2 hover:border-white/20 transition-all">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono uppercase text-neutral-400 tracking-wider">
+                          GROSS TICKET REVENUE
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-[#C5FF35]/15 text-[#C5FF35] flex items-center justify-center">
+                          <TrendingUp className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="font-mono text-2xl sm:text-3xl font-black text-white">
+                        ₦{grossTicketRevenue.toLocaleString()}
+                      </div>
+                      <div className="text-[10px] font-mono text-[#C5FF35] flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>0% Commission · ₦0 platform fee</span>
+                      </div>
+                    </div>
+
+                    {/* KPI 2: Paid Attendees */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2 hover:border-white/20 transition-all">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono uppercase text-neutral-400 tracking-wider">
+                          PAID ATTENDEES
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-sky-400/15 text-sky-400 flex items-center justify-center">
+                          <Ticket className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="font-mono text-2xl sm:text-3xl font-black text-white">
+                        {paidAttendees.length}{" "}
+                        <span className="text-xs text-neutral-400 font-normal">/ 500</span>
+                      </div>
+                      <div className="text-[10px] font-mono text-sky-400">
+                        +{totalCompanions} plus-ones & squad passes
+                      </div>
+                    </div>
+
+                    {/* KPI 3: Waitlist Queue */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2 hover:border-white/20 transition-all">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono uppercase text-neutral-400 tracking-wider">
+                          WAITLIST QUEUE
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-amber-400/15 text-amber-400 flex items-center justify-center">
+                          <Clock className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="font-mono text-2xl sm:text-3xl font-black text-white">
+                        {waitlistAttendees.length}
+                      </div>
+                      <div className="text-[10px] font-mono text-amber-400">
+                        {waitlistAttendees.length > 0 ? "1-Click promotion ready" : "No pending waitlist"}
+                      </div>
+                    </div>
+
+                    {/* KPI 4: Check-in Velocity */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2 hover:border-white/20 transition-all">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono uppercase text-neutral-400 tracking-wider">
+                          GATE CHECK-IN
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-emerald-400/15 text-emerald-400 flex items-center justify-center">
+                          <UserCheck className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="font-mono text-2xl sm:text-3xl font-black text-white">
+                        {checkedInAttendees.length}{" "}
+                        <span className="text-xs text-neutral-400 font-normal">
+                          ({checkInRate}%)
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-mono text-emerald-400">
+                        Sub-second door turnstile
+                      </div>
+                    </div>
+
+                    {/* KPI 5: Gifts & Support */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2 hover:border-white/20 transition-all">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono uppercase text-neutral-400 tracking-wider">
+                          GIFTS & PATRONAGE
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-rose-400/15 text-rose-400 flex items-center justify-center">
+                          <Heart className="w-3.5 h-3.5 fill-rose-400" />
+                        </div>
+                      </div>
+                      <div className="font-mono text-2xl sm:text-3xl font-black text-white">
+                        ₦{totalGiftsReceived.toLocaleString()}
+                      </div>
+                      <div className="text-[10px] font-mono text-rose-400">
+                        {currentEventGifts.length} campus supporters backed
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Attendees Management Toolbar */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      {/* Filter Pills */}
+                      <div className="flex flex-wrap items-center gap-1.5 p-1 bg-white/5 border border-white/10 rounded-2xl font-mono text-xs">
+                        <button
+                          type="button"
+                          onClick={() => setMetricsFilter("all")}
+                          className={`px-3 py-1.5 rounded-xl transition-all ${
+                            metricsFilter === "all"
+                              ? "bg-white text-black font-bold shadow-sm"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          All ({currentEventAttendees.length})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMetricsFilter("paid")}
+                          className={`px-3 py-1.5 rounded-xl transition-all ${
+                            metricsFilter === "paid"
+                              ? "bg-sky-400 text-black font-bold shadow-sm"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          Paid ({paidAttendees.length})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMetricsFilter("waitlist")}
+                          className={`px-3 py-1.5 rounded-xl transition-all ${
+                            metricsFilter === "waitlist"
+                              ? "bg-amber-400 text-black font-bold shadow-sm"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          Waitlist ({waitlistAttendees.length})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMetricsFilter("checked_in")}
+                          className={`px-3 py-1.5 rounded-xl transition-all ${
+                            metricsFilter === "checked_in"
+                              ? "bg-emerald-400 text-black font-bold shadow-sm"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          Checked In ({checkedInAttendees.length})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMetricsFilter("gifts")}
+                          className={`px-3 py-1.5 rounded-xl transition-all ${
+                            metricsFilter === "gifts"
+                              ? "bg-rose-400 text-black font-bold shadow-sm"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          Gifts & Support ({currentEventGifts.length})
+                        </button>
+                      </div>
+
+                      {/* Search & Export Buttons */}
+                      <div className="flex items-center gap-2">
+                        <div className="relative flex-1 sm:w-64">
+                          <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            value={metricsSearch}
+                            onChange={(e) => setMetricsSearch(e.target.value)}
+                            placeholder="Search attendee, tag, or code..."
+                            className="w-full pl-8 pr-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] font-mono"
+                          />
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={handleExportCsv}
+                          className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-mono flex items-center gap-1.5 border border-white/15 transition-all shrink-0"
+                          title="Export roster as CSV"
+                        >
+                          {copiedCsv ? <Check className="w-3.5 h-3.5 text-[#C5FF35]" /> : <Download className="w-3.5 h-3.5" />}
+                          <span>{copiedCsv ? "Copied CSV!" : "Export CSV"}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Main Table Container */}
+                    <div className="rounded-2xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl">
+                      {metricsFilter !== "gifts" ? (
+                        /* Attendee Roster Table */
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse text-xs">
+                            <thead>
+                              <tr className="border-b border-white/10 bg-white/[0.02] text-[10px] font-mono uppercase tracking-wider text-neutral-400">
+                                <th className="py-3.5 px-4">Attendee</th>
+                                <th className="py-3.5 px-4">Pass Tier</th>
+                                <th className="py-3.5 px-4">Paid (₦)</th>
+                                <th className="py-3.5 px-4">Ticket Code</th>
+                                <th className="py-3.5 px-4">Status</th>
+                                <th className="py-3.5 px-4">Gifter Badge</th>
+                                <th className="py-3.5 px-4 text-right">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5 font-sans">
+                              {filteredAttendees.length === 0 ? (
+                                <tr>
+                                  <td colSpan={7} className="py-12 text-center text-neutral-400 font-mono text-xs">
+                                    No attendees found matching filter.
+                                  </td>
+                                </tr>
+                              ) : (
+                                filteredAttendees.map((att) => {
+                                  const gifterBadge = att.gifterLevel ? GIFTER_LEVEL_INFO[att.gifterLevel] : null;
+
+                                  return (
+                                    <tr key={att.id} className="hover:bg-white/[0.02] transition-colors">
+                                      {/* Attendee */}
+                                      <td className="py-3 px-4">
+                                        <div className="flex items-center gap-2.5">
+                                          <div className="w-8 h-8 rounded-xl bg-white/10 text-white font-display font-bold flex items-center justify-center text-xs shrink-0">
+                                            {att.name.charAt(0)}
+                                          </div>
+                                          <div className="min-w-0">
+                                            <span className="font-display font-bold text-xs text-white block truncate">
+                                              {att.name}
+                                            </span>
+                                            <div className="flex items-center gap-1.5 text-[10px] font-mono text-neutral-400">
+                                              {att.username && <span className="text-[#C5FF35]">@{att.username}</span>}
+                                              <span className="truncate">{att.email}</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </td>
+
+                                      {/* Tier */}
+                                      <td className="py-3 px-4 font-mono text-neutral-300">
+                                        <span className="px-2 py-0.5 rounded-lg bg-white/5 border border-white/10 text-[11px]">
+                                          {att.ticketTier}
+                                        </span>
+                                      </td>
+
+                                      {/* Amount Paid */}
+                                      <td className="py-3 px-4 font-mono font-bold">
+                                        {att.amountPaid > 0 ? (
+                                          <span className="text-[#C5FF35]">₦{att.amountPaid.toLocaleString()}</span>
+                                        ) : (
+                                          <span className="text-amber-400">Waitlist (₦0)</span>
+                                        )}
+                                      </td>
+
+                                      {/* Ticket Code */}
+                                      <td className="py-3 px-4 font-mono">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleCopyCode(att.ticketCode)}
+                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-colors text-[11px]"
+                                          title="Copy code"
+                                        >
+                                          <span>{att.ticketCode}</span>
+                                          {copiedCode === att.ticketCode ? (
+                                            <Check className="w-3 h-3 text-[#C5FF35]" />
+                                          ) : (
+                                            <Copy className="w-3 h-3 text-neutral-400" />
+                                          )}
+                                        </button>
+                                      </td>
+
+                                      {/* Status */}
+                                      <td className="py-3 px-4 font-mono">
+                                        {att.status === "checked_in" && (
+                                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
+                                            <span>✓ Checked In</span>
+                                            {att.checkedInAt && (
+                                              <span className="text-neutral-400 text-[9px]">
+                                                ({att.checkedInAt.split(" ")[1] || att.checkedInAt})
+                                              </span>
+                                            )}
+                                          </span>
+                                        )}
+                                        {att.status === "paid" && (
+                                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[10px] font-bold">
+                                            <span>🎟️ Paid Pass</span>
+                                          </span>
+                                        )}
+                                        {att.status === "waitlist" && (
+                                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[10px] font-bold">
+                                            <span>⏳ Waitlist</span>
+                                          </span>
+                                        )}
+                                      </td>
+
+                                      {/* Gifter Badge */}
+                                      <td className="py-3 px-4 font-mono">
+                                        {gifterBadge ? (
+                                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px]">
+                                            <div className="w-3.5 h-3.5 rounded-full overflow-hidden relative shrink-0">
+                                              <Image src={gifterBadge.imageUrl} alt={gifterBadge.name} fill className="object-contain" />
+                                            </div>
+                                            <span>{gifterBadge.badge}</span>
+                                          </span>
+                                        ) : (
+                                          <span className="text-neutral-600">—</span>
+                                        )}
+                                      </td>
+
+                                      {/* Actions */}
+                                      <td className="py-3 px-4 text-right">
+                                        {att.status === "waitlist" && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handlePromoteAttendee(att.id)}
+                                            className="px-3 py-1.5 rounded-xl bg-[#C5FF35] text-black font-mono text-[11px] font-bold hover:bg-white transition-all shadow-sm"
+                                          >
+                                            Promote to Ticket
+                                          </button>
+                                        )}
+                                        {att.status === "paid" && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCheckInAttendee(att.id)}
+                                            className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-[11px] border border-white/20 transition-all"
+                                          >
+                                            Check In Gate
+                                          </button>
+                                        )}
+                                        {att.status === "checked_in" && (
+                                          <span className="text-emerald-400 font-mono text-[11px] font-semibold">
+                                            Verified ✓
+                                          </span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        /* Gifts & Support Telemetry Table */
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse text-xs">
+                            <thead>
+                              <tr className="border-b border-white/10 bg-white/[0.02] text-[10px] font-mono uppercase tracking-wider text-neutral-400">
+                                <th className="py-3.5 px-4">Patron Supporter</th>
+                                <th className="py-3.5 px-4">Badge Level</th>
+                                <th className="py-3.5 px-4">Amount (₦)</th>
+                                <th className="py-3.5 px-4">Cheer Message</th>
+                                <th className="py-3.5 px-4">Timestamp</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5 font-sans">
+                              {filteredGifts.length === 0 ? (
+                                <tr>
+                                  <td colSpan={5} className="py-12 text-center text-neutral-400 font-mono text-xs">
+                                    No gift contributions recorded yet.
+                                  </td>
+                                </tr>
+                              ) : (
+                                filteredGifts.map((gift) => {
+                                  const badge = GIFTER_LEVEL_INFO[gift.level];
+                                  return (
+                                    <tr key={gift.id} className="hover:bg-white/[0.02] transition-colors">
+                                      <td className="py-3 px-4">
+                                        <div className="flex items-center gap-2.5">
+                                          <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-300 font-bold flex items-center justify-center text-xs">
+                                            {gift.gifterName.charAt(0)}
+                                          </div>
+                                          <div>
+                                            <span className="font-display font-bold text-xs text-white block">
+                                              {gift.gifterName}
+                                            </span>
+                                            {gift.gifterUsername && (
+                                              <span className="font-mono text-[10px] text-neutral-400">
+                                                @{gift.gifterUsername}
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </td>
+
+                                      <td className="py-3 px-4 font-mono">
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] font-bold">
+                                          <div className="w-3.5 h-3.5 rounded-full overflow-hidden relative shrink-0">
+                                            <Image src={badge.imageUrl} alt={badge.name} fill className="object-contain" />
+                                          </div>
+                                          <span>{badge.badge}</span>
+                                          <span className="text-neutral-400 font-normal">· {badge.name}</span>
+                                        </span>
+                                      </td>
+
+                                      <td className="py-3 px-4 font-mono font-bold text-[#C5FF35]">
+                                        ₦{gift.amount.toLocaleString()}
+                                      </td>
+
+                                      <td className="py-3 px-4 text-neutral-300 max-w-xs">
+                                        {gift.message ? (
+                                          <span className="italic">&ldquo;{gift.message}&rdquo;</span>
+                                        ) : (
+                                          <span className="text-neutral-600">—</span>
+                                        )}
+                                      </td>
+
+                                      <td className="py-3 px-4 font-mono text-[10px] text-neutral-400">
+                                        {new Date(gift.createdAt).toLocaleDateString()} · {new Date(gift.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                      </td>
+                                    </tr>
+                                  );
+                                })
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Two-Column Master Canvas */
+                <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
                 {/* Left Side: Live Banner Preview + Glassmorphic Hero Card */}
                 <div className="lg:col-span-6 relative min-h-[480px] lg:min-h-full flex flex-col justify-between p-6 sm:p-10 overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10">
                   {/* Dynamic Banner Preview Image */}
@@ -1203,6 +1800,7 @@ export default function HostEventStudioPage() {
                   </div>
                 </div>
               </div>
+            )}
             </div>
           )}
 

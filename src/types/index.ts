@@ -78,12 +78,15 @@ export interface BookingDetails {
 
 export interface UserProfile {
   id: string;
-  username: string; // e.g. "tade_oou"
+  username: string; // e.g. "tade_vibes"
   fullName: string;
   email: string;
   role: "partygoer" | "organizer";
   campus: string;
   bio?: string;
+  avatarUrl?: string;
+  gifterLevel?: 1 | 2 | 3 | 4 | 5 | 6; // Level 1 (Padi) to Level 6 (Legend)
+  totalGifted?: number;
   friends: string[]; // usernames
   eventsAttending: {
     eventId: string;
@@ -168,4 +171,37 @@ export interface EventPhoto {
   uploadedAt: string;
   downloadsCount: number;
 }
+
+export type GifterLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
+export interface EventGift {
+  id: string;
+  eventId: string;
+  userId?: string;
+  gifterName: string;
+  gifterUsername?: string;
+  amount: number;
+  level: GifterLevel;
+  message?: string;
+  isPublic: boolean;
+  createdAt: string;
+}
+
+export interface AttendeeMetricItem {
+  id: string;
+  eventId: string;
+  name: string;
+  username?: string;
+  email: string;
+  phone?: string;
+  ticketTier: string;
+  amountPaid: number;
+  ticketCode: string;
+  status: "paid" | "waitlist" | "checked_in";
+  registeredAt: string;
+  checkedInAt?: string;
+  gifterLevel?: GifterLevel;
+  companionsCount?: number;
+}
+
 
