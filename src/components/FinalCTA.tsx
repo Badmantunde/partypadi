@@ -3,12 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { getAppUrl } from "@/lib/urls";
 
 interface FinalCTAProps {
-  onOpenHostModal: () => void;
+  onOpenHostModal?: () => void;
 }
 
-export function FinalCTA({ onOpenHostModal }: FinalCTAProps) {
+export function FinalCTA({ onOpenHostModal }: FinalCTAProps = {}) {
   return (
     <section className="w-full py-24 sm:py-36 bg-[#0C0D0E] text-[#F5F5F0] border-t border-neutral-800 relative overflow-hidden">
       {/* Swiss grid accent lines */}
@@ -46,14 +47,13 @@ export function FinalCTA({ onOpenHostModal }: FinalCTAProps) {
             <span className="w-2 h-2 rounded-full bg-[#C5FF35]" />
           </Link>
 
-          <button
-            type="button"
-            onClick={onOpenHostModal}
+          <Link
+            href={getAppUrl("/onboarding", { role: "organizer" })}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border border-white/20 text-white hover:bg-white/5 rounded-full text-xs font-mono font-medium uppercase tracking-wider transition-all"
           >
             <span>Bring Your Event to PartyPadi</span>
             <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </Link>
         </div>
 
         {/* Swiss Coordinates & Location Stamp */}

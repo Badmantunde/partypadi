@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { PartyPadiLogo } from "./PartyPadiLogo";
+import { getAppUrl } from "@/lib/urls";
 
 interface FooterProps {
   onOpenHostModal?: () => void;
@@ -74,22 +75,12 @@ export function Footer({ onOpenHostModal }: FooterProps = {}) {
             </span>
             <ul className="space-y-2 text-xs">
               <li>
-                {onOpenHostModal ? (
-                  <button
-                    type="button"
-                    onClick={onOpenHostModal}
-                    className="text-neutral-300 hover:text-[#C5FF35] transition-colors text-left"
-                  >
-                    Publish an Event Studio
-                  </button>
-                ) : (
-                  <Link
-                    href="/host"
-                    className="text-neutral-300 hover:text-[#C5FF35] transition-colors"
-                  >
-                    Publish an Event Studio
-                  </Link>
-                )}
+                <Link
+                  href={getAppUrl("/onboarding", { role: "organizer" })}
+                  className="text-neutral-300 hover:text-[#C5FF35] transition-colors"
+                >
+                  Publish an Event Studio
+                </Link>
               </li>
               <li>
                 <Link href="/how-it-works#scanner" className="text-neutral-300 hover:text-[#C5FF35] transition-colors">

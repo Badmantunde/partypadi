@@ -1,13 +1,13 @@
-"use client";
-
 import React from "react";
+import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
+import { getAppUrl } from "@/lib/urls";
 
 interface OrganizerSectionProps {
-  onOpenHostModal: () => void;
+  onOpenHostModal?: () => void;
 }
 
-export function OrganizerSection({ onOpenHostModal }: OrganizerSectionProps) {
+export function OrganizerSection({ onOpenHostModal }: OrganizerSectionProps = {}) {
   const outcomes = [
     {
       title: "Direct Campus Reach",
@@ -72,14 +72,13 @@ export function OrganizerSection({ onOpenHostModal }: OrganizerSectionProps) {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={onOpenHostModal}
+                <Link
+                  href={getAppUrl("/onboarding", { role: "organizer" })}
                   className="flex items-center justify-center gap-3 px-8 py-4 bg-[#C5FF35] text-[#11120F] hover:bg-[#b4f323] rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all shadow-md hover:scale-[1.02]"
                 >
                   <span>Start Selling Tickets</span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
 
                 <a
                   href="#how-it-works"

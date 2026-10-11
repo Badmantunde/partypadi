@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PartyPadiLogo } from "./PartyPadiLogo";
-import { Menu, X, User, LogOut, Users, Sparkles } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { Menu, X, ArrowRight } from "lucide-react";
+import { getAppUrl } from "@/lib/urls";
 import { AuthModal } from "./AuthModal";
 import { ProfileModal } from "./ProfileModal";
 import { PartyCircleModal } from "./PartyCircleModal";
@@ -18,13 +18,6 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const {
-    currentUser,
-    openAuthModal,
-    openProfileModal,
-    openCircleModal,
-    logout,
-  } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,69 +93,30 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
             <div className="flex items-center justify-end gap-2 2xl:gap-2.5 shrink-0">
               {/* Host an Event button */}
               <Link
-                href="/host"
-                className={`text-xs font-mono px-3 2xl:px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
-                  checkIsActive("/host")
-                    ? "bg-white/15 text-white font-bold border border-white/25 shadow-xs"
-                    : "text-white/80 hover:text-white hover:bg-white/5"
-                }`}
+                href={getAppUrl("/onboarding", { role: "organizer" })}
+                className="text-xs font-mono px-3 2xl:px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 text-white/80 hover:text-white hover:bg-white/5"
               >
-                {checkIsActive("/host") && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] shadow-[0_0_8px_#C5FF35] shrink-0" />
-                )}
                 <span className="whitespace-nowrap">Host an Event</span>
-                <span
-                  className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold whitespace-nowrap transition-colors ${
-                    checkIsActive("/host")
-                      ? "bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30"
-                      : "bg-white/10 text-neutral-300 border border-white/10"
-                  }`}
-                >
+                <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold whitespace-nowrap transition-colors bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30">
                   0% Fee
                 </span>
               </Link>
 
-              {/* Account / Auth Button */}
-              {/* Account / Auth Button */}
-              {currentUser ? (
-                <div className="flex items-center gap-2 shrink-0">
-                  <Link
-                    href={currentUser.role === "organizer" ? "/organizer" : "/dashboard"}
-                    className="spicy-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#00D54B] text-black font-mono font-bold text-xs hover:bg-[#D7F23A] transition-all shrink-0 shadow-sm"
-                  >
-                    <span>{currentUser.role === "organizer" ? "Creator Studio" : "Dashboard"}</span>
-                    <span>→</span>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={openProfileModal}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-xs text-white transition-all group shadow-xs whitespace-nowrap shrink-0"
-                    title="View Profile, Friends & Circles"
-                  >
-                    <span className="w-5 h-5 rounded-full bg-[#C5FF35] text-[#0C0D0E] font-display font-black text-[11px] flex items-center justify-center shrink-0">
-                      {currentUser.fullName.charAt(0)}
-                    </span>
-                    <span className="font-mono font-bold text-[#C5FF35] whitespace-nowrap max-w-[120px] 2xl:max-w-none truncate">
-                      @{currentUser.username}
-                    </span>
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => openAuthModal("signin")}
-                  className="text-xs font-mono text-white/90 hover:text-white px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap shrink-0"
-                >
-                  Sign In
-                </button>
-              )}
-
+              {/* Sign In */}
               <Link
-                href="/events"
-                className="spicy-btn hidden 2xl:inline-flex items-center gap-2 px-4 py-2 bg-white text-[#0C0D0E] hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded-full text-xs font-mono font-medium tracking-tight transition-all duration-300 group whitespace-nowrap shrink-0"
+                href={getAppUrl("/onboarding", { mode: "signin" })}
+                className="text-xs font-mono text-white/90 hover:text-white px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all whitespace-nowrap shrink-0"
               >
-                <span className="whitespace-nowrap">Explore Events</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] transition-transform group-hover:scale-125 shrink-0" />
+                Sign In
+              </Link>
+
+              {/* Launch App */}
+              <Link
+                href={getAppUrl("/onboarding")}
+                className="spicy-btn inline-flex items-center gap-1.5 px-4 py-2 bg-[#00D54B] text-black hover:bg-[#D7F23A] rounded-full text-xs font-mono font-bold tracking-tight transition-all shadow-md whitespace-nowrap shrink-0"
+              >
+                <span>Launch App</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
@@ -177,33 +131,20 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
             </Link>
 
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              {currentUser ? (
-                <>
-                  <Link
-                    href={currentUser.role === "organizer" ? "/organizer" : "/dashboard"}
-                    className="px-2.5 sm:px-3 py-1.5 rounded-full bg-[#00D54B] text-black text-[11px] font-mono font-bold whitespace-nowrap shrink-0 shadow-xs"
-                  >
-                    <span>{currentUser.role === "organizer" ? "Studio" : "App"}</span>
-                    <span className="ml-1">→</span>
-                  </Link>
-                  <button
-                    onClick={openProfileModal}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold whitespace-nowrap shrink-0 max-w-[110px] sm:max-w-none"
-                  >
-                    <span className="w-4 h-4 rounded-full bg-[#C5FF35] text-black text-[10px] flex items-center justify-center font-bold shrink-0">
-                      {currentUser.fullName.charAt(0)}
-                    </span>
-                    <span className="truncate max-w-[60px] sm:max-w-none">@{currentUser.username}</span>
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => openAuthModal("signin")}
-                  className="px-3 py-1.5 rounded-full bg-white/10 text-white text-[11px] font-mono font-medium whitespace-nowrap shrink-0"
-                >
-                  Sign In
-                </button>
-              )}
+              <Link
+                href={getAppUrl("/onboarding", { mode: "signin" })}
+                className="px-3 py-1.5 rounded-full bg-white/10 text-white text-[11px] font-mono font-medium whitespace-nowrap shrink-0"
+              >
+                Sign In
+              </Link>
+
+              <Link
+                href={getAppUrl("/onboarding")}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#00D54B] text-black text-[11px] font-mono font-bold rounded-full whitespace-nowrap shrink-0"
+              >
+                <span>Launch App</span>
+                <span className="w-1 h-1 rounded-full bg-black" />
+              </Link>
 
               <Link
                 href="/events"
@@ -230,77 +171,23 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
         {mobileMenuOpen && (
           <div className="xl:hidden border-b border-white/10 bg-[#0C0D0E]/98 backdrop-blur-xl px-5 pt-4 pb-8 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
 
-            {/* User Profile Card in Mobile Menu */}
-            {currentUser ? (
-              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-[#C5FF35] text-[#0C0D0E] font-bold text-xs flex items-center justify-center">
-                      {currentUser.fullName.charAt(0)}
-                    </div>
-                    <div>
-                      <span className="font-mono text-xs font-bold text-white block">
-                        @{currentUser.username}
-                      </span>
-                      <span className="text-[10px] text-neutral-400 capitalize">
-                        {currentUser.role} · {currentUser.friends.length} Friends
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="text-neutral-400 hover:text-red-400 text-xs p-1"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      openProfileModal();
-                    }}
-                    className="py-2 bg-white/10 hover:bg-white/15 rounded-xl text-white font-medium text-center"
-                  >
-                    Profile & Passes
-                  </button>
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      openCircleModal();
-                    }}
-                    className="py-2 bg-[#C5FF35] text-[#0C0D0E] rounded-xl font-bold text-center"
-                  >
-                    + New Circle
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-xs">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openAuthModal("signin");
-                  }}
-                  className="py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/5 text-center font-bold"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openAuthModal("signup");
-                  }}
-                  className="py-2.5 rounded-xl bg-[#C5FF35] text-[#0C0D0E] text-center font-bold"
-                >
-                  Join PartyPadi
-                </button>
-              </div>
-            )}
+            {/* Action Buttons in Mobile Menu */}
+            <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-xs">
+              <Link
+                href={getAppUrl("/onboarding", { mode: "signin" })}
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/5 text-center font-bold"
+              >
+                Sign In
+              </Link>
+              <Link
+                href={getAppUrl("/onboarding", { mode: "signup" })}
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 rounded-xl bg-[#00D54B] text-black text-center font-bold"
+              >
+                Launch App
+              </Link>
+            </div>
 
             <nav className="flex flex-col space-y-1 pt-1" aria-label="Mobile Navigation">
               {navLinks.map((link) => {
@@ -332,16 +219,12 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
 
             <div className="pt-2 flex flex-col gap-2.5">
               <Link
-                href="/host"
+                href={getAppUrl("/onboarding", { role: "organizer" })}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`w-full py-3 text-center text-xs font-mono uppercase tracking-wider rounded-full transition-all flex items-center justify-center gap-2 ${
-                  checkIsActive("/host")
-                    ? "bg-[#C5FF35] text-[#0C0D0E] font-bold shadow-md"
-                    : "border border-white/20 text-white hover:bg-white/5"
-                }`}
+                className="w-full py-3 text-center text-xs font-mono uppercase tracking-wider rounded-full transition-all flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/5"
               >
                 <span>Host an Event (0% Commission)</span>
-                {checkIsActive("/host") && <span className="w-1.5 h-1.5 rounded-full bg-black" />}
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />
               </Link>
               <Link
                 href="/events"

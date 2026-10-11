@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import { getAppUrl } from "@/lib/urls";
 
 interface HeroProps {
   onOpenHostModal: () => void;
@@ -198,14 +200,13 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
               <span>Explore Events</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
-            <button
-              type="button"
-              onClick={onOpenHostModal}
+            <Link
+              href={getAppUrl("/onboarding", { role: "organizer" })}
               className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-mono text-white/70 hover:text-white transition-colors"
             >
               <span>Host an Event</span>
               <span className="text-[10px]">→</span>
-            </button>
+            </Link>
           </div>
         </div>
 

@@ -16,6 +16,7 @@ import { GifterBadge } from "@/components/GifterBadge";
 import { TicketModal } from "@/components/TicketModal";
 import { PartyCircleModal } from "@/components/PartyCircleModal";
 import { GiftSupportModal } from "@/components/GiftSupportModal";
+import { getPublicUrl } from "@/lib/urls";
 import {
   Sparkles,
   Compass,
@@ -303,7 +304,7 @@ export function PartygoerDashboardClient({
           <div className="space-y-6">
             {/* Logo */}
             <div className="flex items-center justify-between pt-1">
-              <Link href="/" className="flex items-center gap-2 group transition-transform">
+              <Link href={getPublicUrl("/")} className="flex items-center gap-2 group transition-transform" title="Party Padi">
                 <PartyPadiLogo theme="dark" size="md" />
               </Link>
               <span className="px-2 py-0.5 rounded-full bg-[#00D54B]/15 text-[#00D54B] border border-[#00D54B]/30 text-[10px] font-mono font-bold tracking-wider uppercase">
@@ -419,7 +420,7 @@ export function PartygoerDashboardClient({
 
             {/* Back to Public Marketing Site */}
             <Link
-              href="/"
+              href={getPublicUrl("/")}
               className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-mono text-neutral-400 hover:text-white hover:bg-white/5 transition-all"
             >
               <span>Public Website</span>

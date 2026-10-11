@@ -12,6 +12,30 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/",
+        has: [
+          {
+            type: "host",
+            value: "app.partypadi.vercel.app",
+          },
+        ],
+        destination: "/onboarding",
+      },
+      {
+        source: "/",
+        has: [
+          {
+            type: "host",
+            value: "app.localhost:3000",
+          },
+        ],
+        destination: "/onboarding",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

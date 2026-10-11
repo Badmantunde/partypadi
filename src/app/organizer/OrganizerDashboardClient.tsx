@@ -14,6 +14,7 @@ import { useAuth, getOrganizerMilestones } from "@/context/AuthContext";
 import { useToast } from "@/components/Toast";
 import { PartyPadiLogo } from "@/components/PartyPadiLogo";
 import { GifterBadge } from "@/components/GifterBadge";
+import { getPublicUrl } from "@/lib/urls";
 import {
   LayoutDashboard,
   Calendar,
@@ -351,7 +352,7 @@ export function OrganizerDashboardClient({
           <div className="space-y-6">
             {/* Brand Logo & Studio Badge */}
             <div className="flex items-center justify-between pt-1">
-              <Link href="/" className="flex items-center gap-2 group transition-transform">
+              <Link href={getPublicUrl("/")} className="flex items-center gap-2 group transition-transform" title="Party Padi">
                 <PartyPadiLogo theme="dark" size="md" />
               </Link>
               <span className="px-2 py-0.5 rounded-full bg-[#D7F23A]/15 text-[#D7F23A] border border-[#D7F23A]/30 text-[10px] font-mono font-bold tracking-wider uppercase">
@@ -455,7 +456,7 @@ export function OrganizerDashboardClient({
             </button>
 
             <Link
-              href="/"
+              href={getPublicUrl("/")}
               className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-mono text-neutral-400 hover:text-white hover:bg-white/5 transition-all"
             >
               <span>Public Website</span>
@@ -480,7 +481,7 @@ export function OrganizerDashboardClient({
           <header className="sticky top-0 z-30 bg-[#0C0D0E]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-3.5 sm:py-4 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="lg:hidden">
-                <Link href="/">
+                <Link href={getPublicUrl("/")}>
                   <PartyPadiLogo theme="dark" size="sm" />
                 </Link>
               </div>
