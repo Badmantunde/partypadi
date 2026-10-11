@@ -74,7 +74,7 @@ export default function HostEventStudioPage() {
             </h1>
 
             <p className="text-base sm:text-xl text-neutral-400 max-w-3xl mx-auto leading-relaxed">
-              Automated ticket tiers, sub-second offline gate scanners, and same-night Paystack bank payouts directly to your Nigerian account.
+              Automated ticket tiers, sub-second offline gate scanners, and instant virtual account payouts directly to your Nigerian bank account.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
@@ -245,7 +245,7 @@ export default function HostEventStudioPage() {
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2 text-xs font-mono text-white/70">
                     <span className="w-2 h-2 rounded-full bg-[#C5FF35]" />
-                    <span>Instant Paystack Settlement</span>
+                    <span>Instant Virtual Account Settlement</span>
                   </div>
 
                   <div className="relative group cursor-pointer">
@@ -284,7 +284,7 @@ export default function HostEventStudioPage() {
                     "🌊 UNILAG (Akoka)",
                     "🎓 UI (Ibadan)",
                     "⚡ LASU (Ojo)",
-                    "💳 Paystack Direct",
+                    "⚡ Instant Virtual Accounts",
                     "📱 0.8s Offline Scan",
                     "+12 More Campuses",
                   ].map((pill) => {
@@ -665,7 +665,7 @@ export default function HostEventStudioPage() {
                           />
                           <p className="text-[11px] text-[#C5FF35] mt-1 font-mono flex items-center gap-1">
                             <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>Paystack account verification confirmed</span>
+                            <span>Beneficiary account verified for instant withdrawals</span>
                           </p>
                         </div>
 
@@ -810,13 +810,13 @@ export default function HostEventStudioPage() {
 
           <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-2">
             <span className="text-[10px] font-mono tracking-widest text-[#C5FF35] uppercase">
-              03 // AUTOMATIC SETTLEMENT
+              03 // REAL-TIME VIRTUAL ACCOUNTS
             </span>
             <h4 className="font-display font-medium text-lg text-white">
-              Same-Night Direct Payout
+              Instant Drop & Anytime Withdrawal
             </h4>
             <p className="text-xs text-neutral-400 leading-relaxed">
-              Funds are held securely via Paystack escrow and disbursed directly into your faculty or personal bank account as soon as the event starts.
+              Ticket proceeds drop directly into your dedicated virtual account in real time. Withdraw your money to your Nigerian payout account anytime.
             </p>
           </div>
         </div>

@@ -44,7 +44,7 @@ export default function HowItWorksPage() {
     },
     {
       q: "How do event organizers receive their ticket money?",
-      a: "Ticket proceeds are collected via Paystack into secure automated escrow. Once event doors open, payouts are initiated directly to your registered Nigerian commercial or microfinance bank account (GTB, Access, Kuda, Moniepoint, etc.).",
+      a: "Each organizer gets a dedicated virtual account. When a student purchases a ticket, funds drop directly and immediately into the organizer's account balance in real time. Organizers can withdraw their money directly to their payout bank account (GTBank, Access, Kuda, Moniepoint, OPay, etc.) anytime.",
     },
     {
       q: "What payment methods are supported for students?",
