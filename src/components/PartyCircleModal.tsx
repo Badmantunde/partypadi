@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { X, Users, Calendar, ArrowRight, Check } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "./Toast";
 import { EVENTS } from "@/data/events";
 
 export function PartyCircleModal() {
+  const router = useRouter();
   const {
     circleModalOpen,
     closeCircleModal,
@@ -103,6 +105,7 @@ export function PartyCircleModal() {
     });
 
     closeCircleModal();
+    router.push(`/circles/${created.id}`);
   };
 
   return (

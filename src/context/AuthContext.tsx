@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { UserProfile, PartyCircle } from "@/types";
+import { UserProfile, PartyCircle, CircleEventSuggestion, CircleActivityItem } from "@/types";
 
 // Seed community users at OOU Ago-Iwoye
 const SEED_USERS: UserProfile[] = [
@@ -80,7 +80,72 @@ const SEED_CIRCLES: PartyCircle[] = [
     description: "Gathering at the quad lawn before heading to Mini Stadium for Sunset Sessions.",
     createdBy: "tade_oou",
     members: ["tade_oou", "fola_vibes", "chioma_k"],
+    inviteCode: "SUNSET26",
     targetEventId: "after-class-sunset",
+    isVotingOpen: false,
+    suggestions: [
+      {
+        id: "sugg-1",
+        eventId: "after-class-sunset",
+        suggestedBy: "tade_oou",
+        suggestedAt: "2026-10-09",
+        votes: ["tade_oou", "fola_vibes", "chioma_k"],
+      },
+      {
+        id: "sugg-2",
+        eventId: "green-room-sessions",
+        suggestedBy: "fola_vibes",
+        suggestedAt: "2026-10-09",
+        votes: [],
+      },
+    ],
+    activity: [
+      {
+        id: "act-1",
+        type: "circle_created",
+        actorUsername: "tade_oou",
+        description: "@tade_oou created the circle",
+        timestamp: "2026-10-09T14:30:00Z",
+      },
+      {
+        id: "act-2",
+        type: "member_joined",
+        actorUsername: "fola_vibes",
+        description: "@fola_vibes joined the circle",
+        timestamp: "2026-10-09T14:45:00Z",
+      },
+      {
+        id: "act-3",
+        type: "member_joined",
+        actorUsername: "chioma_k",
+        description: "@chioma_k joined the circle",
+        timestamp: "2026-10-09T15:00:00Z",
+      },
+      {
+        id: "act-4",
+        type: "event_suggested",
+        actorUsername: "tade_oou",
+        description: "@tade_oou suggested AFTER CLASS: Sunset Sessions",
+        timestamp: "2026-10-09T15:15:00Z",
+        eventId: "after-class-sunset",
+      },
+      {
+        id: "act-5",
+        type: "vote_cast",
+        actorUsername: "chioma_k",
+        description: "@chioma_k voted for AFTER CLASS: Sunset Sessions",
+        timestamp: "2026-10-09T15:30:00Z",
+        eventId: "after-class-sunset",
+      },
+      {
+        id: "act-6",
+        type: "event_selected",
+        actorUsername: "tade_oou",
+        description: "@tade_oou confirmed AFTER CLASS: Sunset Sessions as the circle's plan",
+        timestamp: "2026-10-09T16:00:00Z",
+        eventId: "after-class-sunset",
+      },
+    ],
     createdAt: "2026-10-09",
   },
   {
@@ -89,7 +154,57 @@ const SEED_CIRCLES: PartyCircle[] = [
     description: "Black-tie dinner table reservation and pre-drinks linkup.",
     createdBy: "fola_vibes",
     members: ["fola_vibes", "tade_oou"],
-    targetEventId: "fassa-dinner-awards",
+    inviteCode: "LAWGALA",
+    targetEventId: undefined,
+    isVotingOpen: true,
+    suggestions: [
+      {
+        id: "sugg-3",
+        eventId: "fassa-dinner-awards",
+        suggestedBy: "fola_vibes",
+        suggestedAt: "2026-10-10",
+        votes: ["fola_vibes"],
+      },
+      {
+        id: "sugg-4",
+        eventId: "afrofest-culture-night",
+        suggestedBy: "tade_oou",
+        suggestedAt: "2026-10-10",
+        votes: ["tade_oou"],
+      },
+    ],
+    activity: [
+      {
+        id: "act-7",
+        type: "circle_created",
+        actorUsername: "fola_vibes",
+        description: "@fola_vibes created the circle",
+        timestamp: "2026-10-10T11:00:00Z",
+      },
+      {
+        id: "act-8",
+        type: "member_joined",
+        actorUsername: "tade_oou",
+        description: "@tade_oou joined the circle",
+        timestamp: "2026-10-10T11:30:00Z",
+      },
+      {
+        id: "act-9",
+        type: "event_suggested",
+        actorUsername: "fola_vibes",
+        description: "@fola_vibes suggested FASSA Gala '26",
+        timestamp: "2026-10-10T12:00:00Z",
+        eventId: "fassa-dinner-awards",
+      },
+      {
+        id: "act-10",
+        type: "event_suggested",
+        actorUsername: "tade_oou",
+        description: "@tade_oou suggested AfroFest Night",
+        timestamp: "2026-10-10T12:15:00Z",
+        eventId: "afrofest-culture-night",
+      },
+    ],
     createdAt: "2026-10-10",
   },
 ];
@@ -114,13 +229,23 @@ interface AuthContextType {
   logout: () => void;
   addFriend: (friendUsername: string) => boolean;
   removeFriend: (friendUsername: string) => void;
+  getCircle: (circleId: string) => PartyCircle | undefined;
+  getCircleByInviteCode: (inviteCode: string) => PartyCircle | undefined;
   createCircle: (data: {
     name: string;
     description?: string;
-    members: string[];
+    members?: string[];
     targetEventId?: string;
   }) => PartyCircle;
-  joinCircle: (circleId: string) => void;
+  updateCircle: (circleId: string, updates: Partial<PartyCircle>) => void;
+  joinCircle: (circleIdOrInviteCode: string) => { success: boolean; message: string; circle?: PartyCircle };
+  leaveCircle: (circleId: string) => boolean;
+  removeCircleMember: (circleId: string, memberUsername: string) => boolean;
+  suggestEventToCircle: (circleId: string, eventId: string) => boolean;
+  voteForEvent: (circleId: string, suggestionId: string) => boolean;
+  selectFinalEvent: (circleId: string, eventId: string) => boolean;
+  reopenVoting: (circleId: string) => boolean;
+  getMemberTicketStatus: (eventId: string, memberUsername: string) => boolean;
   rsvpEvent: (eventId: string, allowFriendsToSee: boolean, ticketCode: string) => void;
   getFriendsAttendingEvent: (eventId: string) => Array<{ username: string; fullName: string; bio?: string }>;
   openAuthModal: (defaultTab?: "signin" | "signup", defaultRole?: "partygoer" | "organizer") => void;
@@ -280,21 +405,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     saveUser(updatedUser);
   };
 
+  const getCircle = (circleId: string): PartyCircle | undefined => {
+    return circles.find((c) => c.id === circleId);
+  };
+
+  const getCircleByInviteCode = (inviteCode: string): PartyCircle | undefined => {
+    return circles.find(
+      (c) => c.inviteCode.toLowerCase() === inviteCode.trim().toLowerCase()
+    );
+  };
+
   const createCircle = (data: {
     name: string;
     description?: string;
-    members: string[];
+    members?: string[];
     targetEventId?: string;
   }): PartyCircle => {
+    const rawCode = (
+      data.name.replace(/[^a-zA-Z0-9]/g, "").slice(0, 4) +
+      Math.floor(1000 + Math.random() * 9000)
+    ).toUpperCase();
+    const creator = currentUser ? currentUser.username : "guest";
+    const initialMembers = currentUser
+      ? Array.from(new Set([currentUser.username, ...(data.members || [])]))
+      : (data.members || ["guest"]);
+
     const newCircle: PartyCircle = {
       id: `circle-${Date.now()}`,
       name: data.name.trim(),
       description: data.description?.trim(),
-      createdBy: currentUser ? currentUser.username : "guest",
-      members: currentUser
-        ? Array.from(new Set([currentUser.username, ...data.members]))
-        : data.members,
+      createdBy: creator,
+      members: initialMembers,
+      inviteCode: rawCode,
       targetEventId: data.targetEventId,
+      isVotingOpen: true,
+      suggestions: data.targetEventId
+        ? [
+            {
+              id: `sugg-${Date.now()}`,
+              eventId: data.targetEventId,
+              suggestedBy: creator,
+              suggestedAt: new Date().toISOString().split("T")[0],
+              votes: [creator],
+            },
+          ]
+        : [],
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "circle_created",
+          actorUsername: creator,
+          description: `@${creator} created circle "${data.name.trim()}"`,
+          timestamp: new Date().toISOString(),
+        },
+      ],
       createdAt: new Date().toISOString().split("T")[0],
     };
 
@@ -304,16 +468,285 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return newCircle;
   };
 
-  const joinCircle = (circleId: string) => {
-    if (!currentUser) return;
+  const updateCircle = (circleId: string, updates: Partial<PartyCircle>) => {
     const updatedCircles = circles.map((c) => {
-      if (c.id === circleId && !c.members.includes(currentUser.username)) {
-        return { ...c, members: [...c.members, currentUser.username] };
+      if (c.id === circleId) {
+        return { ...c, ...updates };
       }
       return c;
     });
     setCircles(updatedCircles);
     localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+  };
+
+  const joinCircle = (
+    circleIdOrInviteCode: string
+  ): { success: boolean; message: string; circle?: PartyCircle } => {
+    if (!currentUser) {
+      return { success: false, message: "Please sign in or create an account to join this circle." };
+    }
+
+    const cleanInput = circleIdOrInviteCode.trim().toLowerCase();
+    const target = circles.find(
+      (c) => c.id.toLowerCase() === cleanInput || c.inviteCode.toLowerCase() === cleanInput
+    );
+
+    if (!target) {
+      return { success: false, message: "Circle not found or invite code is invalid." };
+    }
+
+    if (target.members.includes(currentUser.username)) {
+      return { success: true, message: "You are already a member of this circle.", circle: target };
+    }
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      members: [...target.members, currentUser.username],
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "member_joined",
+          actorUsername: currentUser.username,
+          description: `@${currentUser.username} joined the circle`,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return { success: true, message: `Welcome! You have joined "${target.name}".`, circle: updatedCircle };
+  };
+
+  const leaveCircle = (circleId: string): boolean => {
+    if (!currentUser) return false;
+    const target = circles.find((c) => c.id === circleId);
+    if (!target) return false;
+
+    // If owner, check if other members exist
+    if (target.createdBy === currentUser.username && target.members.length > 1) {
+      const nextOwner = target.members.find((m) => m !== currentUser.username) || "guest";
+      const updatedCircle: PartyCircle = {
+        ...target,
+        createdBy: nextOwner,
+        members: target.members.filter((m) => m !== currentUser.username),
+        activity: [
+          {
+            id: `act-${Date.now()}`,
+            type: "member_left",
+            actorUsername: currentUser.username,
+            description: `@${currentUser.username} left the circle. Ownership passed to @${nextOwner}.`,
+            timestamp: new Date().toISOString(),
+          },
+          ...target.activity,
+        ],
+      };
+      const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+      setCircles(updatedCircles);
+      localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+      return true;
+    }
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      members: target.members.filter((m) => m !== currentUser.username),
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "member_left",
+          actorUsername: currentUser.username,
+          description: `@${currentUser.username} left the circle`,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return true;
+  };
+
+  const removeCircleMember = (circleId: string, memberUsername: string): boolean => {
+    if (!currentUser) return false;
+    const target = circles.find((c) => c.id === circleId);
+    if (!target || target.createdBy !== currentUser.username) return false;
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      members: target.members.filter((m) => m.toLowerCase() !== memberUsername.toLowerCase()),
+      suggestions: target.suggestions.map((s) => ({
+        ...s,
+        votes: s.votes.filter((v) => v.toLowerCase() !== memberUsername.toLowerCase()),
+      })),
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "member_left",
+          actorUsername: currentUser.username,
+          description: `@${currentUser.username} removed @${memberUsername} from the circle`,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return true;
+  };
+
+  const suggestEventToCircle = (circleId: string, eventId: string): boolean => {
+    if (!currentUser) return false;
+    const target = circles.find((c) => c.id === circleId);
+    if (!target) return false;
+
+    // Check if already suggested
+    if (target.suggestions.some((s) => s.eventId === eventId)) {
+      return false;
+    }
+
+    // Auto-cast 1 vote for this suggestion, removing previous vote if any
+    const updatedSuggestions = target.suggestions.map((s) => ({
+      ...s,
+      votes: s.votes.filter((v) => v !== currentUser.username),
+    }));
+
+    const newSuggestion: CircleEventSuggestion = {
+      id: `sugg-${Date.now()}`,
+      eventId,
+      suggestedBy: currentUser.username,
+      suggestedAt: new Date().toISOString().split("T")[0],
+      votes: [currentUser.username],
+    };
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      suggestions: [...updatedSuggestions, newSuggestion],
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "event_suggested",
+          actorUsername: currentUser.username,
+          description: `@${currentUser.username} suggested an event`,
+          eventId,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return true;
+  };
+
+  const voteForEvent = (circleId: string, suggestionId: string): boolean => {
+    if (!currentUser) return false;
+    const target = circles.find((c) => c.id === circleId);
+    if (!target) return false;
+
+    const targetSugg = target.suggestions.find((s) => s.id === suggestionId);
+    if (!targetSugg) return false;
+
+    const alreadyVotedThis = targetSugg.votes.includes(currentUser.username);
+
+    const updatedSuggestions = target.suggestions.map((s) => {
+      const cleanVotes = s.votes.filter((v) => v !== currentUser.username);
+      if (s.id === suggestionId && !alreadyVotedThis) {
+        return { ...s, votes: [...cleanVotes, currentUser.username] };
+      }
+      return { ...s, votes: cleanVotes };
+    });
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      suggestions: updatedSuggestions,
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "vote_cast",
+          actorUsername: currentUser.username,
+          description: alreadyVotedThis
+            ? `@${currentUser.username} withdrew their vote`
+            : `@${currentUser.username} voted for an event`,
+          eventId: targetSugg.eventId,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return true;
+  };
+
+  const selectFinalEvent = (circleId: string, eventId: string): boolean => {
+    if (!currentUser) return false;
+    const target = circles.find((c) => c.id === circleId);
+    if (!target || target.createdBy !== currentUser.username) return false;
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      targetEventId: eventId,
+      isVotingOpen: false,
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "event_selected",
+          actorUsername: currentUser.username,
+          description: `@${currentUser.username} confirmed the official circle plan!`,
+          eventId,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return true;
+  };
+
+  const reopenVoting = (circleId: string): boolean => {
+    if (!currentUser) return false;
+    const target = circles.find((c) => c.id === circleId);
+    if (!target || target.createdBy !== currentUser.username) return false;
+
+    const updatedCircle: PartyCircle = {
+      ...target,
+      isVotingOpen: true,
+      activity: [
+        {
+          id: `act-${Date.now()}`,
+          type: "voting_reopened",
+          actorUsername: currentUser.username,
+          description: `@${currentUser.username} reopened event voting for the group`,
+          timestamp: new Date().toISOString(),
+        },
+        ...target.activity,
+      ],
+    };
+
+    const updatedCircles = circles.map((c) => (c.id === target.id ? updatedCircle : c));
+    setCircles(updatedCircles);
+    localStorage.setItem("pp_circles", JSON.stringify(updatedCircles));
+    return true;
+  };
+
+  const getMemberTicketStatus = (eventId: string, memberUsername: string): boolean => {
+    const member = allUsers.find(
+      (u) => u.username.toLowerCase() === memberUsername.toLowerCase()
+    );
+    if (!member) return false;
+    return member.eventsAttending.some((att) => att.eventId === eventId);
   };
 
   const rsvpEvent = (eventId: string, allowFriendsToSee: boolean, ticketCode: string) => {
@@ -412,8 +845,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         addFriend,
         removeFriend,
+        getCircle,
+        getCircleByInviteCode,
         createCircle,
+        updateCircle,
         joinCircle,
+        leaveCircle,
+        removeCircleMember,
+        suggestEventToCircle,
+        voteForEvent,
+        selectFinalEvent,
+        reopenVoting,
+        getMemberTicketStatus,
         rsvpEvent,
         getFriendsAttendingEvent,
         openAuthModal,

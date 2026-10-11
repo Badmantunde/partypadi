@@ -93,14 +93,50 @@ export interface UserProfile {
   }[];
 }
 
+export interface CircleEventSuggestion {
+  id: string;
+  eventId: string;
+  suggestedBy: string; // username
+  suggestedAt: string;
+  votes: string[]; // usernames of members who voted
+}
+
+export interface CircleActivityItem {
+  id: string;
+  type:
+    | "circle_created"
+    | "member_joined"
+    | "member_left"
+    | "event_suggested"
+    | "vote_cast"
+    | "event_selected"
+    | "voting_reopened";
+  actorUsername: string;
+  description: string;
+  timestamp: string;
+  eventId?: string;
+}
+
 export interface PartyCircle {
   id: string;
   name: string;
   description?: string;
-  createdBy: string;
+  createdBy: string; // owner username
   members: string[]; // usernames
-  targetEventId?: string;
+  inviteCode: string;
+  targetEventId?: string; // officially selected event ID
+  isVotingOpen: boolean;
+  suggestions: CircleEventSuggestion[];
+  activity: CircleActivityItem[];
   createdAt: string;
+}
+
+export interface CreatorTicketTier {
+  id: string;
+  name: string;
+  price: number;
+  capacity: number;
+  description?: string;
 }
 
 export interface HostEventFormData {

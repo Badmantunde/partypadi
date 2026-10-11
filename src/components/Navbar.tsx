@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { PartyPadiLogo } from "./PartyPadiLogo";
-import { Menu, X, User, LogOut, Users } from "lucide-react";
+import { Menu, X, User, LogOut, Users, Sparkles } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { AuthModal } from "./AuthModal";
 import { ProfileModal } from "./ProfileModal";
@@ -14,6 +15,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const {
@@ -35,10 +37,16 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Discover", href: "/events" },
+    { label: "Padi Circles", href: "/circles" },
     { label: "How It Works", href: "/how-it-works" },
     { label: "Organizers", href: "/organizers" },
     { label: "About", href: "/about" },
   ];
+
+  const checkIsActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <>
@@ -68,39 +76,44 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
 
             {/* Center: Floating Dark Capsule Navigation */}
             <nav
-              className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 backdrop-blur-md shadow-inner"
+              className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner"
               aria-label="Main Navigation"
             >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="px-3.5 py-1.5 text-xs font-mono text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all duration-200"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const active = checkIsActive(link.href);
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={`relative px-3.5 py-1.5 text-xs font-mono rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+                      active
+                        ? "bg-white/15 text-white font-bold border border-white/25 shadow-xs"
+                        : "text-white/70 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    {active && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] shadow-[0_0_8px_#C5FF35]" />
+                    )}
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Right: Action Buttons */}
             <div className="hidden sm:flex items-center gap-2.5">
               {/* Host an Event button */}
-              {onOpenHostModal ? (
-                <button
-                  type="button"
-                  onClick={onOpenHostModal}
-                  className="text-xs font-mono text-white/80 hover:text-white px-3 py-2 rounded-full hover:bg-white/5 transition-all"
-                >
-                  Host an Event
-                </button>
-              ) : (
-                <Link
-                  href="/host"
-                  className="text-xs font-mono text-white/80 hover:text-white px-3 py-2 rounded-full hover:bg-white/5 transition-all"
-                >
-                  Host an Event
-                </Link>
-              )}
+              <Link
+                href="/host"
+                className={`text-xs font-mono px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 ${
+                  checkIsActive("/host")
+                    ? "bg-[#C5FF35] text-[#0C0D0E] font-bold shadow-[0_0_15px_rgba(197,255,53,0.3)]"
+                    : "text-white/80 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <span>Host an Event</span>
+                <span className="text-[9px] bg-white/10 text-white/80 px-1.5 py-0.5 rounded font-mono font-semibold">0% Fee</span>
+              </Link>
 
               {/* Account / Auth Button */}
               {currentUser ? (
@@ -254,27 +267,46 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               </div>
             )}
 
-            <nav className="flex flex-col space-y-1.5 pt-1" aria-label="Mobile Navigation">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-3 px-3.5 text-sm font-display font-medium text-white/90 hover:bg-white/5 rounded-xl border-b border-white/5 flex items-center justify-between transition-colors"
-                >
-                  <span>{link.label}</span>
-                  <span className="text-xs font-mono text-white/40">→</span>
-                </Link>
-              ))}
+            <nav className="flex flex-col space-y-1 pt-1" aria-label="Mobile Navigation">
+              {navLinks.map((link) => {
+                const active = checkIsActive(link.href);
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`py-3 px-3.5 text-sm font-display rounded-xl border flex items-center justify-between transition-colors ${
+                      active
+                        ? "bg-white/15 text-[#C5FF35] font-bold border-[#C5FF35]/30 shadow-xs"
+                        : "text-white/90 hover:bg-white/5 border-white/5 font-medium"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {active ? (
+                        <span className="w-2 h-2 rounded-full bg-[#C5FF35] shadow-[0_0_8px_#C5FF35]" />
+                      ) : (
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                      )}
+                      <span>{link.label}</span>
+                    </div>
+                    <span className="text-xs font-mono text-white/50">{active ? "ACTIVE" : "→"}</span>
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="pt-2 flex flex-col gap-2.5">
               <Link
                 href="/host"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-3 text-center text-xs font-mono uppercase tracking-wider border border-white/20 text-white rounded-full hover:bg-white/5 transition-all"
+                className={`w-full py-3 text-center text-xs font-mono uppercase tracking-wider rounded-full transition-all flex items-center justify-center gap-2 ${
+                  checkIsActive("/host")
+                    ? "bg-[#C5FF35] text-[#0C0D0E] font-bold shadow-md"
+                    : "border border-white/20 text-white hover:bg-white/5"
+                }`}
               >
-                Host an Event (0% Commission)
+                <span>Host an Event (0% Commission)</span>
+                {checkIsActive("/host") && <span className="w-1.5 h-1.5 rounded-full bg-black" />}
               </Link>
               <Link
                 href="/events"
