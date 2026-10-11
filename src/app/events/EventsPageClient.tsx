@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { TicketModal } from "@/components/TicketModal";
 import { HostEventModal } from "@/components/HostEventModal";
 import { ToastProvider, useToast } from "@/components/Toast";
+import { useAuth } from "@/context/AuthContext";
 import {
   Search,
   MapPin,
@@ -22,6 +23,7 @@ interface EventsPageClientProps {
 
 function EventsPageContent({ initialEvents }: EventsPageClientProps) {
   const { showToast } = useToast();
+  const { currentUser, getFriendsAttendingEvent } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>("all");
   const [selectedCampus, setSelectedCampus] = useState("all");
@@ -265,6 +267,20 @@ function EventsPageContent({ initialEvents }: EventsPageClientProps) {
                       <Calendar className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
                       <span>{event.campus}</span>
                     </div>
+
+                    {/* Friend Attendance Radar */}
+                    {currentUser && (() => {
+                      const friendsGoing = getFriendsAttendingEvent(event.id);
+                      if (friendsGoing.length === 0) return null;
+                      return (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#C5FF35]/20 border border-[#C5FF35]/40 rounded-full text-[10px] font-mono text-[#11120F] font-bold truncate">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#11120F] shrink-0 animate-pulse" />
+                          <span className="truncate">
+                            {friendsGoing.length} friend{friendsGoing.length > 1 ? "s" : ""} going ({friendsGoing.map((f) => `@${f.username}`).join(", ")})
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Price & Action CTA */}

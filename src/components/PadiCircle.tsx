@@ -3,10 +3,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useToast } from "./Toast";
-import { Users, Split, Car, Check, QrCode } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { Users, Split, Car, Check, QrCode, ArrowRight } from "lucide-react";
 
 export function PadiCircle() {
   const { showToast } = useToast();
+  const { openCircleModal } = useAuth();
   const [email, setEmail] = useState("");
   const [isJoined, setIsJoined] = useState(false);
 
@@ -60,13 +62,23 @@ export function PadiCircle() {
             </h2>
           </div>
 
-          <div className="lg:col-span-5 space-y-3">
+          <div className="lg:col-span-5 space-y-4">
             <p className="text-sm sm:text-base text-neutral-400 leading-relaxed">
               Going to events alone is good, but rolling up with your clique is what creates unforgettable university memories. Padi Circle is our upcoming social coordination layer.
             </p>
-            <span className="inline-block px-3.5 py-1 bg-white/5 text-white/80 text-[10px] font-mono uppercase tracking-wider rounded-full border border-white/10">
-              LAUNCHING NEXT SEMESTER
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => openCircleModal()}
+                className="spicy-btn inline-flex items-center gap-2 px-5 py-2.5 bg-[#C5FF35] text-[#0C0D0E] font-mono text-xs font-bold uppercase tracking-wider rounded-full hover:bg-[#b5f220] transition-all shadow-md hover:scale-[1.02]"
+              >
+                <span>Start a Gathering Circle</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <span className="inline-block px-3 py-1 bg-white/5 text-white/80 text-[10px] font-mono uppercase tracking-wider rounded-full border border-white/10">
+                ACTIVE ON OOU CAMPUS
+              </span>
+            </div>
           </div>
         </div>
 

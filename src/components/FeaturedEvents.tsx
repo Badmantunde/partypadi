@@ -9,7 +9,9 @@ import {
   Search,
   ArrowRight,
   ShieldCheck,
+  Users,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface FeaturedEventsProps {
   events: CampusEvent[];
@@ -24,6 +26,7 @@ export function FeaturedEvents({
   onSelectCategory,
   onSelectEvent,
 }: FeaturedEventsProps) {
+  const { currentUser, getFriendsAttendingEvent } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredEvents = useMemo(() => {
@@ -166,6 +169,23 @@ export function FeaturedEvents({
                       </span>
                     </div>
 
+                    {/* Friend Attendance Radar */}
+                    {currentUser && leadEvent && (() => {
+                      const leadFriends = getFriendsAttendingEvent(leadEvent.id);
+                      if (leadFriends.length === 0) return null;
+                      return (
+                        <div className="flex items-center gap-2 p-2 bg-[#C5FF35]/15 border border-[#C5FF35]/40 rounded-xl text-xs font-mono text-[#11120F]">
+                          <span className="w-2 h-2 rounded-full bg-[#11120F] animate-pulse shrink-0" />
+                          <span className="font-bold">
+                            {leadFriends.length} friend{leadFriends.length > 1 ? "s" : ""} going:
+                          </span>
+                          <span className="text-neutral-700 truncate">
+                            {leadFriends.map((f) => `@${f.username}`).join(", ")}
+                          </span>
+                        </div>
+                      );
+                    })()}
+
                     <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
                       {leadEvent.description}
                     </p>
@@ -271,7 +291,7 @@ export function FeaturedEvents({
                         </p>
                       </div>
 
-                      <div className="pt-2 border-t border-neutral-100 space-y-1 text-xs text-neutral-600">
+                      <div className="pt-2 border-t border-neutral-100 space-y-1.5 text-xs text-neutral-600">
                         <div className="flex items-center gap-1.5 truncate">
                           <MapPin className="w-3.5 h-3.5 text-[#11120F] shrink-0" />
                           <span className="truncate">{event.venue}</span>
@@ -280,6 +300,20 @@ export function FeaturedEvents({
                           <ShieldCheck className="w-3.5 h-3.5 text-[#11120F] shrink-0" />
                           <span className="truncate">{event.organizer.name}</span>
                         </div>
+
+                        {/* Friend Attendance Radar */}
+                        {currentUser && (() => {
+                          const friendsGoing = getFriendsAttendingEvent(event.id);
+                          if (friendsGoing.length === 0) return null;
+                          return (
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#C5FF35]/20 border border-[#C5FF35]/40 rounded-full text-[10px] font-mono text-[#11120F] font-bold truncate">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#11120F] shrink-0 animate-pulse" />
+                              <span className="truncate">
+                                {friendsGoing.length} friend{friendsGoing.length > 1 ? "s" : ""} going ({friendsGoing.map((f) => `@${f.username}`).join(", ")})
+                              </span>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { CampusEvent } from "@/types";
+import { CampusEvent, AdditionalAttendee } from "@/types";
 import { useToast } from "./Toast";
+import { useAuth } from "@/context/AuthContext";
 import {
   X,
   Calendar,
@@ -12,6 +13,10 @@ import {
   QrCode,
   Copy,
   Download,
+  Users,
+  Eye,
+  Mail,
+  User,
 } from "lucide-react";
 
 interface TicketModalProps {
@@ -22,15 +27,51 @@ interface TicketModalProps {
 
 export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
   const { showToast } = useToast();
+  const { currentUser, rsvpEvent } = useAuth();
   const [selectedTierId, setSelectedTierId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [matricNumber, setMatricNumber] = useState("");
+  const [additionalAttendees, setAdditionalAttendees] = useState<AdditionalAttendee[]>([]);
+  const [allowFriendsToSee, setAllowFriendsToSee] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [ticketCode, setTicketCode] = useState("");
+
+  // Pre-fill user information if logged in
+  useEffect(() => {
+    if (isOpen && currentUser) {
+      if (!fullName) setFullName(currentUser.fullName);
+      if (!email) setEmail(currentUser.email);
+    }
+  }, [isOpen, currentUser, fullName, email]);
+
+  // Adjust companion fields when quantity changes
+  const handleQuantityChange = (newQty: number) => {
+    setQuantity(newQty);
+    const needed = Math.max(0, newQty - 1);
+    setAdditionalAttendees((prev) => {
+      const next = [...prev];
+      if (next.length < needed) {
+        while (next.length < needed) {
+          next.push({ fullName: "", email: "" });
+        }
+      } else if (next.length > needed) {
+        next.splice(needed);
+      }
+      return next;
+    });
+  };
+
+  const updateCompanion = (index: number, field: "fullName" | "email", value: string) => {
+    setAdditionalAttendees((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
 
   const handleClose = React.useCallback(() => {
     setIsSuccess(false);
@@ -40,6 +81,8 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
     setEmail("");
     setPhone("");
     setMatricNumber("");
+    setAdditionalAttendees([]);
+    setAllowFriendsToSee(true);
     onClose();
   }, [onClose]);
 
@@ -80,6 +123,20 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
       return;
     }
 
+    if (quantity >= 2) {
+      for (let i = 0; i < quantity - 1; i++) {
+        const attendee = additionalAttendees[i];
+        if (!attendee?.email?.trim()) {
+          showToast({
+            type: "error",
+            title: `Attendee ${i + 2} Email Required`,
+            message: `Please enter the email address for Attendee ${i + 2} (companion ticket).`,
+          });
+          return;
+        }
+      }
+    }
+
     setIsSubmitting(true);
 
     setTimeout(() => {
@@ -87,10 +144,19 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
       setTicketCode(generatedCode);
       setIsSubmitting(false);
       setIsSuccess(true);
+
+      // Record RSVP in community auth context if signed in
+      if (currentUser) {
+        rsvpEvent(event.id, allowFriendsToSee, generatedCode);
+      }
+
       showToast({
         type: "success",
-        title: "Ticket Reserved Successfully",
-        message: `Your digital pass ${generatedCode} is ready!`,
+        title: "Tickets Reserved Successfully",
+        message:
+          quantity >= 2
+            ? `Your pass ${generatedCode} and companion passes have been issued!`
+            : `Your digital pass ${generatedCode} is ready!`,
       });
     }, 800);
   };
@@ -178,7 +244,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
                       <span className="font-medium text-[#11120F] truncate block">{event.venue}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-mono text-neutral-400 block uppercase">PASS HOLDER</span>
+                      <span className="text-[10px] font-mono text-neutral-400 block uppercase">PRIMARY HOLDER</span>
                       <span className="font-medium text-[#11120F]">{fullName}</span>
                     </div>
                     <div>
@@ -211,6 +277,36 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
                   </span>
                 </div>
               </div>
+
+              {/* Companion Passes List (if quantity >= 2) */}
+              {additionalAttendees.length > 0 && (
+                <div className="mt-4 pt-3 border-t border-dashed border-neutral-300 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="font-bold text-[#11120F] uppercase">
+                      COMPANION PASSES ISSUED ({additionalAttendees.length}):
+                    </span>
+                    <span className="text-neutral-500 text-[10px]">Delivered to companion emails</span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {additionalAttendees.map((att, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-2 bg-white rounded-lg border border-neutral-200 text-xs font-mono"
+                      >
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="text-neutral-400">#{idx + 2}</span>
+                          <span className="font-medium text-[#11120F] truncate">
+                            {att.fullName ? `${att.fullName} (${att.email})` : att.email}
+                          </span>
+                        </div>
+                        <span className="font-bold text-[#11120F] bg-neutral-100 px-2 py-0.5 rounded-full shrink-0">
+                          {ticketCode}-0{idx + 2}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Actions */}
@@ -334,7 +430,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
               <div className="flex items-center border border-neutral-300 rounded-full bg-neutral-50 overflow-hidden shadow-xs">
                 <button
                   type="button"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  onClick={() => handleQuantityChange(Math.max(1, quantity - 1))}
                   className="px-3.5 py-1.5 text-sm font-mono hover:bg-neutral-200 disabled:opacity-30 transition-colors"
                   disabled={quantity <= 1}
                   aria-label="Decrease quantity"
@@ -346,7 +442,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQuantity(Math.min(5, quantity + 1))}
+                  onClick={() => handleQuantityChange(Math.min(5, quantity + 1))}
                   className="px-3.5 py-1.5 text-sm font-mono hover:bg-neutral-200 disabled:opacity-30 transition-colors"
                   disabled={quantity >= 5}
                   aria-label="Increase quantity"
@@ -357,65 +453,172 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
             </div>
 
             {/* Step 2: Attendee Details */}
-            <div className="space-y-3">
-              <label className="text-xs font-mono uppercase tracking-wider text-[#11120F] font-semibold block">
-                03. Attendee Details
-              </label>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-mono uppercase tracking-wider text-[#11120F] font-semibold block">
+                  03. Attendee Details
+                </label>
+                {currentUser && (
+                  <span className="text-[10px] font-mono text-[#11120F] bg-neutral-100 px-2.5 py-0.5 rounded-full">
+                    Signed in as @{currentUser.username}
+                  </span>
+                )}
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Babatunde Adeyemi"
-                    className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
-                  />
-                </div>
+              {/* Attendee 1 (Primary Holder) */}
+              <div className="space-y-3">
+                <span className="text-[11px] font-mono uppercase text-neutral-500 font-bold block">
+                  Attendee 01 (Primary Pass Holder)
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="e.g. Babatunde Adeyemi"
+                      className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
-                    Student Email *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="student@oouagoiwoye.edu.ng"
-                    className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
+                      Student Email *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="student@oouagoiwoye.edu.ng"
+                      className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
-                    Phone / WhatsApp Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="0801 234 5678"
-                    className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
+                      Phone / WhatsApp Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="0801 234 5678"
+                      className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
-                    Department / Matric No. (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={matricNumber}
-                    onChange={(e) => setMatricNumber(e.target.value)}
-                    placeholder="e.g. CSC/2022/104"
-                    className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
-                  />
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
+                      Department / Matric No. (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={matricNumber}
+                      onChange={(e) => setMatricNumber(e.target.value)}
+                      placeholder="e.g. CSC/2022/104"
+                      className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
+                    />
+                  </div>
                 </div>
+              </div>
+
+              {/* Companion Attendees (Required email for Attendee 2 and up) */}
+              {quantity >= 2 && (
+                <div className="pt-4 border-t border-neutral-200 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-[#11120F]" />
+                      <span className="text-[11px] font-mono uppercase font-bold text-[#11120F]">
+                        Companion Pass Details (Ticket 2 {quantity > 2 ? `to ${quantity}` : ""})
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono bg-[#C5FF35] text-[#11120F] px-2 py-0.5 rounded-full font-bold">
+                      {quantity - 1} Companion Pass{quantity > 2 ? "es" : ""}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-neutral-500">
+                    Enter the email address for your companion so their personalized digital pass is sent to them.
+                  </p>
+
+                  <div className="space-y-3">
+                    {Array.from({ length: quantity - 1 }).map((_, idx) => {
+                      const attendeeNum = idx + 2;
+                      const currentComp = additionalAttendees[idx] || { fullName: "", email: "" };
+                      return (
+                        <div
+                          key={idx}
+                          className="p-3.5 bg-neutral-50/80 border border-neutral-200 rounded-2xl space-y-2.5"
+                        >
+                          <div className="flex items-center justify-between text-[11px] font-mono font-bold text-[#11120F]">
+                            <span>
+                              Attendee {attendeeNum} {attendeeNum === 2 ? "(Second Person)" : ""}
+                            </span>
+                            <span className="text-[10px] font-normal text-neutral-400">
+                              Pass #{attendeeNum}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
+                                Attendee {attendeeNum} Email *
+                              </label>
+                              <input
+                                type="email"
+                                required
+                                value={currentComp.email}
+                                onChange={(e) => updateCompanion(idx, "email", e.target.value)}
+                                placeholder="companion@student.oouagoiwoye.edu.ng"
+                                className="w-full px-3.5 py-2 text-xs bg-white border border-neutral-200 rounded-xl focus:border-[#11120F] focus:outline-none transition-colors"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
+                                Attendee {attendeeNum} Full Name (Optional)
+                              </label>
+                              <input
+                                type="text"
+                                value={currentComp.fullName || ""}
+                                onChange={(e) => updateCompanion(idx, "fullName", e.target.value)}
+                                placeholder="e.g. Fola Coker"
+                                className="w-full px-3.5 py-2 text-xs bg-white border border-neutral-200 rounded-xl focus:border-[#11120F] focus:outline-none transition-colors"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Social Friend Radar Privacy Toggle */}
+              <div className="p-3.5 bg-neutral-50/80 border border-neutral-200 rounded-2xl flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="allowFriendsToSeeToggle"
+                  checked={allowFriendsToSee}
+                  onChange={(e) => setAllowFriendsToSee(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded text-black focus:ring-black accent-[#11120F] cursor-pointer"
+                />
+                <label
+                  htmlFor="allowFriendsToSeeToggle"
+                  className="text-xs text-[#11120F] cursor-pointer select-none space-y-0.5"
+                >
+                  <span className="font-bold flex items-center gap-1.5">
+                    <Eye className="w-3.5 h-3.5 text-[#11120F]" />
+                    <span>Allow friends to see that I&apos;m going to this event</span>
+                  </span>
+                  <span className="text-[11px] text-neutral-500 block leading-tight">
+                    When checked, your connected PartyPadi campus friends can see you on their event radar. You can change this anytime in your profile.
+                  </span>
+                </label>
               </div>
             </div>
 

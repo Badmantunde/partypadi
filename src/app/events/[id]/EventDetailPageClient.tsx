@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { TicketModal } from "@/components/TicketModal";
 import { HostEventModal } from "@/components/HostEventModal";
 import { ToastProvider, useToast } from "@/components/Toast";
+import { useAuth } from "@/context/AuthContext";
 import {
   Calendar,
   MapPin,
@@ -28,6 +29,12 @@ interface EventDetailPageClientProps {
 
 function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps) {
   const { showToast } = useToast();
+  const {
+    currentUser,
+    getFriendsAttendingEvent,
+    openCircleModal,
+    openAuthModal,
+  } = useAuth();
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
   const [hostModalOpen, setHostModalOpen] = useState(false);
   const [selectedTierId, setSelectedTierId] = useState(event.ticketTiers[0]?.id || "");
@@ -211,29 +218,108 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                 </span>
               </div>
 
-              {/* Squad Invitation Banner */}
-              <div className="p-6 bg-[#0C0D0E] text-white rounded-3xl space-y-3 relative overflow-hidden shadow-xl">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#C5FF35] animate-ping" />
-                  <span className="text-[11px] font-mono tracking-widest uppercase text-neutral-300 font-semibold">
-                    PADI SQUAD COORDINATION
-                  </span>
+              {/* Friend Attendance Radar & Gathering Circle */}
+              <div className="p-6 bg-[#0C0D0E] text-white rounded-3xl space-y-4 relative overflow-hidden shadow-xl border border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#C5FF35] animate-ping" />
+                    <span className="text-[11px] font-mono tracking-widest uppercase text-neutral-300 font-semibold">
+                      FRIEND RADAR // CAMPUS NETWORK
+                    </span>
+                  </div>
+                  {currentUser && (
+                    <span className="text-[10px] font-mono text-[#C5FF35] bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full">
+                      @{currentUser.username}
+                    </span>
+                  )}
                 </div>
-                <h4 className="font-display font-bold text-lg text-white">
-                  Rolling with your clique?
-                </h4>
-                <p className="text-xs sm:text-sm text-neutral-400 max-w-lg leading-relaxed">
-                  Coordinate table packages, share direct booking links on WhatsApp, and show up together with seamless multi-seat tickets.
-                </p>
-                <div className="pt-1">
-                  <button
-                    onClick={handleShare}
-                    className="inline-flex items-center gap-2 py-2 px-4 bg-white/10 hover:bg-white/20 text-white rounded-full text-xs font-mono transition-colors"
-                  >
-                    <Users className="w-3.5 h-3.5 text-[#C5FF35]" />
-                    <span>Copy Clique Invite Link</span>
-                  </button>
-                </div>
+
+                {currentUser ? (
+                  (() => {
+                    const friendsGoing = getFriendsAttendingEvent(event.id);
+                    return (
+                      <div className="space-y-3">
+                        {friendsGoing.length > 0 ? (
+                          <div className="space-y-2">
+                            <h4 className="font-display font-bold text-lg text-white">
+                              {friendsGoing.length} of your campus friends {friendsGoing.length > 1 ? "are" : "is"} attending!
+                            </h4>
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              {friendsGoing.map((friend) => (
+                                <div
+                                  key={friend.username}
+                                  className="flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/15 rounded-full text-xs font-mono"
+                                >
+                                  <span className="w-5 h-5 rounded-full bg-[#C5FF35] text-black font-bold flex items-center justify-center text-[10px]">
+                                    {friend.fullName.charAt(0)}
+                                  </span>
+                                  <span className="text-white font-bold">@{friend.username}</span>
+                                  <span className="text-neutral-400 text-[10px]">({friend.fullName})</span>
+                                </div>
+                              ))}
+                            </div>
+                            <p className="text-xs text-neutral-400">
+                              Their privacy settings allow friends to see their attendance.
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="space-y-1">
+                            <h4 className="font-display font-bold text-base text-white">
+                              None of your friends have RSVP&apos;d yet
+                            </h4>
+                            <p className="text-xs text-neutral-400">
+                              Be the leader! Start a Padi Circle for this event and rally your friends to attend together.
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="flex flex-wrap items-center gap-2.5 pt-2">
+                          <button
+                            type="button"
+                            onClick={() => openCircleModal(event.id)}
+                            className="spicy-btn inline-flex items-center gap-1.5 py-2 px-4 bg-[#C5FF35] text-[#0C0D0E] font-mono text-xs font-bold uppercase tracking-wider rounded-full hover:bg-[#b5f220] transition-colors"
+                          >
+                            <Users className="w-3.5 h-3.5" />
+                            <span>Start Circle for this Event</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleShare}
+                            className="inline-flex items-center gap-1.5 py-2 px-3.5 bg-white/10 hover:bg-white/20 text-white rounded-full text-xs font-mono transition-colors"
+                          >
+                            <Share2 className="w-3.5 h-3.5" />
+                            <span>Share Link</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <div className="space-y-3">
+                    <h4 className="font-display font-bold text-lg text-white">
+                      See which of your friends are going
+                    </h4>
+                    <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
+                      Sign in or create a free PartyPadi profile to connect with campus friends, track RSVPs, and organize gathering circles.
+                    </p>
+                    <div className="flex items-center gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => openAuthModal("signin")}
+                        className="spicy-btn py-2 px-4 bg-[#C5FF35] text-[#0C0D0E] rounded-full text-xs font-mono font-bold uppercase tracking-wider"
+                      >
+                        Sign In to See Friends →
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleShare}
+                        className="py-2 px-3.5 bg-white/10 text-white rounded-full text-xs font-mono"
+                      >
+                        Share Link
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -40,10 +40,10 @@ export default function HostEventStudioPage() {
   const [isPublished, setIsPublished] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Calculations
+  // Calculations (0% commission during campus launch - completely free)
   const grossPotential = regularPrice * regularCapacity + vipPrice * vipCapacity;
-  const platformFee = Math.round(grossPotential * 0.045);
-  const netEarnings = grossPotential - platformFee;
+  const platformFee = 0;
+  const netEarnings = grossPotential;
 
   const handlePublish = (e: React.FormEvent) => {
     e.preventDefault();
@@ -532,8 +532,8 @@ export default function HostEventStudioPage() {
                             <span className="text-white font-bold">₦{grossPotential.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center justify-between text-xs font-mono text-neutral-400">
-                            <span>PARTYPADI PROTOCOL FEE (4.5%):</span>
-                            <span className="text-neutral-400">-₦{platformFee.toLocaleString()}</span>
+                            <span>PARTYPADI COMMISSION (0% LAUNCH):</span>
+                            <span className="text-[#C5FF35] font-bold">₦0 (WAIVED)</span>
                           </div>
                           <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white">
                             <span className="text-[#C5FF35] font-bold">ESTIMATED NET PAYOUT:</span>

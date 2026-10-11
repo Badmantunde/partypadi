@@ -55,6 +55,11 @@ export interface CampusOption {
   eventCount: number;
 }
 
+export interface AdditionalAttendee {
+  fullName?: string;
+  email: string;
+}
+
 export interface BookingDetails {
   eventId: string;
   tierId: string;
@@ -63,10 +68,39 @@ export interface BookingDetails {
   email: string;
   phone: string;
   matricNumber?: string;
+  additionalAttendees?: AdditionalAttendee[];
+  allowFriendsToSee?: boolean;
   subtotal: number;
   fee: number;
   total: number;
   ticketCode: string;
+}
+
+export interface UserProfile {
+  id: string;
+  username: string; // e.g. "tade_oou"
+  fullName: string;
+  email: string;
+  role: "partygoer" | "organizer";
+  campus: string;
+  bio?: string;
+  friends: string[]; // usernames
+  eventsAttending: {
+    eventId: string;
+    allowFriendsToSee: boolean;
+    ticketCode?: string;
+    purchasedAt: string;
+  }[];
+}
+
+export interface PartyCircle {
+  id: string;
+  name: string;
+  description?: string;
+  createdBy: string;
+  members: string[]; // usernames
+  targetEventId?: string;
+  createdAt: string;
 }
 
 export interface HostEventFormData {

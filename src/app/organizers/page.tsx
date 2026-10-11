@@ -16,10 +16,10 @@ export default function OrganizersPage() {
   const [ticketPrice, setTicketPrice] = useState(3000);
   const [expectedAttendees, setExpectedAttendees] = useState(500);
 
-  // Revenue calculation
+  // Revenue calculation (0% commission for campus launch - 100% net to organizers)
   const grossRevenue = ticketPrice * expectedAttendees;
-  const platformFee = Math.round(grossRevenue * 0.045);
-  const netEarnings = grossRevenue - platformFee;
+  const platformFee = 0;
+  const netEarnings = grossRevenue;
 
   return (
     <div className="min-h-screen bg-white text-[#11120F] flex flex-col font-sans selection:bg-[#C5FF35] selection:text-[#11120F]">
@@ -147,8 +147,8 @@ export default function OrganizersPage() {
                     <span className="text-white">₦{grossRevenue.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-neutral-400">
-                    <span>PartyPadi Fee (4.5%):</span>
-                    <span className="text-neutral-400">-₦{platformFee.toLocaleString()}</span>
+                    <span>PartyPadi Commission:</span>
+                    <span className="text-[#C5FF35] font-bold">₦0 (0% Waived)</span>
                   </div>
                   <div className="flex justify-between text-neutral-400">
                     <span>Card Processing:</span>
