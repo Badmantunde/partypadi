@@ -290,7 +290,7 @@ export function PartygoerDashboardClient({
   ];
 
   return (
-    <div className="min-h-screen bg-[#070809] text-white flex flex-col font-sans selection:bg-[#00D54B] selection:text-black">
+    <div className="min-h-screen bg-[#070809] text-white flex flex-col font-sans selection:bg-[#C5FF35] selection:text-black">
       {/* Top Application Canvas Frame */}
       <div className="flex-1 flex w-full max-w-[1680px] mx-auto min-h-screen">
         {/* ========================================================================= */}
@@ -312,7 +312,7 @@ export function PartygoerDashboardClient({
               >
                 <PartyPadiLogo theme="dark" size="md" />
               </button>
-              <span className="px-2 py-0.5 rounded-full bg-[#00D54B]/15 text-[#00D54B] border border-[#00D54B]/30 text-[10px] font-mono font-bold tracking-wider uppercase">
+              <span className="px-2 py-0.5 rounded-full bg-[#C5FF35]/15 text-[#C5FF35] border border-[#C5FF35]/30 text-[10px] font-mono font-bold tracking-wider uppercase">
                 Partygoer
               </span>
             </div>
@@ -320,7 +320,7 @@ export function PartygoerDashboardClient({
             {/* User Profile Mini Badge */}
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-9 h-9 rounded-xl bg-[#00D54B] text-[#0C0D0E] font-display font-black text-sm flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-9 h-9 rounded-xl bg-[#C5FF35] text-[#0C0D0E] font-display font-black text-sm flex items-center justify-center shrink-0 shadow-sm">
                   {user.fullName.charAt(0)}
                 </div>
                 <div className="min-w-0">
@@ -328,7 +328,7 @@ export function PartygoerDashboardClient({
                     @{user.username}
                   </div>
                   <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 truncate">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00D54B]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />
                     <span>{user.campus}</span>
                   </div>
                 </div>
@@ -358,7 +358,7 @@ export function PartygoerDashboardClient({
                   label: "My Tickets",
                   icon: Ticket,
                   badge: userTickets.length > 0 ? userTickets.length : null,
-                  badgeColor: "bg-[#00D54B] text-black",
+                  badgeColor: "bg-[#C5FF35] text-black",
                 },
                 {
                   id: "saved" as DashboardTab,
@@ -385,7 +385,7 @@ export function PartygoerDashboardClient({
                     <div className="flex items-center gap-3">
                       <IconComponent
                         className={`w-4 h-4 transition-colors ${
-                          isActive ? "text-[#00D54B]" : "text-neutral-400 group-hover:text-white"
+                          isActive ? "text-[#C5FF35]" : "text-neutral-400 group-hover:text-white"
                         }`}
                       />
                       <span className={isActive ? "text-white" : "text-neutral-300"}>
@@ -465,12 +465,12 @@ export function PartygoerDashboardClient({
             <div className="hidden sm:flex flex-col">
               <div className="text-sm sm:text-base font-display font-medium text-white flex items-center gap-2">
                 <span>Welcome back, {user.fullName.split(" ")[0]}</span>
-                <Sparkles className="w-3.5 h-3.5 text-[#00D54B]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#C5FF35]" />
               </div>
               <div className="text-[11px] font-mono text-neutral-400 flex items-center gap-2">
                 <span>{user.campus}</span>
                 <span>•</span>
-                <span className="text-[#00D54B]">Active Semester Wave</span>
+                <span className="text-[#C5FF35]">Active Semester Wave</span>
               </div>
             </div>
 
@@ -482,7 +482,7 @@ export function PartygoerDashboardClient({
                 placeholder="Search events, venues, vibes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-full bg-white/5 border border-white/15 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#00D54B] focus:ring-1 focus:ring-[#00D54B] transition-all"
+                className="w-full pl-10 pr-4 py-2 rounded-full bg-white/5 border border-white/15 text-xs font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] focus:ring-1 focus:ring-[#C5FF35] transition-all"
               />
               {searchQuery && (
                 <button
@@ -523,7 +523,7 @@ export function PartygoerDashboardClient({
               {/* Mobile Profile Trigger */}
               <button
                 onClick={() => setActiveTab("profile")}
-                className="lg:hidden w-8 h-8 rounded-full bg-[#00D54B] text-black font-display font-bold text-xs flex items-center justify-center shrink-0"
+                className="lg:hidden w-8 h-8 rounded-full bg-[#C5FF35] text-black font-display font-bold text-xs flex items-center justify-center shrink-0"
               >
                 {user.fullName.charAt(0)}
               </button>
@@ -541,12 +541,12 @@ export function PartygoerDashboardClient({
                 <section aria-label="Featured Campus Events" className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono uppercase tracking-widest text-neutral-400 font-bold flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#00D54B]" />
+                      <span className="w-2 h-2 rounded-full bg-[#C5FF35]" />
                       FEATURED CAMPUS HEADLINERS
                     </span>
                     <button
                       onClick={() => setActiveTab("discover")}
-                      className="text-xs font-mono text-[#00D54B] hover:underline flex items-center gap-1"
+                      className="text-xs font-mono text-[#C5FF35] hover:underline flex items-center gap-1"
                     >
                       <span>Explore all</span>
                       <span>→</span>
@@ -721,7 +721,7 @@ export function PartygoerDashboardClient({
                             </div>
 
                             <div className="min-w-0 space-y-0.5">
-                              <h4 className="font-display font-bold text-sm sm:text-base text-white truncate group-hover:text-[#00D54B] transition-colors">
+                              <h4 className="font-display font-bold text-sm sm:text-base text-white truncate group-hover:text-[#C5FF35] transition-colors">
                                 {item.title}
                               </h4>
                               <p className="text-xs text-neutral-400 truncate">
@@ -765,7 +765,7 @@ export function PartygoerDashboardClient({
                             >
                               <Heart
                                 className={`w-4 h-4 ${
-                                  saved ? "fill-[#00D54B] text-[#00D54B]" : ""
+                                  saved ? "fill-[#C5FF35] text-[#C5FF35]" : ""
                                 }`}
                               />
                             </button>
@@ -774,7 +774,7 @@ export function PartygoerDashboardClient({
                             <button
                               type="button"
                               onClick={(e) => handleOpenTicket(item, e)}
-                              className="hidden sm:inline-flex px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#00D54B] hover:text-black font-mono text-xs font-bold transition-all"
+                              className="hidden sm:inline-flex px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#C5FF35] hover:text-black font-mono text-xs font-bold transition-all"
                             >
                               Get Ticket
                             </button>
@@ -840,12 +840,12 @@ export function PartygoerDashboardClient({
                               </span>
                               <button
                                 onClick={(e) => handleToggleFavorite(event.id, e)}
-                                className="p-2 rounded-full bg-black/60 backdrop-blur-md text-white hover:text-[#00D54B] transition-colors"
+                                className="p-2 rounded-full bg-black/60 backdrop-blur-md text-white hover:text-[#C5FF35] transition-colors"
                                 aria-label="Toggle favorite"
                               >
                                 <Heart
                                   className={`w-3.5 h-3.5 ${
-                                    isSaved ? "fill-[#00D54B] text-[#00D54B]" : ""
+                                    isSaved ? "fill-[#C5FF35] text-[#C5FF35]" : ""
                                   }`}
                                 />
                               </button>
@@ -854,7 +854,7 @@ export function PartygoerDashboardClient({
                             {/* Bottom Location */}
                             <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white/90">
                               <span className="truncate flex items-center gap-1 max-w-[70%]">
-                                <MapPin className="w-3 h-3 text-[#00D54B] shrink-0" />
+                                <MapPin className="w-3 h-3 text-[#C5FF35] shrink-0" />
                                 <span className="truncate">{event.venue}</span>
                               </span>
                               <span className="font-bold text-[#D7F23A]">
@@ -869,7 +869,7 @@ export function PartygoerDashboardClient({
                               <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">
                                 {event.categoryLabel}
                               </span>
-                              <h4 className="font-display font-bold text-base text-white group-hover:text-[#00D54B] transition-colors line-clamp-1">
+                              <h4 className="font-display font-bold text-base text-white group-hover:text-[#C5FF35] transition-colors line-clamp-1">
                                 {event.title}
                               </h4>
                               <p className="text-xs text-neutral-400 line-clamp-2">
@@ -879,7 +879,7 @@ export function PartygoerDashboardClient({
 
                             {/* Friends attending or sponsor progress */}
                             {friendsGoing.length > 0 && (
-                              <div className="pt-2 border-t border-white/5 flex items-center gap-2 text-xs font-mono text-[#00D54B]">
+                              <div className="pt-2 border-t border-white/5 flex items-center gap-2 text-xs font-mono text-[#C5FF35]">
                                 <Users2 className="w-3.5 h-3.5 shrink-0" />
                                 <span className="truncate">
                                   @{friendsGoing[0].username} is attending
@@ -891,7 +891,7 @@ export function PartygoerDashboardClient({
                             <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
                               <button
                                 onClick={(e) => handleOpenTicket(event, e)}
-                                className="spicy-btn flex-1 py-2 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all text-center"
+                                className="spicy-btn flex-1 py-2 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all text-center"
                               >
                                 Get Pass
                               </button>
@@ -930,7 +930,7 @@ export function PartygoerDashboardClient({
                 <div className="p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <Filter className="w-4 h-4 text-[#00D54B]" />
+                      <Filter className="w-4 h-4 text-[#C5FF35]" />
                       <span className="text-xs font-mono font-bold uppercase text-white">
                         Filter By:
                       </span>
@@ -944,7 +944,7 @@ export function PartygoerDashboardClient({
                           onClick={() => setPriceFilter(p)}
                           className={`px-3 py-1 rounded-lg capitalize transition-all ${
                             priceFilter === p
-                              ? "bg-[#00D54B] text-black font-bold"
+                              ? "bg-[#C5FF35] text-black font-bold"
                               : "text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -993,7 +993,7 @@ export function PartygoerDashboardClient({
                           >
                             <Heart
                               className={`w-4 h-4 ${
-                                isEventSaved(event.id) ? "fill-[#00D54B] text-[#00D54B]" : ""
+                                isEventSaved(event.id) ? "fill-[#C5FF35] text-[#C5FF35]" : ""
                               }`}
                             />
                           </button>
@@ -1021,12 +1021,12 @@ export function PartygoerDashboardClient({
                         </div>
 
                         <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                          <span className="font-mono font-bold text-sm text-[#00D54B]">
+                          <span className="font-mono font-bold text-sm text-[#C5FF35]">
                             {event.isFree ? "Free Entry" : `₦${event.priceStartingFrom.toLocaleString()}`}
                           </span>
                           <button
                             onClick={(e) => handleOpenTicket(event, e)}
-                            className="px-4 py-1.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all"
+                            className="px-4 py-1.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all"
                           >
                             Get Pass
                           </button>
@@ -1064,10 +1064,10 @@ export function PartygoerDashboardClient({
                             setSelectedCategory(cat.id);
                             setActiveTab("discover");
                           }}
-                          className="p-6 rounded-3xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#00D54B]/40 transition-all cursor-pointer space-y-4 group"
+                          className="p-6 rounded-3xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#C5FF35]/40 transition-all cursor-pointer space-y-4 group"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="w-10 h-10 rounded-2xl bg-[#00D54B]/15 text-[#00D54B] flex items-center justify-center font-display font-bold">
+                            <span className="w-10 h-10 rounded-2xl bg-[#C5FF35]/15 text-[#C5FF35] flex items-center justify-center font-display font-bold">
                               #
                             </span>
                             <span className="px-3 py-1 rounded-full bg-white/10 font-mono text-xs text-white">
@@ -1076,7 +1076,7 @@ export function PartygoerDashboardClient({
                           </div>
 
                           <div className="space-y-1">
-                            <h3 className="font-display font-bold text-xl text-white group-hover:text-[#00D54B] transition-colors">
+                            <h3 className="font-display font-bold text-xl text-white group-hover:text-[#C5FF35] transition-colors">
                               {cat.label}
                             </h3>
                             <p className="text-xs text-neutral-400">
@@ -1093,7 +1093,7 @@ export function PartygoerDashboardClient({
                             </p>
                           </div>
 
-                          <div className="pt-2 flex items-center text-xs font-mono text-[#00D54B] font-bold gap-1">
+                          <div className="pt-2 flex items-center text-xs font-mono text-[#C5FF35] font-bold gap-1">
                             <span>Browse category</span>
                             <span>→</span>
                           </div>
@@ -1121,7 +1121,7 @@ export function PartygoerDashboardClient({
 
                   <button
                     onClick={() => openCircleModal()}
-                    className="spicy-btn px-5 py-2.5 rounded-full bg-[#00D54B] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center gap-2 shrink-0 self-start sm:self-auto"
+                    className="spicy-btn px-5 py-2.5 rounded-full bg-[#C5FF35] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center gap-2 shrink-0 self-start sm:self-auto"
                   >
                     <Users2 className="w-4 h-4" />
                     <span>Create New Circle</span>
@@ -1143,7 +1143,7 @@ export function PartygoerDashboardClient({
                             </h3>
                             <span className="text-xs font-mono text-neutral-400">
                               Created by @{circle.createdBy} • Code:{" "}
-                              <strong className="text-[#00D54B]">{circle.inviteCode}</strong>
+                              <strong className="text-[#C5FF35]">{circle.inviteCode}</strong>
                             </span>
                           </div>
                           <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-mono text-white">
@@ -1158,9 +1158,9 @@ export function PartygoerDashboardClient({
                         )}
 
                         {targetEvent ? (
-                          <div className="p-4 rounded-2xl bg-white/5 border border-[#00D54B]/30 flex items-center justify-between gap-4">
+                          <div className="p-4 rounded-2xl bg-white/5 border border-[#C5FF35]/30 flex items-center justify-between gap-4">
                             <div>
-                              <span className="text-[10px] font-mono text-[#00D54B] font-bold uppercase">
+                              <span className="text-[10px] font-mono text-[#C5FF35] font-bold uppercase">
                                 SELECTED CIRCLE PLAN:
                               </span>
                               <div className="font-display font-bold text-sm text-white">
@@ -1172,7 +1172,7 @@ export function PartygoerDashboardClient({
                             </div>
                             <button
                               onClick={() => handleOpenTicket(targetEvent)}
-                              className="px-4 py-2 rounded-xl bg-[#00D54B] text-black font-mono text-xs font-bold shrink-0"
+                              className="px-4 py-2 rounded-xl bg-[#C5FF35] text-black font-mono text-xs font-bold shrink-0"
                             >
                               Get Ticket
                             </button>
@@ -1202,7 +1202,7 @@ export function PartygoerDashboardClient({
 
                           <Link
                             href={`/circles/${circle.id}`}
-                            className="text-[#00D54B] hover:underline"
+                            className="text-[#C5FF35] hover:underline"
                           >
                             Open Circle Discussion →
                           </Link>
@@ -1237,7 +1237,7 @@ export function PartygoerDashboardClient({
                     </p>
                     <button
                       onClick={() => setActiveTab("for_you")}
-                      className="px-6 py-2.5 rounded-full bg-[#00D54B] text-black font-mono text-xs font-bold"
+                      className="px-6 py-2.5 rounded-full bg-[#C5FF35] text-black font-mono text-xs font-bold"
                     >
                       Browse Events
                     </button>
@@ -1251,7 +1251,7 @@ export function PartygoerDashboardClient({
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="space-y-1">
-                            <span className="px-2.5 py-0.5 rounded-full bg-[#00D54B]/20 text-[#00D54B] border border-[#00D54B]/30 text-[10px] font-mono font-bold">
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30 text-[10px] font-mono font-bold">
                               CONFIRMED GATE PASS
                             </span>
                             <h3 className="font-display font-bold text-xl text-white">
@@ -1276,7 +1276,7 @@ export function PartygoerDashboardClient({
                             <span className="text-[10px] font-mono text-neutral-400 block uppercase">
                               TICKET CODE
                             </span>
-                            <span className="font-mono font-bold text-base text-[#00D54B]">
+                            <span className="font-mono font-bold text-base text-[#C5FF35]">
                               {ticketCode}
                             </span>
                           </div>
@@ -1297,7 +1297,7 @@ export function PartygoerDashboardClient({
 
                         <div className="flex items-center justify-between text-xs font-mono text-neutral-400 pt-2 border-t border-white/10">
                           <span>Issued: {purchasedAt}</span>
-                          <Link href={`/events/${event.id}`} className="text-[#00D54B] hover:underline">
+                          <Link href={`/events/${event.id}`} className="text-[#C5FF35] hover:underline">
                             Event Details →
                           </Link>
                         </div>
@@ -1331,7 +1331,7 @@ export function PartygoerDashboardClient({
                     </p>
                     <button
                       onClick={() => setActiveTab("for_you")}
-                      className="px-6 py-2.5 rounded-full bg-[#00D54B] text-black font-mono text-xs font-bold"
+                      className="px-6 py-2.5 rounded-full bg-[#C5FF35] text-black font-mono text-xs font-bold"
                     >
                       Explore Events
                     </button>
@@ -1350,7 +1350,7 @@ export function PartygoerDashboardClient({
                             </span>
                             <button
                               onClick={(e) => handleToggleFavorite(event.id, e)}
-                              className="text-[#00D54B] text-xs font-mono hover:underline"
+                              className="text-[#C5FF35] text-xs font-mono hover:underline"
                             >
                               Remove
                             </button>
@@ -1373,12 +1373,12 @@ export function PartygoerDashboardClient({
                         </div>
 
                         <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                          <span className="font-mono font-bold text-sm text-[#00D54B]">
+                          <span className="font-mono font-bold text-sm text-[#C5FF35]">
                             {event.isFree ? "Free" : `From ₦${event.priceStartingFrom.toLocaleString()}`}
                           </span>
                           <button
                             onClick={(e) => handleOpenTicket(event, e)}
-                            className="px-4 py-2 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all"
+                            className="px-4 py-2 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all"
                           >
                             Get Pass
                           </button>
@@ -1440,7 +1440,7 @@ export function PartygoerDashboardClient({
                     </div>
                     <div className="h-2.5 w-full rounded-full bg-white/10 overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-[#00D54B] to-[#D7F23A] transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-[#C5FF35] to-[#D7F23A] transition-all duration-500"
                         style={{ width: `${levelProgress.percent}%` }}
                       />
                     </div>
@@ -1459,7 +1459,7 @@ export function PartygoerDashboardClient({
                           key={lvl}
                           className={`p-4 rounded-2xl border transition-all ${
                             isCurrent
-                              ? "bg-[#00D54B]/10 border-[#00D54B]/40 shadow-sm"
+                              ? "bg-[#C5FF35]/10 border-[#C5FF35]/40 shadow-sm"
                               : "bg-white/5 border-white/10"
                           }`}
                         >
@@ -1473,7 +1473,7 @@ export function PartygoerDashboardClient({
                           </div>
                           <p className="text-xs text-neutral-400">{info.meaning}</p>
                           {isCurrent && (
-                            <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#00D54B]">
+                            <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#C5FF35]">
                               <Check className="w-3 h-3" /> Current Level
                             </span>
                           )}
@@ -1501,12 +1501,12 @@ export function PartygoerDashboardClient({
 
                 <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-[#00D54B] text-black font-display font-black text-2xl flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-2xl bg-[#C5FF35] text-black font-display font-black text-2xl flex items-center justify-center">
                       {user.fullName.charAt(0)}
                     </div>
                     <div>
                       <h3 className="font-display font-bold text-xl text-white">{user.fullName}</h3>
-                      <div className="text-xs font-mono text-[#00D54B]">@{user.username}</div>
+                      <div className="text-xs font-mono text-[#C5FF35]">@{user.username}</div>
                       <div className="text-xs text-neutral-400">{user.campus}</div>
                     </div>
                   </div>
@@ -1663,8 +1663,8 @@ export function PartygoerDashboardClient({
 
             <div className="min-w-0 space-y-0.5">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#00D54B] animate-pulse" />
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#00D54B] font-bold truncate">
+                <span className="w-2 h-2 rounded-full bg-[#C5FF35] animate-pulse" />
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#C5FF35] font-bold truncate">
                   {activeUpcomingPass ? "YOUR NEXT PASS" : "HEADLINE VIBE"}
                 </span>
               </div>
@@ -1748,7 +1748,7 @@ export function PartygoerDashboardClient({
                     status: "Confirmed Gate Pass",
                   })
                 }
-                className="spicy-btn px-3.5 sm:px-4 py-2 rounded-full bg-[#00D54B] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center gap-1.5 shadow-sm"
+                className="spicy-btn px-3.5 sm:px-4 py-2 rounded-full bg-[#C5FF35] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center gap-1.5 shadow-sm"
               >
                 <Ticket className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Pass:</span>
@@ -1758,7 +1758,7 @@ export function PartygoerDashboardClient({
               <button
                 type="button"
                 onClick={() => handleOpenTicket(headlineEvent)}
-                className="spicy-btn px-4 py-2 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all flex items-center gap-1.5"
+                className="spicy-btn px-4 py-2 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all flex items-center gap-1.5"
               >
                 <Ticket className="w-3.5 h-3.5" />
                 <span>Get Pass</span>
@@ -1799,7 +1799,7 @@ export function PartygoerDashboardClient({
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all ${
-                isActive ? "text-[#00D54B] font-bold" : "text-neutral-400 hover:text-white"
+                isActive ? "text-[#C5FF35] font-bold" : "text-neutral-400 hover:text-white"
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -1820,7 +1820,7 @@ export function PartygoerDashboardClient({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-1">
-              <span className="px-3 py-1 rounded-full bg-[#00D54B]/20 text-[#00D54B] font-mono text-[10px] font-bold">
+              <span className="px-3 py-1 rounded-full bg-[#C5FF35]/20 text-[#C5FF35] font-mono text-[10px] font-bold">
                 OFFICIAL QR GATE PASS
               </span>
               <h3 className="font-display font-bold text-xl text-white">
@@ -1837,7 +1837,7 @@ export function PartygoerDashboardClient({
 
             <div className="p-3 rounded-2xl bg-black/60 border border-white/10 font-mono">
               <span className="text-[10px] text-neutral-400 block uppercase">PASS CODE</span>
-              <span className="text-xl font-bold text-[#00D54B]">
+              <span className="text-xl font-bold text-[#C5FF35]">
                 {qrCodeModalEvent.ticketCode}
               </span>
             </div>

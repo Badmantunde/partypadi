@@ -116,7 +116,7 @@ export const EVENTS: CampusEvent[] = [
     },
     imageUrl:
       "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=1200&q=80",
-    fallbackGradient: "from-emerald-950 via-zinc-900 to-black",
+    fallbackGradient: "from-neutral-950 via-zinc-900 to-black",
     description:
       "A curated sonic experience for students who want more than standard radio loops. Afro-house, UK garage, 3-step, and deep alte rhythms played through high-definition acoustics in an intimate garden setting.",
     highlights: [

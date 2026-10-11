@@ -707,8 +707,8 @@ export default function HostEventStudioPage() {
                     </div>
 
                     <div className="flex items-center gap-2.5 self-end md:self-auto">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C5FF35]/10 border border-[#C5FF35]/30 text-[#C5FF35] font-mono text-[10px] font-bold">
+                        <span className="w-2 h-2 rounded-full bg-[#C5FF35] animate-ping" />
                         <span>GATE TELEMETRY: REAL-TIME</span>
                       </div>
                       <button
@@ -786,7 +786,7 @@ export default function HostEventStudioPage() {
                         <span className="text-[10px] font-mono uppercase text-neutral-400 tracking-wider">
                           GATE CHECK-IN
                         </span>
-                        <div className="w-7 h-7 rounded-lg bg-emerald-400/15 text-emerald-400 flex items-center justify-center">
+                        <div className="w-7 h-7 rounded-lg bg-[#C5FF35]/15 text-[#C5FF35] flex items-center justify-center">
                           <UserCheck className="w-3.5 h-3.5" />
                         </div>
                       </div>
@@ -796,7 +796,7 @@ export default function HostEventStudioPage() {
                           ({checkInRate}%)
                         </span>
                       </div>
-                      <div className="text-[10px] font-mono text-emerald-400">
+                      <div className="text-[10px] font-mono text-[#C5FF35]">
                         Sub-second door turnstile
                       </div>
                     </div>
@@ -863,7 +863,7 @@ export default function HostEventStudioPage() {
                           onClick={() => setMetricsFilter("checked_in")}
                           className={`px-3 py-1.5 rounded-xl transition-all ${
                             metricsFilter === "checked_in"
-                              ? "bg-emerald-400 text-black font-bold shadow-sm"
+                              ? "bg-[#C5FF35] text-black font-bold shadow-sm"
                               : "text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -942,7 +942,7 @@ export default function HostEventStudioPage() {
                                         </div>
                                       </div>
                                       {att.status === "checked_in" ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold shrink-0">
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#C5FF35]/15 border border-[#C5FF35]/30 text-[#C5FF35] text-[10px] font-bold shrink-0">
                                           <Check className="w-2.5 h-2.5" />
                                           <span>Checked In</span>
                                         </span>
@@ -987,7 +987,7 @@ export default function HostEventStudioPage() {
                                       <button
                                         type="button"
                                         onClick={() => handleCheckInAttendee(att.id)}
-                                        className="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-mono text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                                        className="w-full py-2 bg-[#C5FF35] hover:bg-[#D7F23A] text-black rounded-xl font-mono text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
                                       >
                                         <Check className="w-3.5 h-3.5" />
                                         <span>Check In at Gate</span>
@@ -1080,8 +1080,8 @@ export default function HostEventStudioPage() {
                                       {/* Status */}
                                       <td className="py-3 px-4 font-mono">
                                         {att.status === "checked_in" && (
-                                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
-                                            <Check className="w-3 h-3 text-emerald-400" />
+                                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#C5FF35]/15 border border-[#C5FF35]/30 text-[#C5FF35] text-[10px] font-bold">
+                                            <Check className="w-3 h-3 text-[#C5FF35]" />
                                             <span>Checked In</span>
                                             {att.checkedInAt && (
                                               <span className="text-neutral-400 text-[9px]">
@@ -1139,8 +1139,8 @@ export default function HostEventStudioPage() {
                                           </button>
                                         )}
                                         {att.status === "checked_in" && (
-                                          <span className="inline-flex items-center gap-1 text-emerald-400 font-mono text-[11px] font-semibold">
-                                            <Check className="w-3 h-3 text-emerald-400" />
+                                          <span className="inline-flex items-center gap-1 text-[#C5FF35] font-mono text-[11px] font-semibold">
+                                            <Check className="w-3 h-3 text-[#C5FF35]" />
                                             <span>Verified</span>
                                           </span>
                                         )}
@@ -1187,7 +1187,7 @@ export default function HostEventStudioPage() {
                                     >
                                       <div className="flex items-center justify-between">
                                         <div className="shrink-0">
-                                          {m.id === "first_gift" && <Sparkles className="w-3.5 h-3.5 text-emerald-400" />}
+                                          {m.id === "first_gift" && <Sparkles className="w-3.5 h-3.5 text-[#C5FF35]" />}
                                           {m.id === "crowd_favourite" && <Users className="w-3.5 h-3.5 text-amber-400" />}
                                           {m.id === "community_backed" && <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />}
                                           {m.id === "campus_favourite" && <Crown className="w-3.5 h-3.5 text-purple-400" />}

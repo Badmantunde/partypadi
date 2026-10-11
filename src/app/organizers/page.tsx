@@ -318,7 +318,7 @@ export default function OrganizersPage() {
                               <h3 className="font-display font-bold text-base text-[#11120F]">
                                 {org.name}
                               </h3>
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                              <CheckCircle2 className="w-4 h-4 text-black shrink-0" />
                             </div>
                             <span className="text-xs font-mono text-neutral-500 block">
                               {org.role} · {org.campus}
@@ -348,7 +348,7 @@ export default function OrganizersPage() {
                             >
                               <div className="flex items-center gap-1.5">
                                 <div className="shrink-0">
-                                  {m.id === "first_gift" && <Sparkles className="w-3 h-3 text-emerald-600" />}
+                                  {m.id === "first_gift" && <Sparkles className="w-3 h-3 text-neutral-800" />}
                                   {m.id === "crowd_favourite" && <Users className="w-3 h-3 text-amber-600" />}
                                   {m.id === "community_backed" && <ShieldCheck className="w-3 h-3 text-blue-600" />}
                                   {m.id === "campus_favourite" && <Crown className="w-3 h-3 text-purple-600" />}

@@ -419,7 +419,7 @@ export function GiftSupportModal({
 
                 <div className="flex justify-between py-1">
                   <span className="text-neutral-400">Platform Processing Fee</span>
-                  <span className="text-emerald-400 font-mono">₦0 (0% Launch Fee)</span>
+                  <span className="text-[#C5FF35] font-mono">₦0 (0% Launch Fee)</span>
                 </div>
 
                 <div className="flex justify-between py-1">
@@ -457,7 +457,7 @@ export function GiftSupportModal({
 
             {/* Trust & Settlement Disclaimer */}
             <div className="flex items-start gap-2 p-3 rounded-2xl bg-white/5 text-[11px] text-neutral-400 font-mono">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <ShieldCheck className="w-4 h-4 text-[#C5FF35] shrink-0 mt-0.5" />
               <span>
                 Verified settlement directly to organizer account. 100% of your support funds campus sound, production, and event culture.
               </span>

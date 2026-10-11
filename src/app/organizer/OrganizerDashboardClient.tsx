@@ -340,7 +340,7 @@ export function OrganizerDashboardClient({
   };
 
   return (
-    <div className="min-h-screen bg-[#070809] text-white flex flex-col font-sans selection:bg-[#00D54B] selection:text-black">
+    <div className="min-h-screen bg-[#070809] text-white flex flex-col font-sans selection:bg-[#C5FF35] selection:text-black">
       <div className="flex-1 flex w-full max-w-[1680px] mx-auto min-h-screen">
         {/* ========================================================================= */}
         {/* DESKTOP PERSISTENT ORGANIZER SIDEBAR                                      */}
@@ -381,7 +381,7 @@ export function OrganizerDashboardClient({
                 </div>
               </div>
               <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[10px] font-mono text-neutral-400">
-                <span className="flex items-center gap-1 text-[#00D54B]">
+                <span className="flex items-center gap-1 text-[#C5FF35]">
                   <ShieldCheck className="w-3 h-3" />
                   Verified Host
                 </span>
@@ -454,7 +454,7 @@ export function OrganizerDashboardClient({
           <div className="pt-4 border-t border-white/10 space-y-2">
             <button
               onClick={handleSwitchToPartygoer}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono text-[#00D54B] bg-[#00D54B]/10 hover:bg-[#00D54B]/20 border border-[#00D54B]/25 transition-all group"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono text-[#C5FF35] bg-[#C5FF35]/10 hover:bg-[#C5FF35]/20 border border-[#C5FF35]/25 transition-all group"
             >
               <span>Student Partygoer Hub</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -499,7 +499,7 @@ export function OrganizerDashboardClient({
               <div>
                 <h1 className="text-base sm:text-lg font-display font-bold text-white flex items-center gap-2">
                   <span>Organizer Workspace</span>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-[#00D54B]/20 text-[#00D54B] font-mono">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-[#C5FF35]/20 text-[#C5FF35] font-mono">
                     Live
                   </span>
                 </h1>
@@ -549,7 +549,7 @@ export function OrganizerDashboardClient({
                   <div className="p-5 sm:p-6 rounded-3xl bg-white/5 border border-white/10 space-y-2">
                     <div className="flex items-center justify-between text-neutral-400 text-xs font-mono">
                       <span>TICKETS SOLD</span>
-                      <Users className="w-4 h-4 text-[#00D54B]" />
+                      <Users className="w-4 h-4 text-[#C5FF35]" />
                     </div>
                     <div className="text-3xl font-display font-black text-white">
                       {metrics.totalTicketsSold}
@@ -568,7 +568,7 @@ export function OrganizerDashboardClient({
                     <div className="text-3xl font-display font-black text-[#D7F23A]">
                       ₦{metrics.grossSales.toLocaleString()}
                     </div>
-                    <div className="text-[11px] font-mono text-[#00D54B]">
+                    <div className="text-[11px] font-mono text-[#C5FF35]">
                       0% Launch Fee (₦0 fee deducted)
                     </div>
                   </div>
@@ -577,7 +577,7 @@ export function OrganizerDashboardClient({
                   <div className="p-5 sm:p-6 rounded-3xl bg-white/5 border border-white/10 space-y-2">
                     <div className="flex items-center justify-between text-neutral-400 text-xs font-mono">
                       <span>NET ORGANIZER BALANCE</span>
-                      <TrendingUp className="w-4 h-4 text-emerald-400" />
+                      <TrendingUp className="w-4 h-4 text-[#C5FF35]" />
                     </div>
                     <div className="text-3xl font-display font-black text-white">
                       ₦{metrics.netEarnings.toLocaleString()}
@@ -625,7 +625,7 @@ export function OrganizerDashboardClient({
                       </button>
                       <button
                         onClick={() => setActiveTab("attendees")}
-                        className="px-3.5 py-1.5 rounded-xl bg-[#00D54B] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all"
+                        className="px-3.5 py-1.5 rounded-xl bg-[#C5FF35] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all"
                       >
                         View All ({eventAttendeesList.length})
                       </button>
@@ -655,15 +655,15 @@ export function OrganizerDashboardClient({
                               </span>
                             </td>
                             <td className="py-3 text-neutral-300">{att.ticketTier}</td>
-                            <td className="py-3 text-[#00D54B] font-bold">{att.ticketCode}</td>
+                            <td className="py-3 text-[#C5FF35] font-bold">{att.ticketCode}</td>
                             <td className="py-3 text-white">₦{att.amountPaid.toLocaleString()}</td>
                             <td className="py-3">
                               <span
                                 className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                                   att.status === "checked_in"
-                                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                    ? "bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30"
                                     : att.status === "paid"
-                                    ? "bg-[#00D54B]/20 text-[#00D54B] border border-[#00D54B]/30"
+                                    ? "bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30"
                                     : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                                 }`}
                               >
@@ -678,7 +678,7 @@ export function OrganizerDashboardClient({
                               {att.status === "paid" && (
                                 <button
                                   onClick={() => handleCheckIn(att.id)}
-                                  className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-[#00D54B] hover:text-black text-white text-[11px] font-bold transition-all"
+                                  className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-[#C5FF35] hover:text-black text-white text-[11px] font-bold transition-all"
                                 >
                                   Check In
                                 </button>
@@ -693,7 +693,7 @@ export function OrganizerDashboardClient({
                               )}
                               {att.status === "checked_in" && (
                                 <span className="text-[11px] text-neutral-400 inline-flex items-center gap-1">
-                                  <Check className="w-3 h-3 text-[#00D54B]" /> At Venue
+                                  <Check className="w-3 h-3 text-[#C5FF35]" /> At Venue
                                 </span>
                               )}
                             </td>
@@ -712,14 +712,14 @@ export function OrganizerDashboardClient({
                       <h4 className="font-display font-bold text-base text-white">
                         Door Scanner Telemetry
                       </h4>
-                      <span className="text-xs font-mono text-[#00D54B]">
+                      <span className="text-xs font-mono text-[#C5FF35]">
                         {metrics.checkInRate}% In Venue
                       </span>
                     </div>
 
                     <div className="h-3 w-full rounded-full bg-white/10 overflow-hidden">
                       <div
-                        className="h-full bg-[#00D54B] transition-all duration-500"
+                        className="h-full bg-[#C5FF35] transition-all duration-500"
                         style={{ width: `${metrics.checkInRate}%` }}
                       />
                     </div>
@@ -746,7 +746,7 @@ export function OrganizerDashboardClient({
                       </div>
                       <div className="flex justify-between text-neutral-300">
                         <span>Settlement Window:</span>
-                        <span className="text-[#00D54B]">T+1 Post Event Gate Close</span>
+                        <span className="text-[#C5FF35]">T+1 Post Event Gate Close</span>
                       </div>
                     </div>
                   </div>
@@ -793,7 +793,7 @@ export function OrganizerDashboardClient({
                             <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-xs font-mono text-neutral-300">
                               {event.categoryLabel}
                             </span>
-                            <span className="px-2.5 py-0.5 rounded-full bg-[#00D54B]/20 text-[#00D54B] border border-[#00D54B]/30 text-[10px] font-mono font-bold">
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30 text-[10px] font-mono font-bold">
                               {event.status === "draft" ? "Draft" : "Published"}
                             </span>
                           </div>
@@ -834,7 +834,7 @@ export function OrganizerDashboardClient({
                                 setSelectedEventId(event.id);
                                 setActiveTab("overview");
                               }}
-                              className="flex-1 py-2 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all"
+                              className="flex-1 py-2 rounded-xl bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all"
                             >
                               Manage Telemetry
                             </button>
@@ -903,7 +903,7 @@ export function OrganizerDashboardClient({
                           placeholder="e.g. All-White Campus Rave & Sound Clash"
                           value={newTitle}
                           onChange={(e) => setNewTitle(e.target.value)}
-                          className="w-full p-3 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-[#00D54B]"
+                          className="w-full p-3 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                         />
                       </div>
 
@@ -929,7 +929,7 @@ export function OrganizerDashboardClient({
                             placeholder="e.g. Mini Stadium Lawn"
                             value={newVenue}
                             onChange={(e) => setNewVenue(e.target.value)}
-                            className="w-full p-3 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-[#00D54B]"
+                            className="w-full p-3 rounded-xl bg-black/60 border border-white/15 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                           />
                         </div>
                       </div>
@@ -972,7 +972,7 @@ export function OrganizerDashboardClient({
                       <div className="pt-2 flex justify-end">
                         <button
                           onClick={() => setCreateStep("tiers")}
-                          className="px-5 py-2.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all"
+                          className="px-5 py-2.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all"
                         >
                           Continue to Tiers →
                         </button>
@@ -1070,7 +1070,7 @@ export function OrganizerDashboardClient({
                         </button>
                         <button
                           onClick={() => setCreateStep("gate")}
-                          className="px-5 py-2.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all"
+                          className="px-5 py-2.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all"
                         >
                           Continue to Gate Setup →
                         </button>
@@ -1096,8 +1096,8 @@ export function OrganizerDashboardClient({
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-[#00D54B]/10 border border-[#00D54B]/20 text-xs text-neutral-300 space-y-1">
-                        <strong className="text-[#00D54B] block font-mono">
+                      <div className="p-4 rounded-2xl bg-[#C5FF35]/10 border border-[#C5FF35]/20 text-xs text-neutral-300 space-y-1">
+                        <strong className="text-[#C5FF35] block font-mono">
                           Offline QR Sync Enabled
                         </strong>
                         <span>
@@ -1114,7 +1114,7 @@ export function OrganizerDashboardClient({
                         </button>
                         <button
                           onClick={() => setCreateStep("payout")}
-                          className="px-5 py-2.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#00D54B] transition-all"
+                          className="px-5 py-2.5 rounded-full bg-white text-black font-mono text-xs font-bold hover:bg-[#C5FF35] transition-all"
                         >
                           Continue to Settlement →
                         </button>
@@ -1278,7 +1278,7 @@ export function OrganizerDashboardClient({
                             <td className="p-4">
                               <button
                                 onClick={() => handleCopyCode(att.ticketCode)}
-                                className="font-bold text-[#00D54B] hover:underline flex items-center gap-1"
+                                className="font-bold text-[#C5FF35] hover:underline flex items-center gap-1"
                                 title="Click to copy"
                               >
                                 <span>{att.ticketCode}</span>
@@ -1292,9 +1292,9 @@ export function OrganizerDashboardClient({
                               <span
                                 className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                                   att.status === "checked_in"
-                                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                    ? "bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30"
                                     : att.status === "paid"
-                                    ? "bg-[#00D54B]/20 text-[#00D54B] border border-[#00D54B]/30"
+                                    ? "bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30"
                                     : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                                 }`}
                               >
@@ -1309,7 +1309,7 @@ export function OrganizerDashboardClient({
                               {att.status === "paid" && (
                                 <button
                                   onClick={() => handleCheckIn(att.id)}
-                                  className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-[#00D54B] hover:text-black text-white font-mono text-xs font-bold transition-all"
+                                  className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-[#C5FF35] hover:text-black text-white font-mono text-xs font-bold transition-all"
                                 >
                                   Mark In Gate
                                 </button>
@@ -1324,7 +1324,7 @@ export function OrganizerDashboardClient({
                               )}
                               {att.status === "checked_in" && (
                                 <span className="text-[11px] text-neutral-400 inline-flex items-center gap-1">
-                                  <Check className="w-3 h-3 text-[#00D54B]" /> In Venue ({att.checkedInAt || "Verified"})
+                                  <Check className="w-3 h-3 text-[#C5FF35]" /> In Venue ({att.checkedInAt || "Verified"})
                                 </span>
                               )}
                             </td>
@@ -1357,7 +1357,7 @@ export function OrganizerDashboardClient({
                     <span className="text-xs font-mono text-neutral-400 uppercase">
                       ATTENDANCE VELOCITY
                     </span>
-                    <div className="text-4xl font-display font-black text-[#00D54B]">
+                    <div className="text-4xl font-display font-black text-[#C5FF35]">
                       {metrics.checkInRate}%
                     </div>
                     <p className="text-xs text-neutral-400">
@@ -1420,7 +1420,7 @@ export function OrganizerDashboardClient({
                         key={ms.id}
                         className={`p-4 rounded-2xl border ${
                           ms.unlocked
-                            ? "bg-[#00D54B]/10 border-[#00D54B]/30"
+                            ? "bg-[#C5FF35]/10 border-[#C5FF35]/30"
                             : "bg-white/5 border-white/10 opacity-70"
                         }`}
                       >
@@ -1428,7 +1428,7 @@ export function OrganizerDashboardClient({
                           <span className="font-display font-bold text-sm text-white">
                             {ms.title}
                           </span>
-                          <span className="text-xs font-mono font-bold text-[#00D54B] inline-flex items-center gap-1">
+                          <span className="text-xs font-mono font-bold text-[#C5FF35] inline-flex items-center gap-1">
                             {ms.unlocked ? (
                               <>
                                 <Check className="w-3 h-3" /> Unlocked
@@ -1507,7 +1507,7 @@ export function OrganizerDashboardClient({
                       <h3 className="font-display font-bold text-xl text-white">
                         {organizerUser.fullName}
                       </h3>
-                      <div className="text-xs font-mono text-[#00D54B]">
+                      <div className="text-xs font-mono text-[#C5FF35]">
                         @{organizerUser.username} • Verified Campus Host
                       </div>
                       <div className="text-xs text-neutral-400">{organizerUser.campus}</div>
@@ -1601,7 +1601,7 @@ export function OrganizerDashboardClient({
                     </p>
                     <button
                       onClick={handleSwitchToPartygoer}
-                      className="px-4 py-2 rounded-xl bg-[#00D54B] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all"
+                      className="px-4 py-2 rounded-xl bg-[#C5FF35] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all"
                     >
                       Switch to Partygoer Hub
                     </button>

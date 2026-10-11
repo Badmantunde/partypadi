@@ -640,7 +640,7 @@ export default function LeaderboardPage() {
                             >
                               <div className="flex items-center gap-1.5">
                                 <div className="shrink-0">
-                                  {m.id === "first_gift" && <Sparkles className="w-3 h-3 text-emerald-400" />}
+                                  {m.id === "first_gift" && <Sparkles className="w-3 h-3 text-[#C5FF35]" />}
                                   {m.id === "crowd_favourite" && <Users className="w-3 h-3 text-amber-400" />}
                                   {m.id === "community_backed" && <ShieldCheck className="w-3 h-3 text-blue-400" />}
                                   {m.id === "campus_favourite" && <Crown className="w-3 h-3 text-purple-400" />}

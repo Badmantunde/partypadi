@@ -113,7 +113,7 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               {/* Launch App */}
               <Link
                 href={getAppUrl("/onboarding")}
-                className="spicy-btn inline-flex items-center gap-1.5 px-4 py-2 bg-[#00D54B] text-black hover:bg-[#D7F23A] rounded-full text-xs font-mono font-bold tracking-tight transition-all shadow-md whitespace-nowrap shrink-0"
+                className="spicy-btn inline-flex items-center gap-1.5 px-4 py-2 bg-[#C5FF35] text-black hover:bg-[#D7F23A] rounded-full text-xs font-mono font-bold tracking-tight transition-all shadow-md whitespace-nowrap shrink-0"
               >
                 <span>Launch App</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -140,7 +140,7 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
 
               <Link
                 href={getAppUrl("/onboarding")}
-                className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#00D54B] text-black text-[11px] font-mono font-bold rounded-full whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#C5FF35] text-black text-[11px] font-mono font-bold rounded-full whitespace-nowrap shrink-0"
               >
                 <span>Launch App</span>
                 <span className="w-1 h-1 rounded-full bg-black" />
@@ -183,7 +183,7 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               <Link
                 href={getAppUrl("/onboarding", { mode: "signup" })}
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 rounded-xl bg-[#00D54B] text-black text-center font-bold"
+                className="py-2.5 rounded-xl bg-[#C5FF35] text-black text-center font-bold"
               >
                 Launch App
               </Link>

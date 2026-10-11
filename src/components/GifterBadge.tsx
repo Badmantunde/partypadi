@@ -28,15 +28,15 @@ const BADGE_STYLES: Record<
   }
 > = {
   1: {
-    // Padi - Green
-    bgDark: "bg-emerald-500/10",
-    borderDark: "border-emerald-500/30",
-    textDark: "text-emerald-400",
-    bgLight: "bg-emerald-50",
-    borderLight: "border-emerald-200",
-    textLight: "text-emerald-800",
-    glow: "rgba(16,185,129,0.25)",
-    ring: "ring-emerald-500/30",
+    // Padi - Neon Lime
+    bgDark: "bg-[#C5FF35]/10",
+    borderDark: "border-[#C5FF35]/30",
+    textDark: "text-[#C5FF35]",
+    bgLight: "bg-[#C5FF35]/15",
+    borderLight: "border-[#C5FF35]/40",
+    textLight: "text-black",
+    glow: "rgba(197,255,53,0.3)",
+    ring: "ring-[#C5FF35]/30",
   },
   2: {
     // Plug - Blue

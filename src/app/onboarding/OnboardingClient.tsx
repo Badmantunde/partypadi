@@ -235,7 +235,7 @@ export function OnboardingClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070809] text-white flex flex-col justify-between selection:bg-[#00D54B] selection:text-black">
+    <div className="min-h-screen bg-[#070809] text-white flex flex-col justify-between selection:bg-[#C5FF35] selection:text-black">
       {/* Top Bar with Brand & Public Website Link */}
       <header className="w-full border-b border-white/10 bg-[#0C0D0E]/80 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -249,7 +249,7 @@ export function OnboardingClient() {
             </Link>
             <span className="text-white/20 hidden sm:inline">•</span>
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-wider text-neutral-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00D54B] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] animate-pulse" />
               App Portal
             </span>
           </div>
@@ -271,12 +271,12 @@ export function OnboardingClient() {
         {currentUser ? (
           /* Active Session Card */
           <div className="max-w-md w-full p-6 sm:p-8 rounded-3xl bg-[#0C0D0E] border border-white/10 shadow-2xl space-y-6 text-center animate-in fade-in duration-300">
-            <div className="w-16 h-16 rounded-2xl bg-[#00D54B]/10 border border-[#00D54B]/30 flex items-center justify-center mx-auto text-[#00D54B]">
+            <div className="w-16 h-16 rounded-2xl bg-[#C5FF35]/10 border border-[#C5FF35]/30 flex items-center justify-center mx-auto text-[#C5FF35]">
               <User className="w-8 h-8" />
             </div>
 
             <div className="space-y-1.5">
-              <span className="px-3 py-1 rounded-full bg-[#00D54B]/15 text-[#00D54B] border border-[#00D54B]/30 text-[10px] font-mono font-bold uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-[#C5FF35]/15 text-[#C5FF35] border border-[#C5FF35]/30 text-[10px] font-mono font-bold uppercase tracking-wider">
                 ACTIVE SESSION FOUND
               </span>
               <h2 className="text-2xl font-display font-bold text-white tracking-tight">
@@ -296,7 +296,7 @@ export function OnboardingClient() {
                     router.push("/dashboard");
                   }
                 }}
-                className="w-full py-3.5 px-6 rounded-2xl bg-[#00D54B] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center justify-center gap-2 shadow-lg"
+                className="w-full py-3.5 px-6 rounded-2xl bg-[#C5FF35] text-black font-mono text-xs font-bold hover:bg-[#D7F23A] transition-all flex items-center justify-center gap-2 shadow-lg"
               >
                 <span>
                   Enter {currentUser.role === "organizer" ? "Creator Studio" : "Partygoer Dashboard"}
@@ -341,14 +341,14 @@ export function OnboardingClient() {
             {/* LEFT SIDE: AMBIENT NEON GLOW & VERTICAL STEPPER (INSPIRED BY REFERENCE)  */}
             {/* ========================================================================= */}
             <div className="lg:col-span-5 relative p-8 sm:p-10 flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10 bg-black min-h-[340px] lg:min-h-full">
-              {/* Vibrant Atmospheric Mesh Glow Overlay (Neon Violet + Neon Lime + Padi Green) */}
+              {/* Vibrant Atmospheric Mesh Glow Overlay (Neon Violet + Neon Lime) */}
               <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
                 {/* Upper Left Deep Vibe Violet Bloom */}
                 <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-[#7B3FFF]/50 blur-[90px]" />
                 {/* Central Soft Neon Lime Aura */}
                 <div className="absolute top-1/3 left-1/4 w-72 h-72 rounded-full bg-[#C5FF35]/25 blur-[100px]" />
-                {/* Lower Right Padi Green Radiance */}
-                <div className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full bg-[#00D54B]/35 blur-[95px]" />
+                {/* Lower Right Neon Radiance */}
+                <div className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full bg-[#C5FF35]/35 blur-[95px]" />
                 {/* Ambient Subtle Vignette */}
                 <div className="absolute inset-0 bg-radial from-transparent via-black/25 to-black/85" />
               </div>
@@ -396,7 +396,7 @@ export function OnboardingClient() {
                           isActive
                             ? "bg-white text-black font-bold shadow-xl scale-[1.02]"
                             : isCompleted
-                            ? "bg-white/10 border border-[#00D54B]/40 text-white cursor-pointer hover:bg-white/15"
+                            ? "bg-white/10 border border-[#C5FF35]/40 text-white cursor-pointer hover:bg-white/15"
                             : "bg-white/5 border border-white/10 text-white/50"
                         }`}
                       >
@@ -406,7 +406,7 @@ export function OnboardingClient() {
                             isActive
                               ? "bg-black text-white"
                               : isCompleted
-                              ? "bg-[#00D54B] text-black"
+                              ? "bg-[#C5FF35] text-black"
                               : "bg-white/10 text-white/60"
                           }`}
                         >
@@ -430,7 +430,7 @@ export function OnboardingClient() {
               {/* Bottom Guarantee Badge */}
               <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-neutral-400">
                 <span>0% Commission During Campus Beta</span>
-                <span className="text-[#00D54B]">● Live</span>
+                <span className="text-[#C5FF35]">● Live</span>
               </div>
             </div>
 
@@ -460,7 +460,7 @@ export function OnboardingClient() {
                       onClick={() => handleDemoLogin("partygoer")}
                       className="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-neutral-300 hover:text-white transition-all flex items-center justify-center gap-2"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-[#00D54B]" />
+                      <Sparkles className="w-3.5 h-3.5 text-[#C5FF35]" />
                       <span>Demo Partygoer</span>
                     </button>
 
@@ -606,7 +606,7 @@ export function OnboardingClient() {
               {currentStep === 2 && (
                 <div className="space-y-6 max-w-md mx-auto w-full animate-in fade-in duration-200">
                   <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#00D54B]">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C5FF35]">
                       STEP 2 OF 3
                     </span>
                     <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
@@ -624,19 +624,19 @@ export function OnboardingClient() {
                       onClick={() => setSelectedRole("partygoer")}
                       className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${
                         selectedRole === "partygoer"
-                          ? "bg-[#00D54B]/10 border-[#00D54B] ring-1 ring-[#00D54B]"
+                          ? "bg-[#C5FF35]/10 border-[#C5FF35] ring-1 ring-[#C5FF35]"
                           : "bg-white/5 border-white/10 hover:border-white/20"
                       }`}
                     >
-                      <div className="w-10 h-10 rounded-xl bg-[#00D54B]/15 text-[#00D54B] flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-10 h-10 rounded-xl bg-[#C5FF35]/15 text-[#C5FF35] flex items-center justify-center shrink-0 mt-0.5">
                         <Sparkles className="w-5 h-5" />
                       </div>
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-display font-bold text-sm text-white">
+                           <h4 className="font-display font-bold text-sm text-white">
                             Partygoer
                           </h4>
-                          <span className="text-[10px] font-mono text-[#00D54B] font-bold uppercase">
+                          <span className="text-[10px] font-mono text-[#C5FF35] font-bold uppercase">
                             Campus Discovery
                           </span>
                         </div>
@@ -746,7 +746,7 @@ export function OnboardingClient() {
                               onClick={() => toggleVibe(tag)}
                               className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all ${
                                 isSelected
-                                  ? "bg-[#00D54B] text-black font-bold shadow-sm"
+                                  ? "bg-[#C5FF35] text-black font-bold shadow-sm"
                                   : "bg-white/5 text-neutral-400 hover:text-white border border-white/10"
                               }`}
                             >
@@ -773,7 +773,7 @@ export function OnboardingClient() {
                       type="button"
                       disabled={isLoading}
                       onClick={handleFinishOnboarding}
-                      className="flex-1 py-3 rounded-2xl bg-[#00D54B] text-black hover:bg-[#D7F23A] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+                      className="flex-1 py-3 rounded-2xl bg-[#C5FF35] text-black hover:bg-[#D7F23A] font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
                     >
                       <span>
                         {isLoading
