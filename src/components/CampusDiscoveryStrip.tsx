@@ -48,7 +48,7 @@ export function CampusDiscoveryStrip({
 
           <div className="flex items-center gap-4 text-[#DADBD4]">
             <span className="hidden md:inline">
-              CAMPUS STATUS: <span className="text-[#C5FF35]">OOU AGO-IWOYE LIVE</span>
+              CAMPUS STATUS: <span className="text-[#C5FF35]">NOW LIVE</span>
             </span>
             <span className="text-white/60">VOL. 01 / 2026</span>
           </div>

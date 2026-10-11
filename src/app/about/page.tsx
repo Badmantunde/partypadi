@@ -89,7 +89,7 @@ export default function AboutPage() {
                     When the network drops, gates turn into riots
                   </h3>
                   <p className="text-sm text-neutral-300 leading-relaxed">
-                    At 10:30 PM outside an Ago-Iwoye hall party, 1,200 students gather simultaneously. The local cell mast saturates. Online cloud scanners freeze. Bouncers start checking manually, queues overflow, and fights break out.
+                    At 10:30 PM outside a packed campus hall party, 1,200 students gather simultaneously. The local cell mast saturates. Online cloud scanners freeze. Bouncers start checking manually, queues overflow, and fights break out.
                   </p>
                 </div>
 
@@ -168,7 +168,7 @@ export default function AboutPage() {
                   EXPANSION ROADMAP
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-display font-medium tracking-tight">
-                  From Ago-Iwoye to every university in Nigeria.
+                  Built to connect every university across Nigeria.
                 </h2>
               </div>
               <div className="text-xs font-mono text-neutral-500">

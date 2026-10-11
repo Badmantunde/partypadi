@@ -38,7 +38,7 @@ const DEFAULT_EVENT_PHOTOS: Record<string, EventPhoto[]> = {
       category: "red-carpet",
       categoryLabel: "Red Carpet & Fits",
       caption: "Main Hall Quad entrance fits · The arrivals clique",
-      photographer: "@oou_paparazzi",
+      photographer: "@campus_lens",
       uploadedBy: "fassa_execs",
       uploadedAt: "2026-10-10",
       downloadsCount: 142,
@@ -86,7 +86,7 @@ const DEFAULT_EVENT_PHOTOS: Record<string, EventPhoto[]> = {
       category: "red-carpet",
       categoryLabel: "Red Carpet & Fits",
       caption: "Glamour photobooth with 3D neon installations",
-      photographer: "@oou_paparazzi",
+      photographer: "@campus_lens",
       uploadedBy: "fassa_execs",
       uploadedAt: "2026-10-10",
       downloadsCount: 165,
@@ -661,7 +661,7 @@ export function EventPhotoGallery({
                     type="text"
                     value={photographerTag}
                     onChange={(e) => setPhotographerTag(e.target.value)}
-                    placeholder="@campus_paparazzi"
+                    placeholder="e.g. @lensbydavid or @partysnaps"
                     className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#C5FF35]"
                   />
                 </div>

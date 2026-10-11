@@ -9,8 +9,7 @@ export const metadata: Metadata = {
     "The campus-first event discovery and ticketing platform for Nigerian universities. Discover what's happening, get your tickets, and show up with your people.",
   keywords: [
     "campus events",
-    "university party tickets",
-    "OOU events",
+    "campus nightlife",
     "campus ticketing Nigeria",
     "student events",
     "department week",

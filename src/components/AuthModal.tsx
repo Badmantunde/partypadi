@@ -14,7 +14,7 @@ export function AuthModal() {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [campus, setCampus] = useState("OOU Ago-Iwoye");
+  const [campus, setCampus] = useState("Main Campus");
   const [loginIdentifier, setLoginIdentifier] = useState("");
 
   if (!authModalOpen) return null;
@@ -220,7 +220,7 @@ export function AuthModal() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
-                  placeholder="tade_oou"
+                  placeholder="tade_vibes"
                   className="w-full pl-8 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] font-mono"
                 />
               </div>
@@ -232,14 +232,14 @@ export function AuthModal() {
             {/* Email */}
             <div>
               <label className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 block mb-1">
-                STUDENT OR WORK EMAIL *
+                EMAIL ADDRESS *
               </label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="student@oouagoiwoye.edu.ng"
+                placeholder="you@email.com"
                 className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
               />
             </div>
@@ -254,10 +254,11 @@ export function AuthModal() {
                 onChange={(e) => setCampus(e.target.value)}
                 className="w-full px-4 py-2.5 bg-[#141517] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#C5FF35]"
               >
-                <option value="OOU Ago-Iwoye">OOU Ago-Iwoye (Live Launch)</option>
-                <option value="UNILAG Akoka">UNILAG Akoka (Pilot)</option>
-                <option value="UI Ibadan">UI Ibadan (Waitlist)</option>
-                <option value="LASU Ojo">LASU Ojo (Waitlist)</option>
+                <option value="Main Campus">Main Campus / General</option>
+                <option value="UNILAG Akoka">UNILAG (Akoka)</option>
+                <option value="OOU Ago-Iwoye">OOU (Ago-Iwoye)</option>
+                <option value="UI Ibadan">UI (Ibadan)</option>
+                <option value="LASU Ojo">LASU (Ojo)</option>
               </select>
             </div>
 
@@ -280,7 +281,7 @@ export function AuthModal() {
                 required
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
-                placeholder="@tade_oou or tade@student.oouagoiwoye.edu.ng"
+                placeholder="@username or you@email.com"
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white font-mono"
               />
             </div>
@@ -301,11 +302,11 @@ export function AuthModal() {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleQuickDemoLogin("tade_oou")}
+                  onClick={() => handleQuickDemoLogin("tade_vibes")}
                   className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
                 >
-                  <span className="font-mono text-xs font-bold text-[#C5FF35] block">@tade_oou</span>
-                  <span className="text-[9px] text-neutral-400 block">Partygoer · OOU</span>
+                  <span className="font-mono text-xs font-bold text-[#C5FF35] block">@tade_vibes</span>
+                  <span className="text-[9px] text-neutral-400 block">Partygoer · Campus VIP</span>
                 </button>
 
                 <button
@@ -314,7 +315,7 @@ export function AuthModal() {
                   className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
                 >
                   <span className="font-mono text-xs font-bold text-white block">@fassa_execs</span>
-                  <span className="text-[9px] text-neutral-400 block">Organizer · Faculty</span>
+                  <span className="text-[9px] text-neutral-400 block">Organizer · Social Directorate</span>
                 </button>
               </div>
             </div>

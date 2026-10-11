@@ -26,8 +26,8 @@ export interface CampusEvent {
   shortDate: string; // e.g. "24 OCT"
   time: string; // e.g. "19:00 WAT"
   venue: string;
-  campus: string; // e.g. "OOU · Main Campus"
-  fullLocation: string; // e.g. "Mini Stadium Lawn, Ago-Iwoye"
+  campus: string; // e.g. "Main Campus"
+  fullLocation: string; // e.g. "Mini Stadium Lawn, Central Campus"
   priceStartingFrom: number;
   isFree?: boolean;
   statusBadge?: "Selling Fast" | "Campus Pick" | "Almost Gone" | "Free Entry" | "Exclusive";

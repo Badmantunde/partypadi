@@ -298,7 +298,7 @@ export default function CirclesHubPage() {
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#C5FF35]" />
                 <h2 className="text-xl sm:text-2xl font-display font-bold text-white">
-                  Campus Circles in Ago-Iwoye
+                  Live Campus Circles
                 </h2>
               </div>
               <p className="text-xs font-mono text-neutral-400">

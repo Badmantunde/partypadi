@@ -23,7 +23,7 @@ export function Footer({ onOpenHostModal }: FooterProps = {}) {
               The campus-first event discovery and ticketing platform. Connecting university students to authentic experiences, parties, concerts, and departmental dinners.
             </p>
             <div className="pt-2 text-[11px] font-mono text-neutral-400">
-              INITIAL LAUNCH: <span className="text-[#C5FF35]">OOU AGO-IWOYE</span>
+              PLATFORM STATUS: <span className="text-[#C5FF35]">CAMPUS RADAR LIVE</span>
             </div>
           </div>
 

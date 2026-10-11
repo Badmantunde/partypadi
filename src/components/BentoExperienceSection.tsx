@@ -102,7 +102,7 @@ export function BentoExperienceSection({ onSelectEvent }: BentoExperienceSection
 
             <div className="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
               <span>FACULTY BACKED</span>
-              <span className="font-bold text-[#11120F]">OOU Verified ✓</span>
+              <span className="font-bold text-[#11120F]">Campus Verified ✓</span>
             </div>
           </div>
 
@@ -117,7 +117,7 @@ export function BentoExperienceSection({ onSelectEvent }: BentoExperienceSection
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
             <div className="absolute bottom-5 left-5 right-5 text-white space-y-1">
               <span className="text-[10px] font-mono tracking-widest text-[#C5FF35] uppercase block">
-                CAMPUS LIFE // OOU
+                CAMPUS LIFE // VIBES
               </span>
               <h3 className="font-display font-bold text-lg sm:text-xl leading-tight">
                 Show Up With Your People.

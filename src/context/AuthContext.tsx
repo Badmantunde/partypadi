@@ -3,71 +3,71 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { UserProfile, PartyCircle, CircleEventSuggestion, CircleActivityItem } from "@/types";
 
-// Seed community users at OOU Ago-Iwoye
+// Seed community users across campus life
 const SEED_USERS: UserProfile[] = [
   {
     id: "user-1",
-    username: "tade_oou",
+    username: "tade_vibes",
     fullName: "Tade Adeyemi",
-    email: "tade@student.oouagoiwoye.edu.ng",
+    email: "tade@gmail.com",
     role: "partygoer",
-    campus: "OOU Ago-Iwoye",
-    bio: "Biochemistry '26 · Main Hall vibes & sunset sessions lover",
+    campus: "Main Campus",
+    bio: "Main Hall vibes & sunset sessions lover",
     friends: ["fola_vibes", "chioma_k"],
     eventsAttending: [
-      { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-OOU-829141", purchasedAt: "2026-10-09" },
-      { eventId: "green-room-sessions", allowFriendsToSee: true, ticketCode: "PP-OOU-194012", purchasedAt: "2026-10-10" },
+      { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-829141", purchasedAt: "2026-10-09" },
+      { eventId: "green-room-sessions", allowFriendsToSee: true, ticketCode: "PP-194012", purchasedAt: "2026-10-10" },
     ],
   },
   {
     id: "user-2",
     username: "fola_vibes",
     fullName: "Fola Coker",
-    email: "fola@student.oouagoiwoye.edu.ng",
+    email: "fola@gmail.com",
     role: "partygoer",
-    campus: "OOU Ago-Iwoye",
-    bio: "Law '25 · Moot court by day, campus concerts by night",
-    friends: ["tade_oou", "chioma_k", "kemilaw"],
+    campus: "Main Campus",
+    bio: "Moot court by day, campus concerts by night",
+    friends: ["tade_vibes", "chioma_k", "kemilaw"],
     eventsAttending: [
-      { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-OOU-449102", purchasedAt: "2026-10-08" },
-      { eventId: "fassa-dinner-awards", allowFriendsToSee: true, ticketCode: "PP-OOU-772910", purchasedAt: "2026-10-09" },
+      { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-449102", purchasedAt: "2026-10-08" },
+      { eventId: "fassa-dinner-awards", allowFriendsToSee: true, ticketCode: "PP-772910", purchasedAt: "2026-10-09" },
     ],
   },
   {
     id: "user-3",
     username: "chioma_k",
     fullName: "Chioma Kalu",
-    email: "chioma@student.oouagoiwoye.edu.ng",
+    email: "chioma@gmail.com",
     role: "partygoer",
-    campus: "OOU Ago-Iwoye",
-    bio: "Mass Comm '26 · Campus paparazzi & cultural night hypeman",
-    friends: ["tade_oou", "fola_vibes"],
+    campus: "Main Campus",
+    bio: "Campus paparazzi & cultural night hypeman",
+    friends: ["tade_vibes", "fola_vibes"],
     eventsAttending: [
-      { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-OOU-301982", purchasedAt: "2026-10-10" },
-      { eventId: "afrofest-culture-night", allowFriendsToSee: true, ticketCode: "PP-OOU-592817", purchasedAt: "2026-10-10" },
+      { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-301982", purchasedAt: "2026-10-10" },
+      { eventId: "afrofest-culture-night", allowFriendsToSee: true, ticketCode: "PP-592817", purchasedAt: "2026-10-10" },
     ],
   },
   {
     id: "user-4",
     username: "bayo_tech",
     fullName: "Adebayo Johnson",
-    email: "bayo@student.oouagoiwoye.edu.ng",
+    email: "bayo@gmail.com",
     role: "partygoer",
-    campus: "OOU Ago-Iwoye",
+    campus: "Main Campus",
     bio: "Computer Science '25 · Building hackathons & campus sound clashes",
-    friends: ["tade_oou"],
+    friends: ["tade_vibes"],
     eventsAttending: [
-      { eventId: "builders-hangout", allowFriendsToSee: true, ticketCode: "PP-OOU-990184", purchasedAt: "2026-10-10" },
+      { eventId: "builders-hangout", allowFriendsToSee: true, ticketCode: "PP-990184", purchasedAt: "2026-10-10" },
     ],
   },
   {
     id: "user-5",
     username: "fassa_execs",
     fullName: "FASSA Social Committee",
-    email: "social@fassa-oou.org",
+    email: "social@fassa-events.org",
     role: "organizer",
-    campus: "OOU Ago-Iwoye",
-    bio: "Official Social Directorate, Faculty of Science Students Association",
+    campus: "Main Campus",
+    bio: "Official Social Directorate, Faculty Social Committee",
     friends: [],
     eventsAttending: [],
   },
@@ -76,10 +76,10 @@ const SEED_USERS: UserProfile[] = [
 const SEED_CIRCLES: PartyCircle[] = [
   {
     id: "circle-1",
-    name: "Main Hall Sunset Clique",
-    description: "Gathering at the quad lawn before heading to Mini Stadium for Sunset Sessions.",
-    createdBy: "tade_oou",
-    members: ["tade_oou", "fola_vibes", "chioma_k"],
+    name: "Friday Sunset Clique",
+    description: "Gathering at the campus lawn before heading to Mini Stadium for Sunset Sessions.",
+    createdBy: "tade_vibes",
+    members: ["tade_vibes", "fola_vibes", "chioma_k"],
     inviteCode: "SUNSET26",
     targetEventId: "after-class-sunset",
     isVotingOpen: false,
@@ -87,9 +87,9 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "sugg-1",
         eventId: "after-class-sunset",
-        suggestedBy: "tade_oou",
+        suggestedBy: "tade_vibes",
         suggestedAt: "2026-10-09",
-        votes: ["tade_oou", "fola_vibes", "chioma_k"],
+        votes: ["tade_vibes", "fola_vibes", "chioma_k"],
       },
       {
         id: "sugg-2",
@@ -103,8 +103,8 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "act-1",
         type: "circle_created",
-        actorUsername: "tade_oou",
-        description: "@tade_oou created the circle",
+        actorUsername: "tade_vibes",
+        description: "@tade_vibes created the circle",
         timestamp: "2026-10-09T14:30:00Z",
       },
       {
@@ -124,8 +124,8 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "act-4",
         type: "event_suggested",
-        actorUsername: "tade_oou",
-        description: "@tade_oou suggested AFTER CLASS: Sunset Sessions",
+        actorUsername: "tade_vibes",
+        description: "@tade_vibes suggested AFTER CLASS: Sunset Sessions",
         timestamp: "2026-10-09T15:15:00Z",
         eventId: "after-class-sunset",
       },
@@ -140,8 +140,8 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "act-6",
         type: "event_selected",
-        actorUsername: "tade_oou",
-        description: "@tade_oou confirmed AFTER CLASS: Sunset Sessions as the circle's plan",
+        actorUsername: "tade_vibes",
+        description: "@tade_vibes confirmed AFTER CLASS: Sunset Sessions as the circle's plan",
         timestamp: "2026-10-09T16:00:00Z",
         eventId: "after-class-sunset",
       },
@@ -150,10 +150,10 @@ const SEED_CIRCLES: PartyCircle[] = [
   },
   {
     id: "circle-2",
-    name: "Law '25 Gala Squad",
+    name: "Law & Friends Gala Squad",
     description: "Black-tie dinner table reservation and pre-drinks linkup.",
     createdBy: "fola_vibes",
-    members: ["fola_vibes", "tade_oou"],
+    members: ["fola_vibes", "tade_vibes"],
     inviteCode: "LAWGALA",
     targetEventId: undefined,
     isVotingOpen: true,
@@ -168,9 +168,9 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "sugg-4",
         eventId: "afrofest-culture-night",
-        suggestedBy: "tade_oou",
+        suggestedBy: "tade_vibes",
         suggestedAt: "2026-10-10",
-        votes: ["tade_oou"],
+        votes: ["tade_vibes"],
       },
     ],
     activity: [
@@ -184,8 +184,8 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "act-8",
         type: "member_joined",
-        actorUsername: "tade_oou",
-        description: "@tade_oou joined the circle",
+        actorUsername: "tade_vibes",
+        description: "@tade_vibes joined the circle",
         timestamp: "2026-10-10T11:30:00Z",
       },
       {
@@ -199,8 +199,8 @@ const SEED_CIRCLES: PartyCircle[] = [
       {
         id: "act-10",
         type: "event_suggested",
-        actorUsername: "tade_oou",
-        description: "@tade_oou suggested AfroFest Night",
+        actorUsername: "tade_vibes",
+        description: "@tade_vibes suggested AfroFest Night",
         timestamp: "2026-10-10T12:15:00Z",
         eventId: "afrofest-culture-night",
       },
@@ -300,8 +300,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = (emailOrUsername: string): boolean => {
     const clean = emailOrUsername.trim().toLowerCase().replace(/^@/, "");
+    const normalized = clean === "tade_oou" ? "tade_vibes" : clean;
     const found = allUsers.find(
       (u) =>
+        u.username.toLowerCase() === normalized ||
+        u.email.toLowerCase() === normalized ||
         u.username.toLowerCase() === clean ||
         u.email.toLowerCase() === clean
     );
@@ -316,11 +319,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: `user-${Date.now()}`,
       username: clean.includes("@") ? clean.split("@")[0] : clean,
       fullName: clean.charAt(0).toUpperCase() + clean.slice(1),
-      email: clean.includes("@") ? clean : `${clean}@student.oouagoiwoye.edu.ng`,
+      email: clean.includes("@") ? clean : `${clean}@gmail.com`,
       role: "partygoer",
-      campus: "OOU Ago-Iwoye",
-      bio: "Active PartyPadi member · OOU Ago-Iwoye",
-      friends: ["tade_oou", "fola_vibes"],
+      campus: "Main Campus",
+      bio: "Active PartyPadi partygoer & vibe creator",
+      friends: ["tade_vibes", "fola_vibes"],
       eventsAttending: [],
     };
 
@@ -357,9 +360,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       fullName: data.fullName.trim(),
       email: data.email.trim(),
       role: data.role,
-      campus: data.campus || "OOU Ago-Iwoye",
+      campus: data.campus || "Main Campus",
       bio: data.bio || (data.role === "partygoer" ? "Partygoer & campus vibe seeker" : "Verified campus event host"),
-      friends: data.role === "partygoer" ? ["tade_oou", "fola_vibes"] : [], // Auto-connect with campus ambassadors
+      friends: data.role === "partygoer" ? ["tade_vibes", "fola_vibes"] : [], // Auto-connect with campus ambassadors
       eventsAttending: [],
     };
 

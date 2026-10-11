@@ -140,7 +140,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
     setIsSubmitting(true);
 
     setTimeout(() => {
-      const generatedCode = `PP-OOU-${Math.floor(100000 + Math.random() * 900000)}`;
+      const generatedCode = `PP-${Math.floor(100000 + Math.random() * 900000)}`;
       setTicketCode(generatedCode);
       setIsSubmitting(false);
       setIsSuccess(true);
@@ -487,14 +487,14 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
 
                   <div>
                     <label className="block text-[10px] font-mono uppercase text-neutral-500 mb-1">
-                      Student Email *
+                      Email Address *
                     </label>
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="student@oouagoiwoye.edu.ng"
+                      placeholder="you@email.com"
                       className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
                     />
                   </div>
@@ -520,7 +520,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
                       type="text"
                       value={matricNumber}
                       onChange={(e) => setMatricNumber(e.target.value)}
-                      placeholder="e.g. CSC/2022/104"
+                      placeholder="e.g. 2024/0481 (optional)"
                       className="w-full px-4 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:bg-white focus:border-[#11120F] focus:outline-none transition-colors"
                     />
                   </div>
@@ -573,7 +573,7 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
                                 required
                                 value={currentComp.email}
                                 onChange={(e) => updateCompanion(idx, "email", e.target.value)}
-                                placeholder="companion@student.oouagoiwoye.edu.ng"
+                                placeholder="companion@email.com"
                                 className="w-full px-3.5 py-2 text-xs bg-white border border-neutral-200 rounded-xl focus:border-[#11120F] focus:outline-none transition-colors"
                               />
                             </div>

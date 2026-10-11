@@ -149,7 +149,7 @@ export function PartyCircleModal() {
               required
               value={circleName}
               onChange={(e) => setCircleName(e.target.value)}
-              placeholder="e.g. Main Hall Sunset Crew, Law '26 Squad"
+              placeholder="e.g. Friday Night Crew, The Roomies, The Usual Suspects"
               className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35]"
             />
           </div>
@@ -214,7 +214,7 @@ export function PartyCircleModal() {
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Linking up at Faculty of Arts Quad lawn by 6:00 PM before moving to the venue."
+              placeholder="e.g. Pre-drinks at my place by 7:00 PM before heading to the venue together."
               className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] resize-none"
             />
           </div>

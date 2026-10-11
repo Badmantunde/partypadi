@@ -66,7 +66,7 @@ export function PartyPadiLogo({
         <span
           className={`text-[9px] font-mono tracking-widest uppercase mt-1 pl-1 ${subtextColor}`}
         >
-          CAMPUS TICKETING // OOU
+          CAMPUS TICKETING & SOCIAL
         </span>
       )}
     </div>

@@ -102,7 +102,7 @@ export function OrganizerSection({ onOpenHostModal }: OrganizerSectionProps) {
                     </span>
                   </div>
                   <span className="text-[10px] font-mono text-neutral-400 bg-neutral-900 px-3 py-1 rounded-full border border-neutral-800">
-                    OOU PORTAL
+                    CAMPUS PORTAL
                   </span>
                 </div>
 

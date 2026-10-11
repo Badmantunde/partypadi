@@ -58,7 +58,7 @@ export function FinalCTA({ onOpenHostModal }: FinalCTAProps) {
 
         {/* Swiss Coordinates & Location Stamp */}
         <div className="pt-10 flex flex-wrap items-center justify-center gap-4 text-[10px] font-mono text-neutral-400 tracking-widest uppercase">
-          <span>AGO-IWOYE · NIGERIA</span>
+          <span>CAMPUS CULTURE · NIGERIA</span>
           <span>{"//"}</span>
           <span>07°08&apos;N 03°55&apos;E</span>
           <span>{"//"}</span>

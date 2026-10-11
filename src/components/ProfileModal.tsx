@@ -199,7 +199,7 @@ export function ProfileModal() {
                   <div className="p-6 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
                     <p className="text-xs text-neutral-400">No friends connected yet.</p>
                     <p className="text-[11px] text-neutral-500">
-                      Search usernames above like <span className="text-[#C5FF35]">@tade_oou</span> or <span className="text-[#C5FF35]">@fola_vibes</span> to see their event radar!
+                      Search usernames above like <span className="text-[#C5FF35]">@tade_vibes</span> or <span className="text-[#C5FF35]">@fola_vibes</span> to see their event radar!
                     </p>
                   </div>
                 ) : (

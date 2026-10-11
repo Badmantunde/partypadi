@@ -256,7 +256,7 @@ export default function HowItWorksPage() {
                         VERIFIED ENTRY · 0.42s
                       </span>
                       <h4 className="text-lg font-display font-bold text-white">
-                        Adekunle O. (OOU/22/0481)
+                        Adekunle O. (Verified Pass)
                       </h4>
                       <p className="text-xs font-mono text-white/70">
                         Tier: VIP LOUNGE PASS · ADMIT 1

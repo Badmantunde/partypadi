@@ -101,7 +101,7 @@ function EventsPageContent({ initialEvents }: EventsPageClientProps) {
               </h1>
 
               <p className="text-base sm:text-xl text-neutral-400 max-w-3xl mx-auto leading-relaxed">
-                Verified tickets, direct student entry, and authentic memories. From outdoor rave sessions in Ago-Iwoye to departmental award nights.
+                Verified tickets, direct student entry, and authentic memories. From outdoor sunset raves to departmental dinners and campus music fests.
               </p>
             </div>
 
@@ -133,8 +133,8 @@ function EventsPageContent({ initialEvents }: EventsPageClientProps) {
                 {/* Campus Selector Pills */}
                 <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
                   {[
-                    { id: "all", label: "All Campuses" },
-                    { id: "oou", label: "OOU Ago-Iwoye", activeBadge: true },
+                    { id: "all", label: "All Campuses", activeBadge: true },
+                    { id: "oou", label: "OOU" },
                     { id: "unilag", label: "UNILAG" },
                     { id: "ui", label: "UI" },
                     { id: "lasu", label: "LASU" },

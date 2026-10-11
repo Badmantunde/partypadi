@@ -70,15 +70,15 @@ export default function HostEventStudioPage() {
   const [gateOrgName, setGateOrgName] = useState("");
   const [gateUsername, setGateUsername] = useState("");
   const [gateEmail, setGateEmail] = useState("");
-  const [gateCampus, setGateCampus] = useState("OOU Ago-Iwoye");
+  const [gateCampus, setGateCampus] = useState("Main Campus");
   const [gateBio, setGateBio] = useState("");
   const [authError, setAuthError] = useState("");
 
   // Event form states
-  const [eventTitle, setEventTitle] = useState("OOU All-White Freshers Welcome Rave");
-  const [selectedCampus, setSelectedCampus] = useState("OOU (Ago-Iwoye)");
+  const [eventTitle, setEventTitle] = useState("All-White Campus Rave & Music Fest");
+  const [selectedCampus, setSelectedCampus] = useState("Main Campus");
   const [selectedCategory, setSelectedCategory] = useState("Party & Rave");
-  const [venue, setVenue] = useState("Club Vegas, Off-Campus Ring Road");
+  const [venue, setVenue] = useState("Club Vegas, Off-Campus Boulevard");
   const [eventDate, setEventDate] = useState("2026-11-20");
   const [eventTime, setEventTime] = useState("20:00");
   const [bannerImageUrl, setBannerImageUrl] = useState("/images/iridescent_fluid_host_art.jpg");
@@ -94,8 +94,8 @@ export default function HostEventStudioPage() {
   // Banking & Gate states
   const [bankName, setBankName] = useState("GTBank (Guaranty Trust)");
   const [accountNumber, setAccountNumber] = useState("0124982736");
-  const [accountName, setAccountName] = useState("ADEKUNLE OLAOLUWA (STUDENT REP)");
-  const [scannerRepEmail, setScannerRepEmail] = useState("headgate@ooufreshers.ng");
+  const [accountName, setAccountName] = useState("ADEKUNLE OLAOLUWA (ORGANIZER)");
+  const [scannerRepEmail, setScannerRepEmail] = useState("gate@campusparty.com");
   const [isPublished, setIsPublished] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -325,7 +325,7 @@ export default function HostEventStudioPage() {
                           FASSA Social Directorate
                         </div>
                         <div className="text-xs font-mono text-neutral-400">
-                          @fassa_execs · Verified Organizer · OOU Ago-Iwoye
+                          @fassa_execs · Verified Campus Organizer
                         </div>
                       </div>
                     </div>
@@ -382,7 +382,7 @@ export default function HostEventStudioPage() {
                           type="text"
                           value={gateEmailOrUser}
                           onChange={(e) => setGateEmailOrUser(e.target.value)}
-                          placeholder="fassa_execs or social@fassa-oou.org"
+                          placeholder="fassa_execs or events@partypadi.com"
                           className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                           required
                         />
@@ -405,7 +405,7 @@ export default function HostEventStudioPage() {
                           type="text"
                           value={gateOrgName}
                           onChange={(e) => setGateOrgName(e.target.value)}
-                          placeholder="e.g. Law Students Society Social Committee"
+                          placeholder="e.g. Campus Rave Society, AfroVibes Collective"
                           className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                           required
                         />
@@ -419,7 +419,7 @@ export default function HostEventStudioPage() {
                             type="text"
                             value={gateUsername}
                             onChange={(e) => setGateUsername(e.target.value)}
-                            placeholder="law_soc_oou"
+                            placeholder="rave_collective"
                             className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                             required
                           />
@@ -432,7 +432,7 @@ export default function HostEventStudioPage() {
                             type="email"
                             value={gateEmail}
                             onChange={(e) => setGateEmail(e.target.value)}
-                            placeholder="social@lawsociety.edu.ng"
+                            placeholder="events@ravecollective.com"
                             className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                             required
                           />
@@ -447,8 +447,9 @@ export default function HostEventStudioPage() {
                           onChange={(e) => setGateCampus(e.target.value)}
                           className="w-full bg-[#161719] border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35]"
                         >
-                          <option value="OOU Ago-Iwoye">OOU (Ago-Iwoye) - Launch Campus</option>
+                          <option value="Main Campus">Main Campus / General</option>
                           <option value="UNILAG Akoka">UNILAG (Akoka)</option>
+                          <option value="OOU Ago-Iwoye">OOU (Ago-Iwoye)</option>
                           <option value="UI Ibadan">UI (Ibadan)</option>
                           <option value="LASU Ojo">LASU (Ojo)</option>
                         </select>
@@ -708,8 +709,9 @@ export default function HostEventStudioPage() {
                                 onChange={(e) => setSelectedCampus(e.target.value)}
                                 className="w-full bg-[#161719] border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35] font-sans"
                               >
-                                <option value="OOU (Ago-Iwoye)">OOU (Ago-Iwoye - Active)</option>
-                                <option value="UNILAG (Akoka)">UNILAG (Akoka - Next)</option>
+                                <option value="Main Campus">Main Campus / General</option>
+                                <option value="UNILAG (Akoka)">UNILAG (Akoka)</option>
+                                <option value="OOU (Ago-Iwoye)">OOU (Ago-Iwoye)</option>
                                 <option value="UI (Ibadan)">UI (Ibadan)</option>
                                 <option value="LASU (Ojo)">LASU (Ojo)</option>
                               </select>
@@ -741,7 +743,7 @@ export default function HostEventStudioPage() {
                               type="text"
                               value={venue}
                               onChange={(e) => setVenue(e.target.value)}
-                              placeholder="e.g. Club Vegas, Off-Campus Ring Road"
+                              placeholder="e.g. Club Vegas, Off-Campus Boulevard, Grand Amphitheatre"
                               className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5FF35] font-sans"
                               required
                             />

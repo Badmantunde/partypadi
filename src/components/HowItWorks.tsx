@@ -161,7 +161,7 @@ export function HowItWorks() {
                       </span>
                     </div>
                     <span className="font-mono text-[10px] text-neutral-400 bg-neutral-100 rounded-full px-2.5 py-0.5">
-                      OOU-2026-884
+                      PADI-2026-884
                     </span>
                   </div>
 
@@ -173,7 +173,7 @@ export function HowItWorks() {
                       AFTER CLASS: Sunset Sessions
                     </h4>
                     <p className="text-xs text-neutral-500">
-                      Mini Stadium Lawn, Ago-Iwoye
+                      Mini Stadium Lawn, Main Campus
                     </p>
                   </div>
 

@@ -104,7 +104,7 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
         {/* 1. Eyebrow Pill (Reference: Early Access — Build Your Identity) */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono uppercase tracking-wider text-white/80 shadow-inner backdrop-blur-md mb-6 sm:mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] animate-pulse" />
-          <span>EARLY ACCESS — LIVE AT OOU AGO-IWOYE</span>
+          <span>EARLY ACCESS — LIVE ON CAMPUS</span>
         </div>
 
         {/* 2. Main Display Headline with Editorial Serif Contrast (Reference Style) */}

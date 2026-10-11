@@ -14,7 +14,7 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
   const { showToast } = useToast();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<EventCategory>("parties");
-  const [campus, setCampus] = useState("OOU · Ago-Iwoye");
+  const [campus, setCampus] = useState("Main Campus");
   const [venue, setVenue] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -189,7 +189,7 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
                     required
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Law Faculty Black & Gold Gala"
+                    placeholder="e.g. Neon Nights Campus Rave, Black & Gold Gala"
                     className="w-full px-4 py-2.5 text-xs bg-[#141513] border border-neutral-800 rounded-xl text-white focus:border-[#C5FF35] focus:outline-none transition-colors"
                   />
                 </div>
@@ -222,10 +222,11 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
                       onChange={(e) => setCampus(e.target.value)}
                       className="w-full px-4 py-2.5 text-xs bg-[#141513] border border-neutral-800 rounded-xl text-white focus:border-[#C5FF35] focus:outline-none transition-colors"
                     >
-                      <option value="OOU · Ago-Iwoye">OOU · Ago-Iwoye (Active)</option>
-                      <option value="UNILAG · Akoka">UNILAG · Akoka (Pilot)</option>
-                      <option value="UI · Ibadan">UI · Ibadan (Coming Soon)</option>
-                      <option value="LASU · Ojo">LASU · Ojo (Coming Soon)</option>
+                      <option value="Main Campus">Main Campus / General</option>
+                      <option value="UNILAG · Akoka">UNILAG · Akoka</option>
+                      <option value="OOU · Ago-Iwoye">OOU · Ago-Iwoye</option>
+                      <option value="UI · Ibadan">UI · Ibadan</option>
+                      <option value="LASU · Ojo">LASU · Ojo</option>
                     </select>
                   </div>
                 </div>
@@ -264,7 +265,7 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
                       type="text"
                       value={venue}
                       onChange={(e) => setVenue(e.target.value)}
-                      placeholder="e.g. Sub-Zero Lounge"
+                      placeholder="e.g. Club Vegas, Campus Amphitheatre, Grand Hall"
                       className="w-full px-4 py-2.5 text-xs bg-[#141513] border border-neutral-800 rounded-xl text-white focus:border-[#C5FF35] focus:outline-none transition-colors"
                     />
                   </div>
@@ -321,7 +322,7 @@ export function HostEventModal({ isOpen, onClose }: HostEventModalProps) {
                     required
                     value={organizerName}
                     onChange={(e) => setOrganizerName(e.target.value)}
-                    placeholder="e.g. FASSA Executives / Vibe Tribe"
+                    placeholder="e.g. Vibe Collective, Campus Social Committee"
                     className="w-full px-4 py-2.5 text-xs bg-[#141513] border border-neutral-800 rounded-xl text-white focus:border-[#C5FF35] focus:outline-none transition-colors"
                   />
                 </div>

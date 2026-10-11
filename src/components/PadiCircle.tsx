@@ -41,7 +41,7 @@ export function PadiCircle() {
       icon: Car,
       title: "Campus Rides & Shuttles",
       description:
-        "Coordinate shared rides from Ago-Iwoye campus gates to off-campus party lounges safely as a group.",
+        "Coordinate shared rides from campus gates to off-campus party lounges safely as a group.",
     },
   ];
 
@@ -76,7 +76,7 @@ export function PadiCircle() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
               <span className="inline-block px-3 py-1 bg-white/5 text-white/80 text-[10px] font-mono uppercase tracking-wider rounded-full border border-white/10">
-                ACTIVE ON OOU CAMPUS
+                ACTIVE CAMPUS CIRCLES
               </span>
             </div>
           </div>
@@ -185,7 +185,7 @@ export function PadiCircle() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter student email..."
+                placeholder="Enter your email address..."
                 className="px-5 py-3 text-xs bg-[#0E0F0C] border border-neutral-800 rounded-full text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] w-full md:w-72 shadow-xs transition-colors"
               />
               <button
