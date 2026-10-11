@@ -9,8 +9,12 @@
   --paper: #FFFFFF;
   --paper-subtle: #FFFFFF;
   --ink: #11120F;
+  --ink-black: #000000;
   --ink-muted: #575852;
   --ink-subtle: #878880;
+  --padi-green: #00D54B;
+  --lime-glow: #D7F23A;
+  --vibe-violet: #7B3FFF;
   --neon-lime: #C5FF35;
   --neon-coral: #FF8D99;
   --soft-gray: #E5E7EB;
@@ -25,8 +29,12 @@
   --color-paper: var(--paper);
   --color-paper-subtle: var(--paper-subtle);
   --color-ink: var(--ink);
+  --color-ink-black: var(--ink-black);
   --color-ink-muted: var(--ink-muted);
   --color-ink-subtle: var(--ink-subtle);
+  --color-padi-green: var(--padi-green);
+  --color-lime-glow: var(--lime-glow);
+  --color-vibe-violet: var(--vibe-violet);
   --color-neon-lime: var(--neon-lime);
   --color-neon-coral: var(--neon-coral);
   --color-soft-gray: var(--soft-gray);

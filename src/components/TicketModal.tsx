@@ -27,11 +27,11 @@ interface TicketModalProps {
 
 export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
   const { showToast } = useToast();
-  const { currentUser, rsvpEvent } = useAuth();
+  const { currentUser, rsvpEvent, addAttendeeMetric } = useAuth();
   const [selectedTierId, setSelectedTierId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState(currentUser?.fullName || "");
+  const [email, setEmail] = useState(currentUser?.email || "");
   const [phone, setPhone] = useState("");
   const [matricNumber, setMatricNumber] = useState("");
   const [additionalAttendees, setAdditionalAttendees] = useState<AdditionalAttendee[]>([]);
@@ -39,14 +39,6 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [ticketCode, setTicketCode] = useState("");
-
-  // Pre-fill user information if logged in
-  useEffect(() => {
-    if (isOpen && currentUser) {
-      if (!fullName) setFullName(currentUser.fullName);
-      if (!email) setEmail(currentUser.email);
-    }
-  }, [isOpen, currentUser, fullName, email]);
 
   // Adjust companion fields when quantity changes
   const handleQuantityChange = (newQty: number) => {
@@ -149,6 +141,21 @@ export function TicketModal({ event, isOpen, onClose }: TicketModalProps) {
       if (currentUser) {
         rsvpEvent(event.id, allowFriendsToSee, generatedCode);
       }
+
+      // Add to organizer's attendee telemetry records
+      addAttendeeMetric({
+        eventId: event.id,
+        name: fullName,
+        username: currentUser?.username,
+        email: email,
+        phone: phone || undefined,
+        ticketTier: activeTier?.name || "General Pass",
+        amountPaid: total,
+        ticketCode: generatedCode,
+        status: "paid",
+        companionsCount: Math.max(0, quantity - 1),
+        gifterLevel: currentUser?.gifterLevel,
+      });
 
       showToast({
         type: "success",

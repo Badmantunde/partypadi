@@ -43,6 +43,7 @@ export interface CampusEvent {
   highlights: string[];
   lineup?: string[];
   dressCode?: string;
+  status?: "published" | "draft" | "past";
   ticketTiers: TicketTier[];
   sponsorshipGoal?: number;
   sponsorshipGoalTitle?: string;
@@ -84,6 +85,7 @@ export interface UserProfile {
   fullName: string;
   email: string;
   role: "partygoer" | "organizer";
+  roles?: ("partygoer" | "organizer")[];
   campus: string;
   bio?: string;
   avatarUrl?: string;
@@ -91,6 +93,7 @@ export interface UserProfile {
   totalGifted?: number;
   showPublicGifts?: boolean;
   friends: string[]; // usernames
+  savedEventIds?: string[];
   eventsAttending: {
     eventId: string;
     allowFriendsToSee: boolean;

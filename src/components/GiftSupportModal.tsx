@@ -32,7 +32,7 @@ interface GiftSupportModalProps {
   eventTitle?: string;
   // If gifting an organizer
   organizerId?: string;
-  organizerName: string;
+  organizerName?: string;
   initialType?: GiftType;
   campus?: string;
 }
@@ -52,7 +52,7 @@ export function GiftSupportModal({
   eventId,
   eventTitle,
   organizerId,
-  organizerName,
+  organizerName = "Campus Organizer",
   initialType = "event_sponsorship",
   campus = "Main Campus",
 }: GiftSupportModalProps) {

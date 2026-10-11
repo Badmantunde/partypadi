@@ -59,10 +59,10 @@ export default function OrganizersPage() {
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
               <Link
-                href="/host"
+                href="/organizer"
                 className="spicy-btn px-8 py-3.5 bg-white text-black hover:bg-[#F5F5F0] rounded-full text-xs font-mono font-bold tracking-tight shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center gap-2"
               >
-                <span>Open Event Studio</span>
+                <span>Open Organizer Studio</span>
                 <span>→</span>
               </Link>
               <a

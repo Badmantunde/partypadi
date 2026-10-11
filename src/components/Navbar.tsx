@@ -123,8 +123,16 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               </Link>
 
               {/* Account / Auth Button */}
+              {/* Account / Auth Button */}
               {currentUser ? (
                 <div className="flex items-center gap-2 shrink-0">
+                  <Link
+                    href={currentUser.role === "organizer" ? "/organizer" : "/dashboard"}
+                    className="spicy-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#00D54B] text-black font-mono font-bold text-xs hover:bg-[#D7F23A] transition-all shrink-0 shadow-sm"
+                  >
+                    <span>{currentUser.role === "organizer" ? "Creator Studio" : "Dashboard"}</span>
+                    <span>→</span>
+                  </Link>
                   <button
                     type="button"
                     onClick={openProfileModal}
@@ -170,15 +178,24 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
 
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {currentUser ? (
-                <button
-                  onClick={openProfileModal}
-                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold whitespace-nowrap shrink-0 max-w-[130px] sm:max-w-none"
-                >
-                  <span className="w-4 h-4 rounded-full bg-[#C5FF35] text-black text-[10px] flex items-center justify-center font-bold shrink-0">
-                    {currentUser.fullName.charAt(0)}
-                  </span>
-                  <span className="truncate max-w-[70px] sm:max-w-none">@{currentUser.username}</span>
-                </button>
+                <>
+                  <Link
+                    href={currentUser.role === "organizer" ? "/organizer" : "/dashboard"}
+                    className="px-2.5 sm:px-3 py-1.5 rounded-full bg-[#00D54B] text-black text-[11px] font-mono font-bold whitespace-nowrap shrink-0 shadow-xs"
+                  >
+                    <span>{currentUser.role === "organizer" ? "Studio" : "App"}</span>
+                    <span className="ml-1">→</span>
+                  </Link>
+                  <button
+                    onClick={openProfileModal}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-[#C5FF35] font-bold whitespace-nowrap shrink-0 max-w-[110px] sm:max-w-none"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#C5FF35] text-black text-[10px] flex items-center justify-center font-bold shrink-0">
+                      {currentUser.fullName.charAt(0)}
+                    </span>
+                    <span className="truncate max-w-[60px] sm:max-w-none">@{currentUser.username}</span>
+                  </button>
+                </>
               ) : (
                 <button
                   onClick={() => openAuthModal("signin")}

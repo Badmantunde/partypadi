@@ -10,6 +10,42 @@ interface HeroProps {
 }
 
 export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
+  const cardsContainerRef = React.useRef<HTMLDivElement>(null);
+  const centerCardRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const centerHeroCard = () => {
+      const container = cardsContainerRef.current;
+      const centerEl = centerCardRef.current;
+      if (!container || !centerEl) return;
+
+      if (container.scrollWidth > container.clientWidth) {
+        const cardLeft = centerEl.offsetLeft;
+        const cardWidth = centerEl.offsetWidth;
+        const containerWidth = container.clientWidth;
+        const targetScroll = cardLeft - (containerWidth / 2) + (cardWidth / 2);
+
+        container.scrollLeft = Math.max(0, targetScroll);
+      }
+    };
+
+    // Center immediately on load
+    centerHeroCard();
+
+    // Re-verify after layout paint and image measurements
+    const rAF = requestAnimationFrame(centerHeroCard);
+    const t1 = setTimeout(centerHeroCard, 50);
+    const t2 = setTimeout(centerHeroCard, 200);
+
+    window.addEventListener("resize", centerHeroCard);
+    return () => {
+      cancelAnimationFrame(rAF);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("resize", centerHeroCard);
+    };
+  }, []);
+
   const cards = [
     {
       id: "green-room-sessions",
@@ -200,13 +236,17 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
           </div>
 
           {/* Cards Arc Container */}
-          <div className="flex sm:flex-row flex-nowrap items-end justify-start sm:justify-center overflow-x-auto sm:overflow-visible pt-12 pb-8 sm:pt-6 sm:pb-2 px-6 sm:px-0 gap-4 sm:gap-0 scrollbar-none snap-x snap-mandatory">
+          <div
+            ref={cardsContainerRef}
+            className="flex sm:flex-row flex-nowrap items-end justify-start lg:justify-center overflow-x-auto lg:overflow-visible pt-12 pb-8 sm:pt-6 sm:pb-2 px-6 sm:px-0 gap-4 sm:gap-0 scrollbar-none snap-x snap-mandatory"
+          >
             {cards.map((card) => {
               const isCenter = card.isCenter;
 
               return (
                 <div
                   key={card.id}
+                  ref={isCenter ? centerCardRef : undefined}
                   onClick={() => onSelectEvent(card.id)}
                   className={`relative shrink-0 snap-center my-1 rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-300 hover:scale-105 hover:z-40 hover:rotate-0 hover:-translate-y-6 cursor-pointer border border-white/20 ${card.zIndex} ${card.rotation} ${card.translateY} ${card.translateX} ${
                     isCenter

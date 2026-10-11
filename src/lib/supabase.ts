@@ -31,7 +31,7 @@ export const supabase = createClient(
 export interface SupabaseAuthResult {
   success: boolean;
   message: string;
-  user?: any;
+  user?: unknown;
 }
 
 /**
@@ -77,8 +77,8 @@ export async function signUpWithEmail(
       message: "Account created successfully. Check your email for verification.",
       user: data.user,
     };
-  } catch (err: any) {
-    return { success: false, message: err?.message || "Sign up failed" };
+  } catch (err: unknown) {
+    return { success: false, message: (err as Error)?.message || "Sign up failed" };
   }
 }
 
@@ -111,8 +111,8 @@ export async function signInWithEmail(
       message: "Signed in successfully via Supabase.",
       user: data.user,
     };
-  } catch (err: any) {
-    return { success: false, message: err?.message || "Sign in failed" };
+  } catch (err: unknown) {
+    return { success: false, message: (err as Error)?.message || "Sign in failed" };
   }
 }
 
@@ -143,8 +143,8 @@ export async function signInWithOtp(email: string): Promise<SupabaseAuthResult> 
       success: true,
       message: "Magic login link sent to your email!",
     };
-  } catch (err: any) {
-    return { success: false, message: err?.message || "OTP request failed" };
+  } catch (err: unknown) {
+    return { success: false, message: (err as Error)?.message || "OTP request failed" };
   }
 }
 

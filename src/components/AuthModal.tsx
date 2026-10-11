@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   X,
   Sparkles,
@@ -16,9 +17,11 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "./Toast";
 
 export function AuthModal() {
+  const router = useRouter();
   const {
     authModalOpen,
     closeAuthModal,
+    allUsers,
     login,
     signup,
     isSupabaseConfigured,
@@ -40,6 +43,14 @@ export function AuthModal() {
   const [loading, setLoading] = useState(false);
 
   if (!authModalOpen) return null;
+
+  const routeUserByRole = (targetRole: "partygoer" | "organizer") => {
+    if (targetRole === "organizer") {
+      router.push("/organizer");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +89,15 @@ export function AuthModal() {
           message: `Welcome back to PartyPadi!`,
         });
         closeAuthModal();
+
+        const clean = loginIdentifier.trim().toLowerCase().replace(/^@/, "");
+        const matched = allUsers.find(
+          (u) =>
+            u.username.toLowerCase() === clean ||
+            u.email.toLowerCase() === clean
+        );
+        const resolvedRole = matched?.role || "partygoer";
+        routeUserByRole(resolvedRole);
       }
     } finally {
       setLoading(false);
@@ -107,6 +127,7 @@ export function AuthModal() {
       if (res.success) {
         login(targetEmail);
         closeAuthModal();
+        routeUserByRole(role);
       }
     } finally {
       setLoading(false);
@@ -121,6 +142,8 @@ export function AuthModal() {
       message: `Signed in as @${usernameDemo}`,
     });
     closeAuthModal();
+    const isOrg = usernameDemo === "fassa_execs";
+    routeUserByRole(isOrg ? "organizer" : "partygoer");
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -167,6 +190,7 @@ export function AuthModal() {
           message: `Welcome @${username.replace(/^@/, "")}! Your PartyPadi profile is ready.`,
         });
         closeAuthModal();
+        routeUserByRole(role);
       }
     } finally {
       setLoading(false);

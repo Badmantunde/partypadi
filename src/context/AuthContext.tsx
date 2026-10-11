@@ -12,7 +12,10 @@ import {
   AttendeeMetricItem,
   OrganizerMilestone,
   LeaderboardEntry,
+  CampusEvent,
 } from "@/types";
+import { EVENTS } from "@/data/events";
+import { setClientSession } from "@/lib/auth-session";
 import {
   supabase,
   isSupabaseConfigured,
@@ -30,11 +33,13 @@ const SEED_USERS: UserProfile[] = [
     fullName: "Tade Adeyemi",
     email: "tade@gmail.com",
     role: "partygoer",
+    roles: ["partygoer", "organizer"],
     campus: "Main Campus",
     bio: "Main Hall vibes & sunset sessions lover",
     gifterLevel: 1, // Level 1 Gifter
     totalGifted: 3500,
     friends: ["fola_vibes", "chioma_k"],
+    savedEventIds: ["fassa-dinner-awards", "campus-unplugged"],
     eventsAttending: [
       { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-829141", purchasedAt: "2026-10-09" },
       { eventId: "green-room-sessions", allowFriendsToSee: true, ticketCode: "PP-194012", purchasedAt: "2026-10-10" },
@@ -46,11 +51,13 @@ const SEED_USERS: UserProfile[] = [
     fullName: "Fola Coker",
     email: "fola@gmail.com",
     role: "partygoer",
+    roles: ["partygoer"],
     campus: "Main Campus",
     bio: "Moot court by day, campus concerts by night",
     gifterLevel: 2, // Level 2 Gifter
     totalGifted: 15000,
     friends: ["tade_vibes", "chioma_k", "kemilaw"],
+    savedEventIds: ["green-room-sessions"],
     eventsAttending: [
       { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-449102", purchasedAt: "2026-10-08" },
       { eventId: "fassa-dinner-awards", allowFriendsToSee: true, ticketCode: "PP-772910", purchasedAt: "2026-10-09" },
@@ -62,11 +69,13 @@ const SEED_USERS: UserProfile[] = [
     fullName: "Chioma Kalu",
     email: "chioma@gmail.com",
     role: "partygoer",
+    roles: ["partygoer"],
     campus: "Main Campus",
     bio: "Campus paparazzi & cultural night hypeman",
     gifterLevel: 1, // Level 1 Gifter
     totalGifted: 2000,
     friends: ["tade_vibes", "fola_vibes"],
+    savedEventIds: ["after-class-sunset"],
     eventsAttending: [
       { eventId: "after-class-sunset", allowFriendsToSee: true, ticketCode: "PP-301982", purchasedAt: "2026-10-10" },
       { eventId: "afrofest-culture-night", allowFriendsToSee: true, ticketCode: "PP-592817", purchasedAt: "2026-10-10" },
@@ -78,11 +87,13 @@ const SEED_USERS: UserProfile[] = [
     fullName: "Adebayo Johnson",
     email: "bayo@gmail.com",
     role: "partygoer",
+    roles: ["partygoer"],
     campus: "Main Campus",
     bio: "Computer Science '25 · Building hackathons & campus sound clashes",
     gifterLevel: 3, // Level 3 Gifter
     totalGifted: 25000,
     friends: ["tade_vibes"],
+    savedEventIds: ["tech-crush-builders"],
     eventsAttending: [
       { eventId: "builders-hangout", allowFriendsToSee: true, ticketCode: "PP-990184", purchasedAt: "2026-10-10" },
     ],
@@ -93,6 +104,7 @@ const SEED_USERS: UserProfile[] = [
     fullName: "FASSA Social Committee",
     email: "social@fassa-events.org",
     role: "organizer",
+    roles: ["organizer", "partygoer"],
     campus: "Main Campus",
     bio: "Official Social Directorate, Faculty Social Committee",
     friends: [],
@@ -766,6 +778,13 @@ interface AuthContextType {
   closeCircleModal: () => void;
   openProfileModal: () => void;
   closeProfileModal: () => void;
+  savedEvents: string[];
+  toggleSaveEvent: (eventId: string) => boolean;
+  isEventSaved: (eventId: string) => boolean;
+  organizerEvents: CampusEvent[];
+  addOrganizerEvent: (event: CampusEvent) => void;
+  updateOrganizerEvent: (eventId: string, updates: Partial<CampusEvent>) => void;
+  switchRole: (role: "partygoer" | "organizer") => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -776,6 +795,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [circles, setCircles] = useState<PartyCircle[]>(SEED_CIRCLES);
   const [gifts, setGifts] = useState<EventGift[]>(SEED_GIFTS);
   const [attendees, setAttendees] = useState<AttendeeMetricItem[]>(SEED_ATTENDEES);
+  const [savedEvents, setSavedEvents] = useState<string[]>([
+    "fassa-dinner-awards",
+    "campus-unplugged",
+  ]);
+  const [organizerEvents, setOrganizerEvents] = useState<CampusEvent[]>(EVENTS);
 
   // Modal controls
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -783,12 +807,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [activeTargetEventId, setActiveTargetEventId] = useState<string | undefined>(undefined);
 
+  const saveUser = (user: UserProfile | null) => {
+    setCurrentUser(user);
+    setClientSession(user);
+    if (user) {
+      localStorage.setItem("pp_current_user", JSON.stringify(user));
+      if (user.savedEventIds) {
+        setSavedEvents(user.savedEventIds);
+        localStorage.setItem("pp_saved_events", JSON.stringify(user.savedEventIds));
+      }
+    } else {
+      localStorage.removeItem("pp_current_user");
+    }
+  };
+
   // Hydrate from localStorage on client mount & subscribe to Supabase
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("pp_current_user");
       if (storedUser) {
-        setCurrentUser(JSON.parse(storedUser));
+        const u = JSON.parse(storedUser);
+        setCurrentUser(u);
+        setClientSession(u);
+        if (u.savedEventIds) {
+          setSavedEvents(u.savedEventIds);
+        }
       }
       const storedUsers = localStorage.getItem("pp_all_users");
       if (storedUsers) {
@@ -805,6 +848,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedAttendees = localStorage.getItem("pp_attendees");
       if (storedAttendees) {
         setAttendees(JSON.parse(storedAttendees));
+      }
+      const storedSaved = localStorage.getItem("pp_saved_events");
+      if (storedSaved) {
+        setSavedEvents(JSON.parse(storedSaved));
+      }
+      const storedOrgEvents = localStorage.getItem("pp_organizer_events");
+      if (storedOrgEvents) {
+        setOrganizerEvents(JSON.parse(storedOrgEvents));
       }
     } catch (e) {
       console.warn("Storage hydration error", e);
@@ -826,9 +877,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             fullName,
             email: sbUser.email || "",
             role,
+            roles: [role],
             campus,
             bio: meta.bio || "Active PartyPadi member",
             friends: ["tade_vibes", "fola_vibes"],
+            savedEventIds: ["fassa-dinner-awards"],
             eventsAttending: [],
           };
           saveUser(profile);
@@ -841,13 +894,65 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const saveUser = (user: UserProfile | null) => {
-    setCurrentUser(user);
-    if (user) {
-      localStorage.setItem("pp_current_user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("pp_current_user");
+  const toggleSaveEvent = (eventId: string): boolean => {
+    const isSaved = savedEvents.includes(eventId);
+    const next = isSaved
+      ? savedEvents.filter((id) => id !== eventId)
+      : [...savedEvents, eventId];
+    setSavedEvents(next);
+    localStorage.setItem("pp_saved_events", JSON.stringify(next));
+
+    if (currentUser) {
+      const updatedUser: UserProfile = {
+        ...currentUser,
+        savedEventIds: next,
+      };
+      saveUser(updatedUser);
+      const updatedList = allUsers.map((u) =>
+        u.id === currentUser.id ? updatedUser : u
+      );
+      setAllUsers(updatedList);
+      localStorage.setItem("pp_all_users", JSON.stringify(updatedList));
     }
+    return !isSaved;
+  };
+
+  const isEventSaved = (eventId: string): boolean => {
+    return savedEvents.includes(eventId);
+  };
+
+  const addOrganizerEvent = (event: CampusEvent) => {
+    const updated = [event, ...organizerEvents];
+    setOrganizerEvents(updated);
+    localStorage.setItem("pp_organizer_events", JSON.stringify(updated));
+  };
+
+  const updateOrganizerEvent = (eventId: string, updates: Partial<CampusEvent>) => {
+    const updated = organizerEvents.map((e) =>
+      e.id === eventId ? { ...e, ...updates } : e
+    );
+    setOrganizerEvents(updated);
+    localStorage.setItem("pp_organizer_events", JSON.stringify(updated));
+  };
+
+  const switchRole = (newRole: "partygoer" | "organizer") => {
+    if (!currentUser) return;
+    const currentRoles = currentUser.roles || [currentUser.role];
+    const updatedRoles = Array.from(new Set([...currentRoles, newRole])) as (
+      | "partygoer"
+      | "organizer"
+    )[];
+    const updatedUser: UserProfile = {
+      ...currentUser,
+      role: newRole,
+      roles: updatedRoles,
+    };
+    saveUser(updatedUser);
+    const updatedList = allUsers.map((u) =>
+      u.id === currentUser.id ? updatedUser : u
+    );
+    setAllUsers(updatedList);
+    localStorage.setItem("pp_all_users", JSON.stringify(updatedList));
   };
 
 
@@ -1601,7 +1706,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!currentUser) return;
 
     const existingIndex = currentUser.eventsAttending.findIndex((e) => e.eventId === eventId);
-    let updatedEvents = [...currentUser.eventsAttending];
+    const updatedEvents = [...currentUser.eventsAttending];
 
     if (existingIndex >= 0) {
       updatedEvents[existingIndex] = {
@@ -1730,6 +1835,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         closeCircleModal,
         openProfileModal,
         closeProfileModal,
+        savedEvents,
+        toggleSaveEvent,
+        isEventSaved,
+        organizerEvents,
+        addOrganizerEvent,
+        updateOrganizerEvent,
+        switchRole,
       }}
     >
       {children}
