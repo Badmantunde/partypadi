@@ -58,25 +58,21 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20 flex-nowrap gap-3">
+          {/* Desktop Layout (xl and above): 3-Track Grid Centering Center Nav Mathematically */}
+          <div className="hidden xl:grid grid-cols-[1fr_auto_1fr] items-center h-20 w-full">
             {/* Left: Star Mark & PartyPadi Wordmark */}
-            <div className="flex items-center gap-3.5 shrink-0">
+            <div className="flex items-center justify-start shrink-0">
               <Link
                 href="/"
                 className="outline-none focus-visible:ring-1 focus-visible:ring-white flex items-center gap-2 group transition-transform hover:scale-[1.02] shrink-0"
               >
                 <PartyPadiLogo theme="dark" size="md" />
               </Link>
-
-              <div className="hidden 2xl:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono tracking-wider uppercase text-white/80 whitespace-nowrap shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] animate-pulse shrink-0" />
-                <span className="whitespace-nowrap">OOU · AGO-IWOYE</span>
-              </div>
             </div>
 
-            {/* Center: Floating Dark Capsule Navigation (Visible on xl and above) */}
+            {/* Center: Floating Dark Capsule Navigation (Mathematically centered) */}
             <nav
-              className="hidden xl:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner shrink-0"
+              className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md shadow-inner shrink-0 justify-self-center"
               aria-label="Main Navigation"
             >
               {navLinks.map((link) => {
@@ -100,19 +96,30 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
               })}
             </nav>
 
-            {/* Right: Action Buttons on Desktop (Visible on xl and above) */}
-            <div className="hidden xl:flex items-center gap-2.5 shrink-0">
+            {/* Right: Action Buttons on Desktop (Right-aligned) */}
+            <div className="flex items-center justify-end gap-2.5 shrink-0">
               {/* Host an Event button */}
               <Link
                 href="/host"
                 className={`text-xs font-mono px-3.5 py-2 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                   checkIsActive("/host")
-                    ? "bg-[#C5FF35] text-[#0C0D0E] font-bold shadow-[0_0_15px_rgba(197,255,53,0.3)]"
+                    ? "bg-white/15 text-white font-bold border border-white/25 shadow-xs"
                     : "text-white/80 hover:text-white hover:bg-white/5"
                 }`}
               >
+                {checkIsActive("/host") && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] shadow-[0_0_8px_#C5FF35] shrink-0" />
+                )}
                 <span className="whitespace-nowrap">Host an Event</span>
-                <span className="text-[9px] bg-white/10 text-white/80 px-1.5 py-0.5 rounded font-mono font-semibold whitespace-nowrap">0% Fee</span>
+                <span
+                  className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold whitespace-nowrap transition-colors ${
+                    checkIsActive("/host")
+                      ? "bg-[#C5FF35]/20 text-[#C5FF35] border border-[#C5FF35]/30"
+                      : "bg-white/10 text-neutral-300 border border-white/10"
+                  }`}
+                >
+                  0% Fee
+                </span>
               </Link>
 
               {/* Account / Auth Button */}
@@ -148,9 +155,18 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35] transition-transform group-hover:scale-125 shrink-0" />
               </Link>
             </div>
+          </div>
 
-            {/* Mobile / Tablet Header Controls (Visible under xl) */}
-            <div className="flex xl:hidden items-center gap-2 shrink-0">
+          {/* Mobile / Tablet Header Controls (Visible under xl) */}
+          <div className="flex xl:hidden items-center justify-between h-16 sm:h-20 w-full flex-nowrap">
+            <Link
+              href="/"
+              className="outline-none focus-visible:ring-1 focus-visible:ring-white flex items-center gap-2 group transition-transform hover:scale-[1.02] shrink-0"
+            >
+              <PartyPadiLogo theme="dark" size="md" />
+            </Link>
+
+            <div className="flex items-center gap-2 shrink-0">
               {currentUser ? (
                 <button
                   onClick={openProfileModal}
@@ -194,11 +210,6 @@ export function Navbar({ onOpenHostModal }: NavbarProps = {}) {
         {/* Mobile Navigation Drawer (Visible on screens < xl when toggled) */}
         {mobileMenuOpen && (
           <div className="xl:hidden border-b border-white/10 bg-[#0C0D0E]/98 backdrop-blur-xl px-5 pt-4 pb-8 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-            {/* Campus Header Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 text-[11px] font-mono tracking-wider uppercase text-white/90 rounded-full w-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C5FF35]" />
-              <span>OOU · AGO-IWOYE (LAUNCH CAMPUS)</span>
-            </div>
 
             {/* User Profile Card in Mobile Menu */}
             {currentUser ? (
