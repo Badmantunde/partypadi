@@ -17,6 +17,7 @@ import {
   ArrowRight,
   ShieldCheck,
   Award,
+  Crown,
 } from "lucide-react";
 
 export default function OrganizersPage() {
@@ -261,7 +262,7 @@ export default function OrganizersPage() {
                   shortName: "FASSA Socials",
                   role: "Faculty Association Executive",
                   campus: "Main Campus",
-                  avatar: "🎓",
+                  avatar: "FS",
                   bio: "Official faculty social directorate coordinating faculty weeks, annual black-tie dinners, and campus linkups.",
                 },
                 {
@@ -270,7 +271,7 @@ export default function OrganizersPage() {
                   shortName: "Vibe Tribe",
                   role: "Official Campus Promoter",
                   campus: "Main Campus",
-                  avatar: "🔥",
+                  avatar: "VT",
                   bio: "Pioneering sunset parties, sound clashes, and semester kickoffs across Nigerian campus culture.",
                 },
                 {
@@ -279,7 +280,7 @@ export default function OrganizersPage() {
                   shortName: "SoundHaus",
                   role: "Independent Sound Curators",
                   campus: "Club Vegas & Garden",
-                  avatar: "🔊",
+                  avatar: "SH",
                   bio: "Underground afro-house, alte sounds, and nocturnal garden sessions powered by acoustic connoisseurs.",
                 },
               ].map((org) => {
@@ -345,12 +346,17 @@ export default function OrganizersPage() {
                                   : "bg-white border-neutral-200 text-neutral-400"
                               }`}
                             >
-                              <div className="flex items-center gap-1">
-                                <span>{m.icon}</span>
+                              <div className="flex items-center gap-1.5">
+                                <div className="shrink-0">
+                                  {m.id === "first_gift" && <Sparkles className="w-3 h-3 text-emerald-600" />}
+                                  {m.id === "crowd_favourite" && <Users className="w-3 h-3 text-amber-600" />}
+                                  {m.id === "community_backed" && <ShieldCheck className="w-3 h-3 text-blue-600" />}
+                                  {m.id === "campus_favourite" && <Crown className="w-3 h-3 text-purple-600" />}
+                                </div>
                                 <span className="truncate">{m.title}</span>
                               </div>
                               <span className="text-[9px] block text-neutral-500 truncate mt-0.5">
-                                {m.unlocked ? "Unlocked ✓" : m.requirement}
+                                {m.unlocked ? "Unlocked" : m.requirement}
                               </span>
                             </div>
                           ))}

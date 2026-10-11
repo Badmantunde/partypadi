@@ -439,9 +439,6 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                       ) : (
                         <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
                           {rankedGifts.map((gift, idx) => {
-                            const isTop3 = idx < 3;
-                            const rankIcons = ["👑", "🥈", "🥉"];
-
                             return (
                               <div
                                 key={gift.id}
@@ -455,7 +452,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                                   <div className="flex items-center gap-2.5 min-w-0">
                                     {/* Rank Marker */}
                                     <div
-                                      className={`w-6 h-6 rounded-full flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                                      className={`w-6 h-6 rounded-full flex items-center justify-center font-mono text-[11px] font-bold shrink-0 ${
                                         idx === 0
                                           ? "bg-amber-400 text-black shadow-xs"
                                           : idx === 1
@@ -465,7 +462,7 @@ function EventDetailContent({ event, relatedEvents }: EventDetailPageClientProps
                                           : "bg-neutral-100 text-neutral-600"
                                       }`}
                                     >
-                                      {isTop3 ? rankIcons[idx] : `#${idx + 1}`}
+                                      #{idx + 1}
                                     </div>
 
                                     {/* Supporter Identity */}

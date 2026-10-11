@@ -101,7 +101,7 @@ export default function LeaderboardPage() {
       name: "FASSA Social Committee",
       role: "Faculty Executive Committee",
       campus: "Main Campus",
-      avatar: "🎓",
+      avatar: "FS",
       totalReceived: gifts
         .filter(
           (g) =>
@@ -124,7 +124,7 @@ export default function LeaderboardPage() {
       name: "Vibe Tribe & Campus Socials",
       role: "Official Campus Promoter",
       campus: "Main Campus",
-      avatar: "🔥",
+      avatar: "VT",
       totalReceived: gifts
         .filter(
           (g) =>
@@ -145,7 +145,7 @@ export default function LeaderboardPage() {
       name: "SoundHaus Collective",
       role: "Independent Sound Curators",
       campus: "Club Vegas & Garden",
-      avatar: "🔊",
+      avatar: "SH",
       totalReceived: gifts
         .filter(
           (g) =>
@@ -587,11 +587,16 @@ export default function LeaderboardPage() {
                               }`}
                             >
                               <div className="flex items-center gap-1.5">
-                                <span>{m.icon}</span>
+                                <div className="shrink-0">
+                                  {m.id === "first_gift" && <Sparkles className="w-3 h-3 text-emerald-400" />}
+                                  {m.id === "crowd_favourite" && <Users className="w-3 h-3 text-amber-400" />}
+                                  {m.id === "community_backed" && <ShieldCheck className="w-3 h-3 text-blue-400" />}
+                                  {m.id === "campus_favourite" && <Crown className="w-3 h-3 text-purple-400" />}
+                                </div>
                                 <span className="truncate">{m.title}</span>
                               </div>
                               <span className="text-[9px] block text-neutral-400 truncate mt-0.5">
-                                {m.unlocked ? "Unlocked ✓" : m.requirement}
+                                {m.unlocked ? "Unlocked" : m.requirement}
                               </span>
                             </div>
                           ))}

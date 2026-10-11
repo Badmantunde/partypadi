@@ -32,7 +32,7 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Main Hall vibes & sunset sessions lover",
-    gifterLevel: 1, // Level 1 Gifter 🥉
+    gifterLevel: 1, // Level 1 Gifter
     totalGifted: 3500,
     friends: ["fola_vibes", "chioma_k"],
     eventsAttending: [
@@ -48,7 +48,7 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Moot court by day, campus concerts by night",
-    gifterLevel: 2, // Level 2 Gifter 🥈
+    gifterLevel: 2, // Level 2 Gifter
     totalGifted: 15000,
     friends: ["tade_vibes", "chioma_k", "kemilaw"],
     eventsAttending: [
@@ -64,7 +64,7 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Campus paparazzi & cultural night hypeman",
-    gifterLevel: 1, // Level 1 Gifter 🥉
+    gifterLevel: 1, // Level 1 Gifter
     totalGifted: 2000,
     friends: ["tade_vibes", "fola_vibes"],
     eventsAttending: [
@@ -80,7 +80,7 @@ const SEED_USERS: UserProfile[] = [
     role: "partygoer",
     campus: "Main Campus",
     bio: "Computer Science '25 · Building hackathons & campus sound clashes",
-    gifterLevel: 3, // Level 3 Gifter 🥇
+    gifterLevel: 3, // Level 3 Gifter
     totalGifted: 25000,
     friends: ["tade_vibes"],
     eventsAttending: [
@@ -113,7 +113,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterUsername: "fola_vibes",
     amount: 15000,
     level: 2, // Plug
-    message: "Drinks support for the sound engineering crew! Keep the energy high 🔊🔥",
+    message: "Drinks support for the sound engineering crew! Keep the energy high.",
     isPublic: true,
     campus: "Main Campus",
     createdAt: "2026-10-10T16:20:00Z",
@@ -129,7 +129,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterUsername: "tade_vibes",
     amount: 3500,
     level: 1, // Padi
-    message: "Shoutout to DJ Tee! Sunset sessions always hits different 🌅",
+    message: "Shoutout to DJ Tee! Sunset sessions always hits different.",
     isPublic: true,
     campus: "Main Campus",
     createdAt: "2026-10-10T18:45:00Z",
@@ -145,7 +145,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterUsername: "bayo_tech",
     amount: 25000,
     level: 3, // Hype Padi
-    message: "Supporting campus tech & nightlife culture! Table 4 on me 🍾",
+    message: "Supporting campus tech & nightlife culture! Table 4 on me.",
     isPublic: true,
     campus: "Main Campus",
     createdAt: "2026-10-11T01:10:00Z",
@@ -160,7 +160,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterUsername: "chioma_k",
     amount: 55000,
     level: 4, // Big Padi
-    message: "Direct support for the executive committee planning faculty week! Keep doing great work 🎓✨",
+    message: "Direct support for the executive committee planning faculty week! Keep doing great work.",
     isPublic: true,
     campus: "Main Campus",
     createdAt: "2026-10-10T20:15:00Z",
@@ -176,7 +176,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterUsername: "tunde_fan",
     amount: 110000,
     level: 5, // Headliner
-    message: "Massive sponsorship for the acoustic rig! Lagos to OOU we turn up ⚡",
+    message: "Massive sponsorship for the acoustic rig! Lagos to OOU we turn up.",
     isPublic: true,
     campus: "Main Campus",
     createdAt: "2026-10-08T12:00:00Z",
@@ -191,7 +191,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterUsername: "alabi_legend",
     amount: 260000,
     level: 6, // Legend
-    message: "Honouring campus traditions. Keep lifting student spirit high 👑🏆",
+    message: "Honouring campus traditions. Keep lifting student spirit high.",
     isPublic: true,
     campus: "Main Campus",
     createdAt: "2026-10-07T09:30:00Z",
@@ -205,7 +205,7 @@ const SEED_GIFTS: EventGift[] = [
     gifterName: "Anonymous Padi",
     amount: 15000,
     level: 2,
-    message: "Anonymous energy boost for the DJ! 🔊",
+    message: "Anonymous energy boost for the DJ!",
     isPublic: false,
     campus: "Main Campus",
     createdAt: "2026-10-11T02:00:00Z",
@@ -525,7 +525,7 @@ export const GIFTER_LEVEL_INFO: Record<
 > = {
   1: {
     name: "Padi",
-    icon: "🌱",
+    icon: "spark",
     minAmount: 1,
     maxAmount: 4999,
     color: "#22C55E",
@@ -537,7 +537,7 @@ export const GIFTER_LEVEL_INFO: Record<
   },
   2: {
     name: "Plug",
-    icon: "⚡",
+    icon: "bolt",
     minAmount: 5000,
     maxAmount: 19999,
     color: "#38BDF8",
@@ -549,7 +549,7 @@ export const GIFTER_LEVEL_INFO: Record<
   },
   3: {
     name: "Hype Padi",
-    icon: "💥",
+    icon: "burst",
     minAmount: 20000,
     maxAmount: 49999,
     color: "#A855F7",
@@ -561,7 +561,7 @@ export const GIFTER_LEVEL_INFO: Record<
   },
   4: {
     name: "Big Padi",
-    icon: "✨",
+    icon: "geometric",
     minAmount: 50000,
     maxAmount: 99999,
     color: "#E2E8F0",
@@ -573,7 +573,7 @@ export const GIFTER_LEVEL_INFO: Record<
   },
   5: {
     name: "Headliner",
-    icon: "⭐",
+    icon: "spotlight",
     minAmount: 100000,
     maxAmount: 249999,
     color: "#EAB308",
@@ -585,7 +585,7 @@ export const GIFTER_LEVEL_INFO: Record<
   },
   6: {
     name: "Legend",
-    icon: "👑",
+    icon: "legend",
     minAmount: 250000,
     color: "#F59E0B",
     badgeStyle: "Special gold and violet emblem",
@@ -605,7 +605,7 @@ export const getNextLevelProgress = (totalGifted: number) => {
       nextLevelName: null,
       amountNeeded: 0,
       percent: 100,
-      text: "You've unlocked the highest Legend tier! 🏆",
+      text: "You've unlocked the highest Legend tier!",
     };
   }
 
@@ -637,7 +637,7 @@ export const getOrganizerMilestones = (
       id: "first_gift",
       title: "First Gift",
       description: "Received first verified gift from a campus supporter.",
-      icon: "🌱",
+      icon: "seed",
       unlocked: uniqueSupportersCount >= 1,
       progress: uniqueSupportersCount >= 1 ? 100 : 0,
       requirement: "1 supporter",
@@ -646,7 +646,7 @@ export const getOrganizerMilestones = (
       id: "crowd_favourite",
       title: "Crowd Favourite",
       description: "Received gifts from 5+ unique campus supporters.",
-      icon: "🔥",
+      icon: "flame",
       unlocked: uniqueSupportersCount >= 5,
       progress: Math.min(100, Math.round((uniqueSupportersCount / 5) * 100)),
       requirement: "5 unique supporters",
@@ -655,7 +655,7 @@ export const getOrganizerMilestones = (
       id: "community_backed",
       title: "Community Backed",
       description: "Reached ₦100,000+ in verified campus sponsorship.",
-      icon: "💎",
+      icon: "shield",
       unlocked: totalSupportReceived >= 100000,
       progress: Math.min(100, Math.round((totalSupportReceived / 100000) * 100)),
       requirement: "₦100k verified support",
@@ -664,7 +664,7 @@ export const getOrganizerMilestones = (
       id: "campus_favourite",
       title: "Campus Favourite",
       description: "Achieved ₦250,000+ verified community support across campus.",
-      icon: "👑",
+      icon: "crown",
       unlocked: totalSupportReceived >= 250000,
       progress: Math.min(100, Math.round((totalSupportReceived / 250000) * 100)),
       requirement: "₦250k verified support",
@@ -978,8 +978,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const defaultMsg =
       data.type === "direct_organizer_gift"
-        ? "Keep elevating campus nightlife and sound culture! 🌟"
-        : "Big support to the organizing crew & sound engineers! 🔥";
+        ? "Keep elevating campus nightlife and sound culture!"
+        : "Big support to the organizing crew & sound engineers!";
 
     const newGift: EventGift = {
       id: `gift-${Date.now()}`,

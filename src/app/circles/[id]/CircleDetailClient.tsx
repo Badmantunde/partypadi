@@ -36,6 +36,7 @@ import {
   Check,
   ChevronRight,
   ShieldCheck,
+  X,
 } from "lucide-react";
 
 export function CircleDetailClient() {
@@ -242,7 +243,7 @@ export function CircleDetailClient() {
     selectFinalEvent(circle.id, eventId);
     showToast({
       type: "success",
-      title: "Official Plan Confirmed! 🎉",
+      title: "Official Plan Confirmed!",
       message: "The circle plan has been updated. Members can now secure passes.",
     });
   };
@@ -861,7 +862,7 @@ export function CircleDetailClient() {
                 onClick={() => setSuggestModalOpen(false)}
                 className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -949,7 +950,7 @@ export function CircleDetailClient() {
                 onClick={() => setInviteModalOpen(false)}
                 className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -1022,9 +1023,9 @@ export function CircleDetailClient() {
               <h3 className="font-display font-bold text-lg text-white">Edit Circle Details</h3>
               <button
                 onClick={() => setEditModalOpen(false)}
-                className="p-1 rounded-full bg-white/5 hover:bg-white/10 text-white/70"
+                className="p-1 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 

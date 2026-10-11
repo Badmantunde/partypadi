@@ -228,7 +228,7 @@ export function EventPhotoGallery({
 
     showToast({
       type: "success",
-      title: "Event Photos Dropped! 📸",
+      title: "Event Photos Dropped!",
       message: `${newPhotos.length} photos published. Partygoers can now find and download their pictures.`,
     });
   };
@@ -253,7 +253,7 @@ export function EventPhotoGallery({
 
     showToast({
       type: "success",
-      title: "Picture Picked! 📸",
+      title: "Picture Picked!",
       message: "High-resolution photo saved to your device. Tag @partypadi on your story!",
     });
   };

@@ -203,7 +203,7 @@ export function AuthModal() {
               }`}
             />
             <span>
-              {isSupabaseConfigured ? "SUPABASE AUTH CONNECTED ⚡" : "CAMPUS COMMUNITY AUTH"}
+              {isSupabaseConfigured ? "SUPABASE AUTH CONNECTED" : "CAMPUS COMMUNITY AUTH"}
             </span>
           </div>
           <h3 className="font-display font-medium text-xl sm:text-2xl text-white">
@@ -448,7 +448,7 @@ export function AuthModal() {
                     className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-colors"
                   >
                     <span className="font-mono text-xs font-bold text-[#C5FF35] block">@tade_vibes</span>
-                    <span className="text-[9px] text-neutral-400 block">Partygoer · Gifter 🥉</span>
+                    <span className="text-[9px] text-neutral-400 block">Partygoer · Gifter L1</span>
                   </button>
 
                   <button

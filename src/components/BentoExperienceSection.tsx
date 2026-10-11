@@ -102,7 +102,10 @@ export function BentoExperienceSection({ onSelectEvent }: BentoExperienceSection
 
             <div className="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
               <span>FACULTY BACKED</span>
-              <span className="font-bold text-[#11120F]">Campus Verified ✓</span>
+              <span className="font-bold text-[#11120F] flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-black" />
+                <span>Campus Verified</span>
+              </span>
             </div>
           </div>
 

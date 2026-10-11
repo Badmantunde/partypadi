@@ -91,13 +91,13 @@ export function Hero({ onOpenHostModal, onSelectEvent }: HeroProps) {
         {/* Soft radial glow behind center */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[400px] bg-gradient-to-b from-[#C5FF35]/8 via-[#0891B2]/5 to-transparent blur-3xl rounded-full" />
 
-        {/* Scattered Sparkles */}
-        <span className="absolute top-16 left-[12%] text-[9px] text-white/20 animate-pulse">✦</span>
-        <span className="absolute top-36 right-[15%] text-[8px] text-white/25">✦</span>
-        <span className="absolute top-28 left-[28%] text-[6px] text-white/30">•</span>
-        <span className="absolute top-52 right-[25%] text-[10px] text-[#C5FF35]/30">✦</span>
-        <span className="absolute top-64 left-[18%] text-[7px] text-white/20">•</span>
-        <span className="absolute top-48 left-[82%] text-[8px] text-white/25">✦</span>
+        {/* Ambient Subtle Accent Nodes */}
+        <span className="absolute top-16 left-[12%] w-1.5 h-1.5 rounded-full bg-white/20 animate-pulse" />
+        <span className="absolute top-36 right-[15%] w-1 h-1 rounded-full bg-white/25" />
+        <span className="absolute top-28 left-[28%] w-1 h-1 rounded-full bg-white/30" />
+        <span className="absolute top-52 right-[25%] w-1.5 h-1.5 rounded-full bg-[#C5FF35]/40" />
+        <span className="absolute top-64 left-[18%] w-1 h-1 rounded-full bg-white/20" />
+        <span className="absolute top-48 left-[82%] w-1 h-1 rounded-full bg-white/25" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">

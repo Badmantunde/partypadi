@@ -38,12 +38,12 @@ interface GiftSupportModalProps {
 }
 
 const PRESET_AMOUNTS = [
-  { amount: 2500, label: "₦2,500", level: 1 as GifterLevel, note: "Padi Support 🌱" },
-  { amount: 7500, label: "₦7,500", level: 2 as GifterLevel, note: "Plug Booster ⚡" },
-  { amount: 25000, label: "₦25,000", level: 3 as GifterLevel, note: "Hype Padi 💥" },
-  { amount: 50000, label: "₦50,000", level: 4 as GifterLevel, note: "Big Padi ✨" },
-  { amount: 100000, label: "₦100,000", level: 5 as GifterLevel, note: "Headliner ⭐" },
-  { amount: 250000, label: "₦250,000", level: 6 as GifterLevel, note: "Campus Legend 👑" },
+  { amount: 2500, label: "₦2,500", level: 1 as GifterLevel, note: "Padi Support" },
+  { amount: 7500, label: "₦7,500", level: 2 as GifterLevel, note: "Plug Booster" },
+  { amount: 25000, label: "₦25,000", level: 3 as GifterLevel, note: "Hype Padi" },
+  { amount: 50000, label: "₦50,000", level: 4 as GifterLevel, note: "Big Padi" },
+  { amount: 100000, label: "₦100,000", level: 5 as GifterLevel, note: "Headliner" },
+  { amount: 250000, label: "₦250,000", level: 6 as GifterLevel, note: "Campus Legend" },
 ];
 
 export function GiftSupportModal({
@@ -126,7 +126,7 @@ export function GiftSupportModal({
         const badge = GIFTER_LEVEL_INFO[res.newGifterLevel];
         showToast({
           type: "success",
-          title: `Support Confirmed! ${badge.icon}`,
+          title: "Support Confirmed!",
           message: `You earned the ${badge.name} badge! Verified contribution attributed to ${
             giftType === "event_sponsorship" ? eventTitle : organizerName
           }.`,
@@ -338,7 +338,7 @@ export function GiftSupportModal({
                 rows={2}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="e.g. Drinks support for the sound engineering crew! Keep the energy high 🔊🔥"
+                placeholder="e.g. Drinks support for the sound engineering crew! Keep the energy high"
                 className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#C5FF35] resize-none"
               />
             </div>

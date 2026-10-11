@@ -36,6 +36,8 @@ import {
   Filter,
   Eye,
   RefreshCw,
+  Users,
+  Crown,
 } from "lucide-react";
 
 type HostStep = "essentials" | "tiers" | "gate" | "payout";
@@ -989,8 +991,9 @@ export default function HostEventStudioPage() {
                                       {/* Status */}
                                       <td className="py-3 px-4 font-mono">
                                         {att.status === "checked_in" && (
-                                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
-                                            <span>✓ Checked In</span>
+                                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
+                                            <Check className="w-3 h-3 text-emerald-400" />
+                                            <span>Checked In</span>
                                             {att.checkedInAt && (
                                               <span className="text-neutral-400 text-[9px]">
                                                 ({att.checkedInAt.split(" ")[1] || att.checkedInAt})
@@ -999,13 +1002,15 @@ export default function HostEventStudioPage() {
                                           </span>
                                         )}
                                         {att.status === "paid" && (
-                                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[10px] font-bold">
-                                            <span>🎟️ Paid Pass</span>
+                                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[10px] font-bold">
+                                            <Ticket className="w-3 h-3 text-sky-400" />
+                                            <span>Paid Pass</span>
                                           </span>
                                         )}
                                         {att.status === "waitlist" && (
-                                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[10px] font-bold">
-                                            <span>⏳ Waitlist</span>
+                                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[10px] font-bold">
+                                            <Clock className="w-3 h-3 text-amber-400" />
+                                            <span>Waitlist</span>
                                           </span>
                                         )}
                                       </td>
@@ -1045,8 +1050,9 @@ export default function HostEventStudioPage() {
                                           </button>
                                         )}
                                         {att.status === "checked_in" && (
-                                          <span className="text-emerald-400 font-mono text-[11px] font-semibold">
-                                            Verified ✓
+                                          <span className="inline-flex items-center gap-1 text-emerald-400 font-mono text-[11px] font-semibold">
+                                            <Check className="w-3 h-3 text-emerald-400" />
+                                            <span>Verified</span>
                                           </span>
                                         )}
                                       </td>
@@ -1090,9 +1096,14 @@ export default function HostEventStudioPage() {
                                       }`}
                                     >
                                       <div className="flex items-center justify-between">
-                                        <span className="text-sm">{m.icon}</span>
+                                        <div className="shrink-0">
+                                          {m.id === "first_gift" && <Sparkles className="w-3.5 h-3.5 text-emerald-400" />}
+                                          {m.id === "crowd_favourite" && <Users className="w-3.5 h-3.5 text-amber-400" />}
+                                          {m.id === "community_backed" && <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />}
+                                          {m.id === "campus_favourite" && <Crown className="w-3.5 h-3.5 text-purple-400" />}
+                                        </div>
                                         <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-white/10">
-                                          {m.unlocked ? "UNLOCKED ✓" : `${m.progress}%`}
+                                          {m.unlocked ? "UNLOCKED" : `${m.progress}%`}
                                         </span>
                                       </div>
                                       <span className="block truncate text-white">{m.title}</span>
